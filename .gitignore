@@ -2,5 +2,6 @@
 .DS_Store
 **/bin
 bin
-**/src-gen/**
-**/xtend-gen/**
+#**/src-gen/**
+#**/xtend-gen/**
+!**/.gitignore
