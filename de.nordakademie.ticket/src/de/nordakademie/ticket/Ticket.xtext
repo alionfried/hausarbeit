@@ -6,4 +6,5 @@ Model:
 	greetings+=Greeting*;
 	
 Greeting:
-	'Hello' name=ID '!';
+	'Hello' name=ID '!'
+	'World' world=STRING;
