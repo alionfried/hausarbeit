@@ -2,6 +2,9 @@ grammar de.nordakademie.ticket.Ticket with org.eclipse.xtext.common.Terminals
 
 generate ticket "http://www.nordakademie.de/ticket/Ticket"
 
+//Kommentar mit ä oder ö
+//Zweiter Kommentar mit ä oder ö unter utf-8
+
 ModelIssue:
 	(issue += Issue | person = Person | transition = Transition)
 ;
