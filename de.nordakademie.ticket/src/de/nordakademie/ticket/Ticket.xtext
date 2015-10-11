@@ -2,9 +2,44 @@ grammar de.nordakademie.ticket.Ticket with org.eclipse.xtext.common.Terminals
 
 generate ticket "http://www.nordakademie.de/ticket/Ticket"
 
-Model:
-	greetings+=Greeting*;
-	
-Greeting:
-	'Hello' name=ID '!'
-	'World' world=STRING;
+ModelIssue:
+	(issue += Issue | person = Person | transition = Transition)
+;
+
+Issue: 
+	'Issue' name=ID
+	status = Status
+	summary = STRING
+	issueType = IssueType
+	assigne = [Person]
+;
+
+Person:
+	name = ID
+	roles += Role*
+;
+
+Role:
+	name = ID
+	transitions += [Transition]* 
+;
+
+Transition:
+	name = ID
+	start = [Status]
+	ziel = [Status]
+;
+
+IssueType:
+	name = ID
+	workflow = Workflow
+;
+
+Workflow:
+	name = ID
+	transitions += [Transition]
+;
+
+Status:
+	name=ID
+;
