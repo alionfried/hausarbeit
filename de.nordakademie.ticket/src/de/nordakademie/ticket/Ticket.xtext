@@ -1,0 +1,9 @@
+grammar de.nordakademie.ticket.Ticket with org.eclipse.xtext.common.Terminals
+
+generate ticket "http://www.nordakademie.de/ticket/Ticket"
+
+Model:
+	greetings+=Greeting*;
+	
+Greeting:
+	'Hello' name=ID '!';
