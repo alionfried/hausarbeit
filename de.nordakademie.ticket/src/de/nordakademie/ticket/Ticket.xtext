@@ -6,43 +6,43 @@ generate ticket "http://www.nordakademie.de/ticket/Ticket"
 //Zweiter Kommentar mit ä oder ö unter utf-8
 
 ModelIssue:
-	(issue += Issue | person = Person | transition = Transition)
+	(issue += Issue | person += Person | transition += Transition)*
 ;
 
-Issue: 
+Issue: 	
 	'Issue' name=ID
-	status = Status
-	summary = STRING
-	issueType = IssueType
-	assigne = [Person]
+	'has' status = Status
+	',has' summary = STRING
+	',has' issueType = IssueType
+	'is' assigne = [Person]
 ;
 
 Person:
-	name = ID
-	roles += Role*
+	'Person' name = ID
+	'has roles'roles += Role*
 ;
 
 Role:
-	name = ID
+	'Role' name = ID
 	transitions += [Transition]* 
 ;
 
 Transition:
-	name = ID
+	'Transition' name = ID
 	start = [Status]
 	ziel = [Status]
 ;
 
 IssueType:
-	name = ID
+	'IssueType' name = ID
 	workflow = Workflow
 ;
 
 Workflow:
-	name = ID
+	'Workflow' name = ID
 	transitions += [Transition]
 ;
 
 Status:
-	name=ID
+	'Status' name=ID
 ;

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/de.nordakademie.ticket/src-gen" editDirectory="/de.nordakademie.ticket.edit/src"
+    editorDirectory="/de.nordakademie.ticket.editor/src" modelPluginID="de.nordakademie.ticket"
+    forceOverwrite="true" modelName="Ticket" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    complianceLevel="6.0" copyrightFields="false" editPluginID="de.nordakademie.ticket.edit"
+    editorPluginID="de.nordakademie.ticket.editor" runtimeVersion="2.11">
+  <genPackages prefix="Ticket" basePackage="de.nordakademie.ticket" disposableProviderFactory="true"
+      fileExtensions="mydsl" ecorePackage="Ticket.ecore#/">
+    <genClasses ecoreClass="Ticket.ecore#//ModelIssue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//ModelIssue/issue"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//ModelIssue/person"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//ModelIssue/transition"/>
+    </genClasses>
+    <genClasses ecoreClass="Ticket.ecore#//Issue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Issue/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//Issue/status"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Issue/summary"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//Issue/issueType"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Issue/assigne"/>
+    </genClasses>
+    <genClasses ecoreClass="Ticket.ecore#//Person">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Person/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//Person/roles"/>
+    </genClasses>
+    <genClasses ecoreClass="Ticket.ecore#//Role">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Role/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Role/transitions"/>
+    </genClasses>
+    <genClasses ecoreClass="Ticket.ecore#//Transition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Transition/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Transition/start"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Transition/ziel"/>
+    </genClasses>
+    <genClasses ecoreClass="Ticket.ecore#//IssueType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//IssueType/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//IssueType/workflow"/>
+    </genClasses>
+    <genClasses ecoreClass="Ticket.ecore#//Workflow">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Workflow/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Workflow/transitions"/>
+    </genClasses>
+    <genClasses ecoreClass="Ticket.ecore#//Status">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Status/name"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
