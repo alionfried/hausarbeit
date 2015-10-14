@@ -6,6 +6,7 @@ package de.nordakademie.ticket.generator
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess
+import de.nordakademie.ticket.ticket.ModelIssue
 
 /**
  * Generates code from your model files on save.
@@ -15,10 +16,33 @@ import org.eclipse.xtext.generator.IFileSystemAccess
 class TicketGenerator implements IGenerator {
 	
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
-//		fsa.generateFile('greetings.txt', 'People to greet: ' + 
-//			resource.allContents
-//				.filter(typeof(Greeting))
-//				.map[name]
-//				.join(', '))
+	fsa.generateFile(
+			resource.URI.trimFileExtension.lastSegment + '.html',
+			resource.contents.filter(ModelIssue).head.toHtml	
+		)		
 	}
+	
+	def CharSequence toHtml(ModelIssue modelIssue)'''
+	<!DOCTYPE html>
+	<head>
+		<html lang="de">
+		<title>Issue Tracker</title>
+		<meta charset="utf-8">
+	</head>
+	<Button>Push me</Button>
+	<Body>
+		<header>
+			<h1>Issue Tracker</h1>
+		</header>
+		<nav>
+			<ul>
+			  <li><a href="#top">News</a></li>
+				 <li>Sports</li>
+				 <li>Weather</li>
+			</ul>
+		</nav>
+	</Body>
+	
+	
+	'''
 }
