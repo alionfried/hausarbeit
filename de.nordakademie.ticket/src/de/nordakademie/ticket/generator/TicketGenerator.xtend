@@ -25,22 +25,20 @@ class TicketGenerator implements IGenerator {
 	def CharSequence toHtml(ModelIssue modelIssue)'''
 	<!DOCTYPE html>
 	<head>
-		<html lang="de">
+		<html lang="en">
 		<title>Issue Tracker</title>
 		<meta charset="utf-8">
-	</head>
-	<Button>Push me</Button>
-	<Body>
-		<header>
-			<h1>Issue Tracker</h1>
-		</header>
-		<nav>
-			<ul>
-			  <li><a href="#top">News</a></li>
-				 <li>Sports</li>
-				 <li>Weather</li>
-			</ul>
-		</nav>
+	</head>	
+	<header style="color:white;background-color:#444;margin-bottom:5px;">
+			<button>New Issue</button>			
+			<input type="search" placeholder="search"></input>
+			<select>
+				<option value="user1">User1</option>
+				<option value="user2">User2</option>				
+			</select>
+	</header>		
+	<Body style="font-family:Verdana,sans-serif;font-size:0.8em;background-color:#E0E0FF;">
+		<p>Issue Content</p>		
 	</Body>
 	
 	
