@@ -6,41 +6,50 @@ generate ticket "http://www.nordakademie.de/ticket/Ticket"
 //Zweiter Kommentar mit ä oder ö unter utf-8
 
 ModelIssue:
-	(issue += Issue | person += Person | transition += Transition)*
+	(	issue += Issue | 
+		person += Person | 
+		role += Role |
+		transition += Transition |
+		issueType += IssueType |
+		workflow += Workflow |
+		status += Status 
+	)*
 ;
 
 Issue: 	
-	'Issue' name=ID
-	'has' status = Status
-	',has' summary = STRING
-	',has' issueType = IssueType
-	'is' assigne = [Person]
+	'Issue' name=ID 'of' issueType = [IssueType] '{'
+		'status' status = [Status]
+		('from' assignee = [Person]) ?
+		summary = STRING
+	'}'
 ;
 
 Person:
-	'Person' name = ID
-	'has roles'roles += Role*
+	'Person' name = ID '{' 
+		roles += [Role]* 
+	'}'
 ;
 
 Role:
-	'Role' name = ID
-	transitions += [Transition]* 
+	'Role' name = ID '{' 
+		transitions += [Transition]* 
+	'}'
 ;
 
 Transition:
-	'Transition' name = ID
-	start = [Status]
-	ziel = [Status]
+	'Transition' name = ID 'named' title = STRING '{'
+		start = [Status] 'to' ziel = [Status] 
+	'}'
 ;
 
 IssueType:
-	'IssueType' name = ID
-	workflow = Workflow
+	'IssueType' name = ID 'follows' workflow = [Workflow]
 ;
 
 Workflow:
-	'Workflow' name = ID
-	transitions += [Transition]
+	'Workflow' name = ID '{' 
+		transitions += [Transition]* 
+	'}'
 ;
 
 Status:

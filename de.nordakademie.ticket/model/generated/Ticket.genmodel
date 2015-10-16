@@ -10,18 +10,22 @@
     <genClasses ecoreClass="Ticket.ecore#//ModelIssue">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//ModelIssue/issue"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//ModelIssue/person"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//ModelIssue/role"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//ModelIssue/transition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//ModelIssue/issueType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//ModelIssue/workflow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//ModelIssue/status"/>
     </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//Issue">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Issue/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//Issue/status"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Issue/issueType"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Issue/status"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Issue/assignee"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Issue/summary"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//Issue/issueType"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Issue/assigne"/>
     </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//Person">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Person/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//Person/roles"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Person/roles"/>
     </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//Role">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Role/name"/>
@@ -29,12 +33,13 @@
     </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//Transition">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Transition/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Transition/title"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Transition/start"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Transition/ziel"/>
     </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//IssueType">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//IssueType/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//IssueType/workflow"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//IssueType/workflow"/>
     </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//Workflow">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Workflow/name"/>
