@@ -2,6 +2,7 @@ grammar de.nordakademie.ticket.Ticket with org.eclipse.xtext.common.Terminals
 
 generate ticket "http://www.nordakademie.de/ticket/Ticket"
 
+
 //Kommentar mit ä oder ö
 //Zweiter Kommentar mit ä oder ö unter utf-8
 
@@ -43,7 +44,9 @@ Transition:
 ;
 
 IssueType:
-	'IssueType' name = ID 'follows' workflow = [Workflow]
+	'IssueType' name = ID 'follows' workflow = [Workflow] '{'
+		fields += Field*
+	'}'
 ;
 
 Workflow:
@@ -56,12 +59,37 @@ Status:
 	'Status' name=ID
 ;
 
-//Field:
-//	DateField | StringField | ComboField | CheckField
-//;
-//
-//DateField:
-//	'Date' name = ID
-//	date = DATE
-//;
+Field:
+	DateField | StringField | ComboField | CheckField
+;
+
+DateField:
+	'Date' name = ID '{'
+	content = Date
+	'}'
+;
+
+Date:
+	day = INT '.' month = INT '.' year = INT
+;
+
+StringField:
+	'String' name = ID '{'
+	string = STRING
+	'}'
+;
+
+ComboField:
+	'Combo' name = ID '{'
+		'entries' '{' entries += STRING* '}'
+		'index' index = INT
+	'}'
+;
+
+CheckField:
+	'Check' name = ID '{'
+		text = STRING
+		( checked ?= 'x' )?
+	'}'
+;
 

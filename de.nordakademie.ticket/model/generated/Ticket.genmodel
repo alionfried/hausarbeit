@@ -40,6 +40,7 @@
     <genClasses ecoreClass="Ticket.ecore#//IssueType">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//IssueType/name"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//IssueType/workflow"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//IssueType/fields"/>
     </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//Workflow">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Workflow/name"/>
@@ -47,6 +48,28 @@
     </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//Status">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Status/name"/>
+    </genClasses>
+    <genClasses ecoreClass="Ticket.ecore#//Field">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Field/name"/>
+    </genClasses>
+    <genClasses ecoreClass="Ticket.ecore#//DateField">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//DateField/content"/>
+    </genClasses>
+    <genClasses ecoreClass="Ticket.ecore#//Date">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Date/day"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Date/month"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Date/year"/>
+    </genClasses>
+    <genClasses ecoreClass="Ticket.ecore#//StringField">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//StringField/string"/>
+    </genClasses>
+    <genClasses ecoreClass="Ticket.ecore#//ComboField">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//ComboField/entries"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//ComboField/index"/>
+    </genClasses>
+    <genClasses ecoreClass="Ticket.ecore#//CheckField">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//CheckField/text"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//CheckField/checked"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
