@@ -7,21 +7,31 @@ generate ticket "http://www.nordakademie.de/ticket/Ticket"
 //Zweiter Kommentar mit ä oder ö unter utf-8
 
 ModelIssue:
-	(	issue += Issue | 
-		person += Person | 
+	(	person += Person +| 
+		role += Role +|
+		transition += Transition +|
+		issueType += IssueType +|
+		workflow += Workflow +|
+		status += Status +
+	)*
+	issueScreen = IssueScreen
+	
+	((	person += Person | 
 		role += Role |
 		transition += Transition |
 		issueType += IssueType |
 		workflow += Workflow |
-		status += Status 
-	)*
+		status += Status
+	)*)?
+		
 ;
 
-Issue: 	
-	'Issue' name=ID 'of' issueType = [IssueType] '{'
-		'status' status = [Status]
-		('from' assignee = [Person]) ?
-		summary = STRING
+IssueScreen: 	
+	'IssueScreen' name=ID '{'
+//		statusfield = StatusField
+//		(assigneefield = AssigneeField) ?
+//		summaryfield = SummaryField
+//		fields += Field*
 	'}'
 ;
 
@@ -45,7 +55,7 @@ Transition:
 
 IssueType:
 	'IssueType' name = ID 'follows' workflow = [Workflow] '{'
-		fields += Field*
+//		fields += Field*
 	'}'
 ;
 
@@ -59,37 +69,62 @@ Status:
 	'Status' name=ID
 ;
 
-Field:
-	DateField | StringField | ComboField | CheckField
-;
 
-DateField:
-	'Date' name = ID '{'
-	content = Date
-	'}'
-;
-
-Date:
-	day = INT '.' month = INT '.' year = INT
-;
-
-StringField:
-	'String' name = ID '{'
-	string = STRING
-	'}'
-;
-
-ComboField:
-	'Combo' name = ID '{'
-		'entries' '{' entries += STRING* '}'
-		'index' index = INT
-	'}'
-;
-
-CheckField:
-	'Check' name = ID '{'
-		text = STRING
-		( checked ?= 'x' )?
-	'}'
-;
+//StatusField:
+//	'StatusField' name = ID '{'
+//		( 'default' ' '?default = [Status] ) ?
+//	'}'
+//;
+//
+//AssigneeField:
+//	'Assignee' name = ID '{'
+//		( 'default' ' '? default = [Person] ) ?
+//	'}'
+//;
+//
+//SummaryField: 
+//	'Summary' name = ID '{' 
+//		( 'default' ' '? default = STRING ) ?
+//	'}'
+//;
+//
+//Field:
+//	DateField | StringField | ComboField | CheckField | MailField
+//;
+//
+//
+//
+//MailField:
+//	'Mail' name = ID 'as' description = STRING '{'
+//		( 'default' ' '? default = STRING ) ?
+//	'}'
+//;
+//
+//DateField:
+//	'Date' name = ID 'as' description = STRING '{'
+//		( 'default' ' '? today?= 'today' | default = Date  ) ?
+//	'}'
+//;
+//
+//Date:
+//	day = INT '.' month = INT '.' year = INT
+//;
+//
+//StringField:
+//	'String' name = ID 'as' description = STRING '{'
+//		( 'default' ' '? default = STRING )?
+//	'}'
+//;
+//
+//ComboField:
+//	'Combo' name = ID 'as' description = STRING'{'
+//		('default entries' '{' entries += STRING+ '}')?
+//	'}'
+//;
+//
+//CheckField:
+//	'Check' name = ID 'as' description = STRING'{'
+//		( 'default' ' '? ( default ?= 'TRUE' ) | 'FALSE' )?
+//	'}'
+//;
 
