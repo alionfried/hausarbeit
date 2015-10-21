@@ -7,6 +7,7 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess
 import de.nordakademie.ticket.ticket.ModelIssue
+import de.nordakademie.ticket.ticket.IssueType
 
 /**
  * Generates code from your model files on save.
@@ -81,9 +82,9 @@ class TicketGenerator implements IGenerator {
 		                            <li class="dropdown">
 		                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Assignee<span class="caret"></span></a>
 		                                <ul class="dropdown-menu">
-		                                    <li><a href="#">Person 1</a></li>
-		                                    <li><a href="#">Person 2</a></li>
-		                                    <li><a href="#">Person 3</a></li>
+		                                	«FOR person : modelIssue.person»
+		                                	<li><a>«person.name»</a></li>
+		                                	«ENDFOR»		                                	
 		                                </ul>
 		                            </li>
 		                        </ul>
@@ -138,9 +139,9 @@ class TicketGenerator implements IGenerator {
 		            <div id="optionCreateNewIssue" class="modal-body">
 		                Here you choose the Issuetype you want to create.<br />
 		                <select id="btnListCreateIssues" class="selectpicker">
-		                    <option value="Ticket">Ticket</option>
-		                    <option value="Story">Story</option>
-		                    <option value="Change">Change</option>
+		                «FOR issueType : modelIssue.issueType»
+		                	<option value="«issueType.name»">«issueType.name» </option>		                	
+		                «ENDFOR»		                    
 		                </select>
 		                <button type="button" class="btn btn-primary">Create</button>				
 		            </div>			
