@@ -142,8 +142,7 @@ class TicketGenerator implements IGenerator {
 		                «FOR issueType : modelIssue.issueType»
 		                	<option value="«issueType.name»">«issueType.name» </option>		                	
 		                «ENDFOR»		                    
-		                </select>
-		                <button type="button" class="btn btn-primary">Create</button>				
+		                </select>		                				
 		            </div>			
 				</div>	    
 			
