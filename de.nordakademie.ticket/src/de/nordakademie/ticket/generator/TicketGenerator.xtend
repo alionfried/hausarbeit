@@ -149,82 +149,107 @@ class TicketGenerator implements IGenerator {
 			
 				
 		        <div id="secondDiv" class="container theme-showcase" role="main">
-		            <button id="btnHide" type="button" class="btn btn-default">Hide</button>
-		            <br />
-		            <button id="btnShow" type="button" class="btn btn-default">Show</button>
+		            <button id="btnCreateIssue" type="button" class="btn btn-primary">Create</button>
 		        </div>
 		            <script src="issuetracker.js"></script>
 		</body>
-</html>
+	</html>
 	
 	
 	'''
 	
 	def CharSequence tojs(ModelIssue modelIssue)'''
 	//Status für aDIV
-	// 1 := onLoad / Ready  (Seite fertig gealden / Button Issue...
-	// 2 := optionCreateNewIssue
-	// 3 := btnHide
-	// 4 := btnShow
-	
-	var aDiv = [
-	  ['mainDiv'             , true, true, false,true],
-	  ['issueOverview'       , true, false, false,true],
-	  ['optionCreateNewIssue', false, true, false,true]
-	];
-	
-	function einAusblendenDIV(nStatus, nTime) {
-	    for (var i = 0; i < aDiv.length; i++) {
-	        var tmpDiv = "#" + aDiv[i][0];
-	        if (aDiv[i][nStatus]) {
-	            $(tmpDiv).show(nTime);
-	        } else {
-	            $(tmpDiv).hide(nTime);
-	        }
-	    }
-	
-	}
-	
-	//$('#btnListCreateIssues').click(function(){
-	//    var sReturn = this.value;    
-	//    alert(sReturn);
-	//});
-	
-	$(".selectpicker").change(function () {
-	
-	    var sReturn = this.options(this.selectedIndex).value;
-	
-	    alert(sReturn);
-	
-	});
-	
-	function selectedItem() {
-	    var sReturn = this.options(this.selectedIndex).value;
-	
-	    alert(sReturn);
-	
-	}
-	
-	$("#btnHide").click(function () {    
-	    einAusblendenDIV(3, 100);
-	});
-	
-	$("#btnShow").click(function () {
-	    einAusblendenDIV(4, 300);
-	});
-	
-	$("#aShow").click(function () {
-	    einAusblendenDIV(1, 1000);
-	});
-	
-	$("#btnCreateNewIssue").click(function () {
-	    einAusblendenDIV(2, 3000);
-	});
-	
-	$(function () {
-	    einAusblendenDIV(1,10);
-	});
-	'''
+// 1 := onLoad / Ready  (Seite fertig gealden / Button Issue...
+// 2 := optionCreateNewIssue
+// 3 := btnHide
+// 4 := btnShow
+
+var aDiv = [
+  ['mainDiv'             , true, true, false,true],
+  ['issueOverview'       , true, false, false,true],
+  ['optionCreateNewIssue', false, true, false, false]
+  ['secondDiv'           , false, true, false, false]
+];
+
+function einAusblendenDIV(nStatus, nTime) {
+    for (var i = 0; i < aDiv.length; i++) {
+        var tmpDiv = "#" + aDiv[i][0];
+        if (aDiv[i][nStatus]) {
+            $(tmpDiv).show(nTime);
+        } else {
+            $(tmpDiv).hide(nTime);
+        }
+    }
+}
+
+//Hier muss mit der Datenbank gearbeitet werden
+function checkpermission(personname) {
+    //String Name der Person erhalten und dann über Datenbank abfragen, ob die Aktion durchgeführt werden darf
+    return true;
+}
+
+//$('#btnListCreateIssues').click(function(){
+//    var sReturn = this.value;    
+//    alert(sReturn);
+//});
+
+$(".selectpicker").change(function () {
+
+    var sReturn = this.options(this.selectedIndex).value;
+
+    alert(sReturn);
+
+});
+
+function selectedItem() {
+    //var sReturn = this.options(this.selectedIndex).value;
+    var sReturn = $(".selectpicker").change(function () {
+
+        var sReturn = this.options(this.selectedIndex).value;
+
+        alert(sReturn);
+
+    });
+
+    alert(sReturn);
+
+}
+
+$("#btnHide").click(function () {    
+    einAusblendenDIV(3, 100);
+});
+
+$("#btnShow").click(function () {
+    einAusblendenDIV(4, 300);
+});
+
+$("#aShow").click(function () {
+    einAusblendenDIV(1, 1000);
+});
+
+$("#btnCreateNewIssue").click(function () {
+    einAusblendenDIV(2, 3000);
+});
+
+$("#btnCreateIssue").click(function () {    
+    getReturn = (checkpermission("alli"))
+    
+    //selectedItem();
+
+    if (getReturn == true) {
+        alert(getReturn);
+    }
+    else {
+        alert("Sie haben nicht die Berechtigung diese Aktion durchzufuehren.")
+    }
+})
+
+$(function () {
+    einAusblendenDIV(1,10);
+});	
+
+'''
 	
 }
 
