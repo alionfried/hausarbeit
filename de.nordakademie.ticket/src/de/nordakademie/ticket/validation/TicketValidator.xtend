@@ -43,7 +43,7 @@ class TicketValidator extends AbstractTicketValidator {
 	
 	@Check
 	def checkRoleContainsTransition (Role role) {
-		if (role.transitions.empty){
+		if (role.transitions.empty && !role.openIssue){
 			error('Role must contain at least one Transition', ROLE__NAME)
 		}
 	}
@@ -73,7 +73,7 @@ class TicketValidator extends AbstractTicketValidator {
 				error('Enter correct Month', DATE__MONTH)
 		} 
 		
-		if (! ((date.year > 1900 && date.year < 2100 ) || (date.year > 0 && date.year < 100)) ){
+		if (! ((date.year > 1900 && date.year < 2100) || (date.year == 9999) || (date.year > 0 && date.year < 100)) ){
 				error('Enter correct Year', DATE__YEAR)
 		}
 		

@@ -17,27 +17,26 @@ ModelIssue:
 	)*
 	issueScreen = IssueScreen
 	
-	((	person += Person | 
+	(	person += Person | 
 		role += Role |
 		transition += Transition |
 		issueType += IssueType |
 		workflow += Workflow |
 		status += Status
-	)*)?
+	)*
 		
 ;
 
 IssueScreen: 	
 	'IssueScreen' name=ID '{'
 		statusfield = StatusField
-		(assigneefield = AssigneeField) ?
 		summaryfield = SummaryField
-		fields += Field*
+		fields += [Field]*
 	'}'
 ;
 
 Person:
-	'Person' name = ID '{' 
+	'Person' name = ID 'called' shownName = STRING '{' 
 		roles += [Role]* 
 	'}'
 ;
@@ -45,6 +44,7 @@ Person:
 Role:
 	'Role' name = ID '{' 
 		transitions += [Transition]* 
+		( openIssue ?= 'create Issue' ) ?
 	'}'
 ;
 
@@ -77,12 +77,6 @@ StatusField:
 	'}'
 ;
 
-AssigneeField:
-	'AssigneeField' name = ID '{'
-		( 'default' default = [Person] ) ?
-	'}'
-;
-
 SummaryField: 
 	'SummaryField' name = ID '{' 
 		( 'default' default = STRING ) ?
@@ -90,16 +84,17 @@ SummaryField:
 ;
 
 Field:
-	DateField | StringField | CheckField | MailField | ComboField
+	DateField | StringField | CheckField | MailField | ComboField | PersonField
 ;
 
 
 
 MailField:
 	'MailField' name = ID 'as' description = STRING '{'
-		( 'default' default = STRING ) ?
+		( 'default' default = MAIL ) ?
 	'}'
 ;
+
 
 DateField:
 	'DateField' name = ID 'as' description = STRING '{'
@@ -129,3 +124,15 @@ CheckField:
 	'}'
 ;
 
+
+PersonField:
+	'PersonField' name = ID  'as' description = STRING '{'
+		( 'default' default = [Person] ) ?
+	'}'
+;
+
+terminal MAIL:
+	( 'a'..'z'|'A'..'Z'|'0'..'9'|'.'|'-'|'_'|'%' ) +     	//'beispiel123'
+	'@' ('a'..'z'|'A'..'Z'|'0'..'9'|'.'|'-')+				//'@wak-sh'
+	'.' ('a'..'z' | 'A'..'Z')('a'..'z' | 'A'..'Z')+			//'.de'
+;

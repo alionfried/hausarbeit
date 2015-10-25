@@ -20,17 +20,18 @@
     <genClasses ecoreClass="Ticket.ecore#//IssueScreen">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//IssueScreen/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//IssueScreen/statusfield"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//IssueScreen/assigneefield"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//IssueScreen/summaryfield"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//IssueScreen/fields"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//IssueScreen/fields"/>
     </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//Person">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Person/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Person/shownName"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Person/roles"/>
     </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//Role">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Role/name"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Role/transitions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Role/openIssue"/>
     </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//Transition">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Transition/name"/>
@@ -53,10 +54,6 @@
     <genClasses ecoreClass="Ticket.ecore#//StatusField">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//StatusField/name"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//StatusField/default"/>
-    </genClasses>
-    <genClasses ecoreClass="Ticket.ecore#//AssigneeField">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//AssigneeField/name"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//AssigneeField/default"/>
     </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//SummaryField">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//SummaryField/name"/>
@@ -86,6 +83,9 @@
     </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//CheckField">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//CheckField/default"/>
+    </genClasses>
+    <genClasses ecoreClass="Ticket.ecore#//PersonField">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//PersonField/default"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
