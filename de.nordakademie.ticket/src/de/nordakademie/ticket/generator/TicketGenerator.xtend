@@ -53,8 +53,7 @@ class TicketGenerator implements IGenerator {
 			<!-- Latest compiled and minified JavaScript -->
 			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>				    
 		      
-		  </head>
-			
+		  </head>			
 			<body id="issueBody" role="document">
 		        <header>
 		            <nav class="navbar navbar-default">
@@ -144,9 +143,7 @@ class TicketGenerator implements IGenerator {
 		                «ENDFOR»		                    
 		                </select>		                				
 		            </div>			
-				</div>	    
-			
-				
+				</div>	    					
 		        <div id="secondDiv" class="container theme-showcase" role="main">
 		            <button id="btnCreateIssue" type="button" class="btn btn-primary">Create</button>
 		        </div>
@@ -158,7 +155,7 @@ class TicketGenerator implements IGenerator {
 	'''
 	
 	def CharSequence tojs(ModelIssue modelIssue)'''
-	//Status für aDIV
+//Status für aDIV
 // 1 := onLoad / Ready  (Seite fertig gealden / Button Issue...
 // 2 := optionCreateNewIssue
 // 3 := btnHide
@@ -167,7 +164,7 @@ class TicketGenerator implements IGenerator {
 var aDiv = [
   ['mainDiv'             , true, true, false,true],
   ['issueOverview'       , true, false, false,true],
-  ['optionCreateNewIssue', false, true, false, false]
+  ['optionCreateNewIssue', false, true, false, false],
   ['secondDiv'           , false, true, false, false]
 ];
 
@@ -215,14 +212,6 @@ function selectedItem() {
 
 }
 
-$("#btnHide").click(function () {    
-    einAusblendenDIV(3, 100);
-});
-
-$("#btnShow").click(function () {
-    einAusblendenDIV(4, 300);
-});
-
 $("#aShow").click(function () {
     einAusblendenDIV(1, 1000);
 });
@@ -233,11 +222,25 @@ $("#btnCreateNewIssue").click(function () {
 
 $("#btnCreateIssue").click(function () {    
     getReturn = (checkpermission("alli"))
-    
-    //selectedItem();
+    var sReturn;        
+        sReturn = $("#optionCreateNewIssue option");//$(this).options($(this).selectedIndex).value;        
+        var length = sReturn.length;
+        var selectedObject;
+        var isSelected = false;
+        var returnObjekt;
+        var i = 0;
+        while (isSelected == false && i < length) {
+                if (sReturn[i].selected == true) {
+                    isSelected = true;
+                    returnObjekt = sReturn[i];
+                }
+                i++;            
+        }
+        selectedObject = returnObjekt.value;
+        //alert(selectedObject);                
 
     if (getReturn == true) {
-        alert(getReturn);
+        alert("Es sollte sich die Eingabemaske fuer " + selectedObject + " oeffnen.");
     }
     else {
         alert("Sie haben nicht die Berechtigung diese Aktion durchzufuehren.")
@@ -246,8 +249,7 @@ $("#btnCreateIssue").click(function () {
 
 $(function () {
     einAusblendenDIV(1,10);
-});	
-
+});
 '''
 	
 }
