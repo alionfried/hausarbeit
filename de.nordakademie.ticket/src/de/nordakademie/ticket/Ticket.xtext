@@ -62,7 +62,7 @@ IssueType:
 
 Workflow:
 	'Workflow' name = ID '{' 
-		transitions += [Transition]* 
+		transitions += [Transition]+
 	'}'
 ;
 

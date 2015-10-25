@@ -2,12 +2,21 @@
  */
 package de.nordakademie.ticket.validation
 
-import static de.nordakademie.ticket.ticket.TicketPackage.Literals.*
-import de.nordakademie.ticket.ticket.Transition
-import org.eclipse.xtext.validation.Check
-import de.nordakademie.ticket.ticket.Workflow
-import de.nordakademie.ticket.ticket.Role
 import de.nordakademie.ticket.ticket.Date
+import de.nordakademie.ticket.ticket.IssueScreen
+import de.nordakademie.ticket.ticket.IssueType
+import de.nordakademie.ticket.ticket.ModelIssue
+import de.nordakademie.ticket.ticket.Person
+import de.nordakademie.ticket.ticket.Role
+import de.nordakademie.ticket.ticket.Transition
+import java.util.ArrayList
+import java.util.List
+import org.eclipse.xtext.validation.Check
+
+import static de.nordakademie.ticket.ticket.TicketPackage.Literals.*
+import de.nordakademie.ticket.ticket.Field
+import de.nordakademie.ticket.ticket.Workflow
+import de.nordakademie.ticket.ticket.ComboField
 
 //import de.nordakademie.ticket.ticket.Date
 
@@ -19,6 +28,35 @@ import de.nordakademie.ticket.ticket.Date
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 class TicketValidator extends AbstractTicketValidator {
+
+	
+	@Check
+	def checkAllRulesAreCreated (ModelIssue modelIssue) {
+		if (modelIssue.issueType.empty ) {
+			error('At least 1 IssueType is needed', MODEL_ISSUE__ISSUE_TYPE)
+		}
+		
+		if (modelIssue.person.empty ) {
+			error('At least 1 Person is needed', MODEL_ISSUE__PERSON)
+		}		 
+		 
+		if (modelIssue.role.empty ) {
+			error('At least 1 Role is needed', MODEL_ISSUE__ROLE)
+		} 
+		 
+		if (modelIssue.status.empty ) {
+			error('At least 1 Status is needed', MODEL_ISSUE__STATUS)
+		}   
+		
+		if (modelIssue.transition.empty ) {
+			error('At least 1 Transition is needed', MODEL_ISSUE__TRANSITION)
+		}   
+		
+		if (modelIssue.workflow.empty ) {
+			error('At least 1 Workflow is needed', MODEL_ISSUE__WORKFLOW)
+		} 
+		
+	}
 
 	@Check
 	def checkTransitionHasDifferentStatus (Transition transition) {
@@ -35,9 +73,23 @@ class TicketValidator extends AbstractTicketValidator {
 	}
 	
 	@Check
-	def checkWorkflowContainsTransition (Workflow workflow) {
-		if (workflow.transitions.empty){
-			error('Workflow must contain at least one Transition', WORKFLOW__NAME)
+	def checkWorkflowHasDifferentTransitions (Workflow workflow){
+		if (checkListForDublicates(workflow.transitions)){
+			error('Workflow must have different Transitions', WORKFLOW__TRANSITIONS)
+		}
+	}
+	
+	@Check
+	def checkPersonHasDifferentRoles (Person person){
+		if (checkListForDublicates(person.roles)){
+			error('A Person must have different Roles', PERSON__ROLES)
+		}
+	}
+	
+	@Check
+	def checkRoleHasDifferentTransitions (Role role){
+		if (checkListForDublicates(role.transitions)){
+			error('Role must have different Transition', ROLE__TRANSITIONS)
 		}
 	}
 	
@@ -45,6 +97,13 @@ class TicketValidator extends AbstractTicketValidator {
 	def checkRoleContainsTransition (Role role) {
 		if (role.transitions.empty && !role.openIssue){
 			error('Role must contain at least one Transition', ROLE__NAME)
+		}
+	}
+	
+	@Check
+	def checkPersonNameIsEmpty (Person person) {
+		if (person.shownName.empty){
+			error('Name must not be empty', PERSON__SHOWN_NAME)
 		}
 	}
 	
@@ -77,5 +136,52 @@ class TicketValidator extends AbstractTicketValidator {
 				error('Enter correct Year', DATE__YEAR)
 		}
 		
+	}
+	
+	@Check
+	def checkIssueTypeHasDifferentFields (IssueType issueType){
+		if (this.checkListForDublicates(issueType.fields)){
+			error('IssueType must have different Fields', ISSUE_TYPE__FIELDS)
+		}
+	}
+	
+	@Check
+	def checkIssueScreenHasDifferentFields (IssueScreen issueScreen){
+		if (this.checkListForDublicates(issueScreen.fields)){
+			error('IssueScreen must have different Fields', ISSUE_SCREEN__FIELDS)
+		}
+	}
+	
+	@Check
+	def checkFieldDescriptionIsEmpty (Field field){
+		if (field.description.empty){
+			error('Description must not be empty', FIELD__DESCRIPTION)
+		}
+	}
+	
+	@Check
+	def checkComboFieldList (ComboField combo){
+		if (this.checkListForDublicates(combo.^default)){
+			error('ComboField must have different Entries', COMBO_FIELD__DEFAULT)
+		}
+		
+		for (String string : combo.^default){
+			if (string.empty){
+				error('Entries must not be empty', COMBO_FIELD__DEFAULT)
+			}
+		}
+	}
+	
+	List<Object> checkList = new ArrayList<Object>
+	def boolean checkListForDublicates (List<?> list){
+		checkList.clear 
+		for (Object field : list) {
+			if (checkList.contains(field)){
+				return true
+			} else {
+				checkList.add(field)
+			}
+		}
+		return false
 	}
 }
