@@ -87,6 +87,9 @@ class TicketGenerator implements IGenerator {
 		                                </ul>
 		                            </li>
 		                        </ul>
+		                        <ul class="nav navbar-nav navbar-right">
+									<li><a id="navRigth">Singed in with Person:</a></li>                                                        
+								</ul>
 		                    </div><!--/.nav-collapse -->
 		                </div>
 		            </nav>
@@ -185,6 +188,10 @@ function checkpermission(personname) {
     return true;
 }
 
+function changeNavRigth(namePerson) {    
+    $("#navRigth").text("Signed in as: " + namePerson);    
+}
+
 //$('#btnListCreateIssues').click(function(){
 //    var sReturn = this.value;    
 //    alert(sReturn);
@@ -240,12 +247,15 @@ $("#btnCreateIssue").click(function () {
         //alert(selectedObject);                
 
     if (getReturn == true) {
-        alert("Es sollte sich die Eingabemaske fuer " + selectedObject + " oeffnen.");
+        alert("Input Option for Type: " + selectedObject);
     }
     else {
-        alert("Sie haben nicht die Berechtigung diese Aktion durchzufuehren.")
+        alert("You don't have the permissons for this action.")
     }
+    changeNavRigth(selectedObject);
 })
+
+
 
 $(function () {
     einAusblendenDIV(1,10);
