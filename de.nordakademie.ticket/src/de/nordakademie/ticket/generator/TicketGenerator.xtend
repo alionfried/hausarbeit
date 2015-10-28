@@ -270,11 +270,22 @@ $(function () {
 '''
 	
 	def CharSequence standardInput(ModelIssue modelIssue)'''
-	<div id="standardInput">
-		<p> abc</p>
-		«FOR fields :  modelIssue.issueScreen.fields»
-			<a>«fields.description»</a>
-			<br/>
+	<div id="standardInput">		
+		«FOR fields :  modelIssue.issueScreen.fields»			
+			«IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.DateField")»
+				<form>
+					«fields.description»	
+					<input id="«fields.name»" name="«fields.name»" type="date" placeholder="«fields.description»">
+				</form>  				
+			«ENDIF»			
+			
+			«IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.PersonField")»
+				<input id="«fields.name»" name="«fields.name»" type="text" class="form-control" placeholder="«fields.description»" aria-describedby="basic-addon2">  				
+			«ENDIF»
+			
+			«IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.MailField")»
+				<input id="«fields.name»" type="text" class="form-control" placeholder="«fields.description»" aria-describedby="basic-addon2">  				
+			«ENDIF»										
 		«ENDFOR»
 				
 	</div>
