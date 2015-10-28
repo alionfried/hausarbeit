@@ -8,6 +8,7 @@ import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess
 import de.nordakademie.ticket.ticket.ModelIssue
 import de.nordakademie.ticket.ticket.IssueType
+import org.eclipse.emf.mwe.core.issues.Issues
 
 /**
  * Generates code from your model files on save.
@@ -27,7 +28,13 @@ class TicketGenerator implements IGenerator {
 			//resource.URI.trimFileExtension.lastSegment + '.js',
 			resource.contents.filter(ModelIssue).head.tojs			
 		)					
+	fsa.generateFile(
+			'standardInput.html',
+			resource.contents.filter(ModelIssue).head.standardInput			
+		)							
 	}
+
+
 	
 	def CharSequence toHtml(ModelIssue modelIssue)'''
 	<!DOCTYPE html>
@@ -262,5 +269,15 @@ $(function () {
 });
 '''
 	
+	def CharSequence standardInput(ModelIssue modelIssue)'''
+	<div id="standardInput">
+		<p> abc</p>
+		«FOR fields :  modelIssue.issueScreen.fields»
+			<a>«fields.description»</a>
+			<br/>
+		«ENDFOR»
+				
+	</div>
+	'''
 }
 
