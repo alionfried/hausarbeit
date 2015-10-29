@@ -32,7 +32,7 @@ class TicketQuickfixProvider extends DefaultQuickfixProvider {
 
 
 @Fix(TicketValidator.EMPTY_STRING)
-def fillDescription(Issue issue, IssueResolutionAcceptor acceptor){
+def fillString(Issue issue, IssueResolutionAcceptor acceptor){
 	var String emptyElement = issue.data.get(0)
 	acceptor.accept(issue, 
 		'Fill ' + emptyElement, 
