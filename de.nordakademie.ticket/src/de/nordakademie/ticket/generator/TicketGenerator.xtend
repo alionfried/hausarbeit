@@ -9,6 +9,7 @@ import org.eclipse.xtext.generator.IFileSystemAccess
 import de.nordakademie.ticket.ticket.ModelIssue
 import de.nordakademie.ticket.ticket.IssueType
 import org.eclipse.emf.mwe.core.issues.Issues
+import de.nordakademie.ticket.ticket.DateField
 
 /**
  * Generates code from your model files on save.
@@ -275,7 +276,7 @@ $(function () {
 			«IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.DateField")»
 				<form>
 					«fields.description»	
-					<input id="«fields.name»" name="«fields.name»" type="date" placeholder="«fields.description»">
+					<input id="«(fields as DateField).name»" name="«fields.name»" type="date" placeholder="«fields.description»">
 				</form>  				
 			«ENDIF»			
 			
