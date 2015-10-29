@@ -3,28 +3,32 @@
  */
 package de.nordakademie.ticket.ui.quickfix
 
+import de.nordakademie.ticket.ticket.Date
+import de.nordakademie.ticket.ticket.Field
+import de.nordakademie.ticket.ticket.IssueScreen
+import de.nordakademie.ticket.ticket.IssueType
+import de.nordakademie.ticket.ticket.ModelIssue
+import de.nordakademie.ticket.ticket.Person
+import de.nordakademie.ticket.ticket.Role
+import de.nordakademie.ticket.ticket.Workflow
+import de.nordakademie.ticket.validation.TicketValidator
+import java.util.ArrayList
+import java.util.Calendar
+import java.util.List
+import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider
 import org.eclipse.xtext.ui.editor.quickfix.Fix
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.validation.Issue
-import de.nordakademie.ticket.validation.TicketValidator
-import de.nordakademie.ticket.ticket.Workflow
-import java.util.List
-import java.util.ArrayList
-import de.nordakademie.ticket.ticket.Field
-import de.nordakademie.ticket.ticket.Role
-import de.nordakademie.ticket.ticket.ModelIssue
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.common.util.TreeIterator
-import de.nordakademie.ticket.ticket.Person
-import de.nordakademie.ticket.ticket.IssueType
-import de.nordakademie.ticket.ticket.IssueScreen
+import de.nordakademie.ticket.ticket.Transition
+import de.nordakademie.ticket.ticket.Status
+import org.eclipse.emf.common.util.EList
 
 /**
  * Custom quickfixes.
  *
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#quick-fixes
  */
-class TicketQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider {
+class TicketQuickfixProvider extends DefaultQuickfixProvider {
 
 
 @Fix(TicketValidator.EMPTY_STRING)
@@ -75,6 +79,238 @@ def addTransitionToRole(Issue issue, IssueResolutionAcceptor acceptor){
 }
 
 
+@Fix(TicketValidator.DUPLICATED_TRANSITION_STATUS)
+def changeStatus(Issue issue, IssueResolutionAcceptor acceptor){
+	acceptor.accept(issue, 
+		'Change Transition', 
+		"Change Transition of '" + issue.data.get(0) + "'" ,  
+		'',
+		[
+			element, 
+			context | 
+				var EList<Status> status = (element.eContainer as ModelIssue).status;
+				(element as Transition).ziel = status.get(status.size)
+				
+		]
+	)
+}
+
+
+@Fix(TicketValidator.INVALID_DAY)
+def changeToFirstDay(Issue issue, IssueResolutionAcceptor acceptor){
+	acceptor.accept(issue, 
+		'Switch day to the first', 
+		"Switch day of '" + issue.data.get(0) + "' to the first '", 
+		'',
+		[
+			element, 
+			context | 
+				(element as Date).day = 1
+		]
+	)
+}
+
+
+@Fix(TicketValidator.INVALID_MONTH)
+def changeToJan(Issue issue, IssueResolutionAcceptor acceptor){
+	acceptor.accept(issue, 
+		'Switch to January', 
+		"Switch month of '" + issue.data.get(0) + "' to January'", 
+		'',
+		[
+			element, 
+			context | 
+				(element as Date).month = 1
+		]
+	)
+}
+
+@Fix(TicketValidator.INVALID_MONTH)
+def changeToFeb(Issue issue, IssueResolutionAcceptor acceptor){
+	acceptor.accept(issue, 
+		'Switch to February', 
+		"Switch month of '" + issue.data.get(0) + "' to February'", 
+		'',
+		[
+			element, 
+			context | 
+				(element as Date).month = 2
+		]
+	)
+}
+
+@Fix(TicketValidator.INVALID_MONTH)
+def changeToMar(Issue issue, IssueResolutionAcceptor acceptor){
+	acceptor.accept(issue, 
+		'Switch to March', 
+		"Switch month of '" + issue.data.get(0) + "' to March'", 
+		'',
+		[
+			element, 
+			context | 
+				(element as Date).month = 3
+		]
+	)
+}
+
+@Fix(TicketValidator.INVALID_MONTH)
+def changeToApr(Issue issue, IssueResolutionAcceptor acceptor){
+	acceptor.accept(issue, 
+		'Switch to April', 
+		"Switch month of '" + issue.data.get(0) + "' to April'", 
+		'',
+		[
+			element, 
+			context | 
+				(element as Date).month = 4
+		]
+	)
+}
+
+@Fix(TicketValidator.INVALID_MONTH)
+def changeToMay(Issue issue, IssueResolutionAcceptor acceptor){
+	acceptor.accept(issue, 
+		'Switch to May', 
+		"Switch month of '" + issue.data.get(0) + "' to May'", 
+		'',
+		[
+			element, 
+			context | 
+				(element as Date).month = 5
+		]
+	)
+}
+
+@Fix(TicketValidator.INVALID_MONTH)
+def changeToJun(Issue issue, IssueResolutionAcceptor acceptor){
+	acceptor.accept(issue, 
+		'Switch to June', 
+		"Switch month of '" + issue.data.get(0) + "' to June'", 
+		'',
+		[
+			element, 
+			context | 
+				(element as Date).month = 6
+		]
+	)
+}
+
+@Fix(TicketValidator.INVALID_MONTH)
+def changeToJul(Issue issue, IssueResolutionAcceptor acceptor){
+	acceptor.accept(issue, 
+		'Switch to July', 
+		"Switch month of '" + issue.data.get(0) + "' to July'", 
+		'',
+		[
+			element, 
+			context | 
+				(element as Date).month = 7
+		]
+	)
+}
+
+@Fix(TicketValidator.INVALID_MONTH)
+def changeToAug(Issue issue, IssueResolutionAcceptor acceptor){
+	acceptor.accept(issue, 
+		'Switch to August', 
+		"Switch month of '" + issue.data.get(0) + "' to August'", 
+		'',
+		[
+			element, 
+			context | 
+				(element as Date).month = 8
+		]
+	)
+}
+
+@Fix(TicketValidator.INVALID_MONTH)
+def changeToSep(Issue issue, IssueResolutionAcceptor acceptor){
+	acceptor.accept(issue, 
+		'Switch to September', 
+		"Switch month of '" + issue.data.get(0) + "' to September'", 
+		'',
+		[
+			element, 
+			context | 
+				(element as Date).month = 9
+		]
+	)
+}
+
+@Fix(TicketValidator.INVALID_MONTH)
+def changeToOct(Issue issue, IssueResolutionAcceptor acceptor){
+	acceptor.accept(issue, 
+		'Switch to October', 
+		"Switch month of '" + issue.data.get(0) + "' to October'", 
+		'',
+		[
+			element, 
+			context | 
+				(element as Date).month = 10
+		]
+	)
+}
+
+@Fix(TicketValidator.INVALID_MONTH)
+def changeToNov(Issue issue, IssueResolutionAcceptor acceptor){
+	acceptor.accept(issue, 
+		'Switch to November', 
+		"Switch month of '" + issue.data.get(0) + "' to November'", 
+		'',
+		[
+			element, 
+			context | 
+				(element as Date).month = 11
+		]
+	)
+}
+
+@Fix(TicketValidator.INVALID_MONTH)
+def changeToDec(Issue issue, IssueResolutionAcceptor acceptor){
+	acceptor.accept(issue, 
+		'Switch to December', 
+		"Switch month of '" + issue.data.get(0) + "' to December'", 
+		'',
+		[
+			element, 
+			context | 
+				(element as Date).month = 12
+		]
+	)
+}
+
+@Fix(TicketValidator.INVALID_YEAR)
+def changeToLast(Issue issue, IssueResolutionAcceptor acceptor){
+	acceptor.accept(issue, 
+		"Switch to '9999'", 
+		"Switch year of '" + issue.data.get(0) + "' to '9999'", 
+		'',
+		[
+			element, 
+			context | 
+				(element as Date).year = 9999
+		]
+	)
+}
+
+
+@Fix(TicketValidator.INVALID_YEAR)
+def changeToThisYear(Issue issue, IssueResolutionAcceptor acceptor){
+	var actualYear = Calendar.getInstance().get(Calendar.YEAR);
+	acceptor.accept(issue, 
+		"Switch to '" + actualYear + "'", 
+		"Switch year of '" + issue.data.get(0) + "' to '" + actualYear + "'", 
+		'',
+		[
+			element, 
+			context | 
+				(element as Date).year = Calendar.getInstance().get(Calendar.YEAR)		
+		]
+	)
+}
+
+
+
 @Fix(TicketValidator.ELEMENT_CONTAINS_LIST_WITH_DUPLICATES)
 def removeTransition(Issue issue, IssueResolutionAcceptor acceptor){
 	acceptor.accept(issue, 
@@ -84,18 +320,18 @@ def removeTransition(Issue issue, IssueResolutionAcceptor acceptor){
 		[
 			element, 
 			context |
-				if (element instanceof Workflow) {
-					(element as Workflow).transitions.removeAllDuplicates();
-				} else if (element instanceof Role) {
-					(element as Role).transitions.removeAllDuplicates();
-				} else if (element instanceof Person) {
-					(element as Person).roles.removeAllDuplicates();
-				} else if (element instanceof IssueType) {
-					(element as IssueType).fields.removeAllDuplicates();
-				} else if (element instanceof IssueScreen) {
-					(element as IssueScreen).fields.removeAllDuplicates();
-				} 
-					
+				switch true {
+				case element instanceof Workflow: 
+					(element as Workflow).transitions.removeAllDuplicates()
+				case element instanceof Role:
+					(element as Role).transitions.removeAllDuplicates()
+				case element instanceof Person:
+					(element as Person).roles.removeAllDuplicates()
+				case element instanceof IssueType:
+					(element as IssueType).fields.removeAllDuplicates()
+				case element instanceof IssueScreen:
+					(element as IssueScreen).fields.removeAllDuplicates()
+				}
 		]
 	)
 }
@@ -117,25 +353,4 @@ def removeAllDuplicates (List<?> list){
 	}
 }
 
-
-
-
-//@Fix(TicketValidator.EMPTY_WORKFLOW)
-//def addTransition(Issue issue, IssueResolutionAcceptor acceptor){
-//	acceptor.accept(Issue issue, 'Add Transition', 'Add Transition', '')[
-//		context |
-//		
-//	]
-//}
-
-
-//	@Fix(MyDslValidator::INVALID_NAME)
-//	def capitalizeName(Issue issue, IssueResolutionAcceptor acceptor) {
-//		acceptor.accept(issue, 'Capitalize name', 'Capitalize the name.', 'upcase.png') [
-//			context |
-//			val xtextDocument = context.xtextDocument
-//			val firstLetter = xtextDocument.get(issue.offset, 1)
-//			xtextDocument.replace(issue.offset, 1, firstLetter.toUpperCase)
-//		]
-//	}
 }

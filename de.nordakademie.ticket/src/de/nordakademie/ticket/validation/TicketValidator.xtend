@@ -17,6 +17,7 @@ import static de.nordakademie.ticket.ticket.TicketPackage.Literals.*
 import de.nordakademie.ticket.ticket.Field
 import de.nordakademie.ticket.ticket.Workflow
 import de.nordakademie.ticket.ticket.ComboField
+import de.nordakademie.ticket.ticket.DateField
 
 //import de.nordakademie.ticket.ticket.Date
 
@@ -32,6 +33,10 @@ class TicketValidator extends AbstractTicketValidator {
 	public static val ELEMENT_CONTAINS_LIST_WITH_DUPLICATES = "de.nordakademie.ticket.ElementContainsListWithDuplicates" ;
 	public static val EMPTY_STRING = "de.nordakademie.ticket.EmptyString" ;
 	public static val EMPTY_ROLE = "de.nordakademie.ticket.EmptyRole" ;
+	public static val INVALID_DAY = "de.nordakademie.ticket.InvalidDay";
+	public static val INVALID_MONTH = "de.nordakademie.ticket.InvalidMonth";
+	public static val INVALID_YEAR = "de.nordakademie.ticket.InvalidYear";
+	public static val DUPLICATED_TRANSITION_STATUS = "de.nordakademie.ticket.DuplicatedTransitionStatus";
 	
 	
 	@Check
@@ -65,7 +70,11 @@ class TicketValidator extends AbstractTicketValidator {
 	@Check
 	def checkTransitionHasDifferentStatus (Transition transition) {
 		if (transition.start == transition.ziel){
-			error('Begin-Status and End-Status must be different', TRANSITION__ZIEL)
+			error('Begin-Status and End-Status must be different', 
+				TRANSITION__ZIEL,
+				DUPLICATED_TRANSITION_STATUS,
+				transition.name
+			)
 		}
 	}
 
@@ -138,30 +147,59 @@ class TicketValidator extends AbstractTicketValidator {
 	@Check
 	def checkDate(Date date) {
 //	Switch-Case funktioniert nicht wie gewünscht mit Mehrfachauswahl
-			
+		var name = ""
+		
+		if (date.eContainer instanceof Field){
+			name = (date.eContainer as Field).name
+		}
+		
 		if (date.month == 1 || date.month == 3 || date.month == 5 || date.month == 7 || date.month == 8
 			|| date.month == 10 || date.month == 12) {
 				if (date.day < 1 || date.day > 31){
-					error('Enter correct Day', DATE__DAY)
+					error('Enter correct Day', 
+						DATE__DAY,
+						INVALID_DAY,
+						name
+					)
 				}
 		} else if (date.month == 4 || date.month == 6 || date.month == 9 || date.month == 11) {
 				if (date.day < 1 || date.day > 30){
-					error('Enter correct Day', DATE__DAY)
+					error('Enter correct Day', 
+						DATE__DAY,
+						INVALID_DAY,
+						name
+					)
 				}
 		} else if (date.month == 2) {
 				if (date.year % 4 == 0 && ( (date.year % 100 != 0) || (date.year % 400 == 0) ) ){
 					if (date.day < 1 || date.day > 29){
-						error('Enter correct Day', DATE__DAY)
+						error('Enter correct Day', 
+							DATE__DAY,
+							INVALID_DAY,
+							name
+						)
 					}
 				} else if (date.day < 1 || date.day > 28){
-					error('Enter correct Day', DATE__DAY)
+					error('Enter correct Day', 
+						DATE__DAY,
+						INVALID_DAY,
+						name
+					)
 				}
 		} else {
-				error('Enter correct Month', DATE__MONTH)
+				error('Enter correct Month', 
+					DATE__MONTH,
+					INVALID_MONTH,
+					name
+				)
 		} 
 		
 		if (! ((date.year > 1900 && date.year < 2100) || (date.year == 9999) || (date.year > 0 && date.year < 100)) ){
-				error('Enter correct Year', DATE__YEAR)
+				error('Enter correct Year', 
+					DATE__YEAR,
+					INVALID_YEAR,
+					name
+				)
 		}
 		
 	}
