@@ -29,7 +29,10 @@ import de.nordakademie.ticket.ticket.ComboField
  */
 class TicketValidator extends AbstractTicketValidator {
 
-	public static val INVALID_WORKFLOW_TRANSITIONS = "de.nordakademie.ticket.InvalidWorkflowTransitions" ;
+	public static val ELEMENT_CONTAINS_LIST_WITH_DUPLICATES = "de.nordakademie.ticket.ElementContainsListWithDuplicates" ;
+	public static val EMPTY_STRING = "de.nordakademie.ticket.EmptyString" ;
+	public static val EMPTY_ROLE = "de.nordakademie.ticket.EmptyRole" ;
+	
 	
 	@Check
 	def checkAllRulesAreCreated (ModelIssue modelIssue) {
@@ -69,45 +72,66 @@ class TicketValidator extends AbstractTicketValidator {
 	@Check
 	def checkTransitionTitleIsEmpty (Transition transition) {
 		if (transition.title.empty){
-			error('Title must not be empty', TRANSITION__TITLE)
+			error('Title must not be empty', 
+				TRANSITION__TITLE,
+				EMPTY_STRING,
+				"Title", transition.name, "to" + transition.ziel.name.toUpperCase
+			)
 		}
 	}
 	
 	@Check
 	def checkWorkflowHasDifferentTransitions (Workflow workflow){
-		if (checkListForDublicates(workflow.transitions)){
+		if (this.listHasDuplicates(workflow.transitions)){
 			error('Workflow must have different Transitions', 
 				WORKFLOW__TRANSITIONS, 
-				INVALID_WORKFLOW_TRANSITIONS
+				ELEMENT_CONTAINS_LIST_WITH_DUPLICATES,
+				workflow.name, "Transitions"
 			)
 		}
 	}
 	
 	@Check
 	def checkPersonHasDifferentRoles (Person person){
-		if (checkListForDublicates(person.roles)){
-			error('A Person must have different Roles', PERSON__ROLES)
+		if (this.listHasDuplicates(person.roles)){
+			error('A Person must have different Roles', 
+				PERSON__ROLES,
+				ELEMENT_CONTAINS_LIST_WITH_DUPLICATES,
+				person.name, "Roles"
+			)
 		}
 	}
 	
 	@Check
 	def checkRoleHasDifferentTransitions (Role role){
-		if (checkListForDublicates(role.transitions)){
-			error('Role must have different Transition', ROLE__TRANSITIONS)
+		if (this.listHasDuplicates(role.transitions)){
+			error('Role must have different Transition', 
+				ROLE__TRANSITIONS,
+				ELEMENT_CONTAINS_LIST_WITH_DUPLICATES,
+				role.name, "Transitions"
+			)
 		}
 	}
 	
 	@Check
 	def checkRoleContainsTransition (Role role) {
 		if (role.transitions.empty && !role.openIssue){
-			error('Role must contain at least one Transition', ROLE__NAME)
+			error('Role must contain at least one Transition', 
+				ROLE__NAME,
+				EMPTY_ROLE,
+				role.name
+			)
 		}
 	}
 	
 	@Check
 	def checkPersonNameIsEmpty (Person person) {
 		if (person.shownName.empty){
-			error('Name must not be empty', PERSON__SHOWN_NAME)
+			error('Name must not be empty', 
+				PERSON__SHOWN_NAME,
+				EMPTY_STRING,
+				"Person", person.name, person.name.toFirstUpper
+			)
 		}
 	}
 	
@@ -144,41 +168,57 @@ class TicketValidator extends AbstractTicketValidator {
 	
 	@Check
 	def checkIssueTypeHasDifferentFields (IssueType issueType){
-		if (this.checkListForDublicates(issueType.fields)){
-			error('IssueType must have different Fields', ISSUE_TYPE__FIELDS)
+		if (this.listHasDuplicates(issueType.fields)){
+			error('IssueType must have different Fields', 
+				ISSUE_TYPE__FIELDS,
+				ELEMENT_CONTAINS_LIST_WITH_DUPLICATES,
+				issueType.name, "Fields"
+			)
 		}
 	}
 	
 	@Check
 	def checkIssueScreenHasDifferentFields (IssueScreen issueScreen){
-		if (this.checkListForDublicates(issueScreen.fields)){
-			error('IssueScreen must have different Fields', ISSUE_SCREEN__FIELDS)
+		if (this.listHasDuplicates(issueScreen.fields)){
+			error('IssueScreen must have different Fields', 
+				ISSUE_SCREEN__FIELDS,
+				ELEMENT_CONTAINS_LIST_WITH_DUPLICATES,
+				issueScreen.name, "Fields"
+			)
 		}
 	}
 	
 	@Check
 	def checkFieldDescriptionIsEmpty (Field field){
 		if (field.description.empty){
-			error('Description must not be empty', FIELD__DESCRIPTION)
+			error('Description must not be empty', 
+				FIELD__DESCRIPTION,
+				EMPTY_STRING,
+				"Description", field.name, field.name.toFirstUpper
+			)
 		}
 	}
 	
 	@Check
 	def checkComboFieldList (ComboField combo){
-		if (this.checkListForDublicates(combo.^default)){
+		if (this.listHasDuplicates(combo.^default)){
 			error('ComboField must have different Entries', COMBO_FIELD__DEFAULT)
 		}
 		
 		for (String string : combo.^default){
 			if (string.empty){
-				error('Entries must not be empty', COMBO_FIELD__DEFAULT)
+				error('Entries must not be empty', 
+					COMBO_FIELD__DEFAULT,
+					EMPTY_STRING,
+					"Entry", combo.name + "-Entry", "Entry"
+				)
 			}
 		}
 	}
 	
-	List<Object> checkList = new ArrayList<Object>
-	def boolean checkListForDublicates (List<?> list){
-		checkList.clear 
+	def boolean listHasDuplicates (List<?> list){
+		var List<Object> checkList = new ArrayList<Object>
+		
 		for (Object field : list) {
 			if (checkList.contains(field)){
 				return true

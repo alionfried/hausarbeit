@@ -10,6 +10,14 @@ import de.nordakademie.ticket.validation.TicketValidator
 import de.nordakademie.ticket.ticket.Workflow
 import java.util.List
 import java.util.ArrayList
+import de.nordakademie.ticket.ticket.Field
+import de.nordakademie.ticket.ticket.Role
+import de.nordakademie.ticket.ticket.ModelIssue
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.common.util.TreeIterator
+import de.nordakademie.ticket.ticket.Person
+import de.nordakademie.ticket.ticket.IssueType
+import de.nordakademie.ticket.ticket.IssueScreen
 
 /**
  * Custom quickfixes.
@@ -19,33 +27,94 @@ import java.util.ArrayList
 class TicketQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider {
 
 
-@Fix(TicketValidator.INVALID_WORKFLOW_TRANSITIONS)
-def removeTransition(Issue issue, IssueResolutionAcceptor acceptor){
+@Fix(TicketValidator.EMPTY_STRING)
+def fillDescription(Issue issue, IssueResolutionAcceptor acceptor){
+	var String emptyElement = issue.data.get(0)
 	acceptor.accept(issue, 
-		'Remove Transition', 
-		'Do something stupid', 
+		'Fill ' + emptyElement, 
+		"Fill " + emptyElement +" of '" + issue.data.get(1) + "' with '" + issue.data.get(2) + "'" , 
 		'',
 		[
 			element, 
 			context | 
-//				(element as Workflow).transitions.removeDublicate();
-				(element as Workflow).name = "wooorkflow"
-		
+				(element as Field).description = issue.data.get(2);
 		]
 	)
 }
 
-def List<?> removeDublicate (List<?> list){
+
+@Fix(TicketValidator.EMPTY_ROLE)
+def setOpenIssue(Issue issue, IssueResolutionAcceptor acceptor){
+	acceptor.accept(issue, 
+		'Allow to create new Issue', 
+		"Allow to create new Issue for Role '" + issue.data.get(0) + "'" , 
+		'',
+		[
+			element, 
+			context | 
+				(element as Role).openIssue = true
+		]
+	)
+}
+
+
+@Fix(TicketValidator.EMPTY_ROLE)
+def addTransitionToRole(Issue issue, IssueResolutionAcceptor acceptor){
+	acceptor.accept(issue, 
+		'Add Transition', 
+		"Add Transition to Role '" + issue.data.get(0) + "'" , 
+		'',
+		[
+			element, 
+			context | 
+				(element as Role).transitions.add(
+					(element.eContainer as ModelIssue).transition.get(0)
+				)
+		]
+	)
+}
+
+
+@Fix(TicketValidator.ELEMENT_CONTAINS_LIST_WITH_DUPLICATES)
+def removeTransition(Issue issue, IssueResolutionAcceptor acceptor){
+	acceptor.accept(issue, 
+		'Remove all duplicates', 
+		"Remove all duplicated '" + issue.data.get(1) + "' from '" + issue.data.get(0) +"'", 
+		'',
+		[
+			element, 
+			context |
+				if (element instanceof Workflow) {
+					(element as Workflow).transitions.removeAllDuplicates();
+				} else if (element instanceof Role) {
+					(element as Role).transitions.removeAllDuplicates();
+				} else if (element instanceof Person) {
+					(element as Person).roles.removeAllDuplicates();
+				} else if (element instanceof IssueType) {
+					(element as IssueType).fields.removeAllDuplicates();
+				} else if (element instanceof IssueScreen) {
+					(element as IssueScreen).fields.removeAllDuplicates();
+				} 
+					
+		]
+	)
+}
+
+
+
+def removeAllDuplicates (List<?> list){
 	var List<Object> checkList = new ArrayList<Object>
-	checkList.clear 
-	for (Object field : list) {
-		if (checkList.contains(field)){
-			list.remove(field)
+	var int i;
+	var Object element;
+
+	for (i = list.size - 1;  i >= 0;  i--) {
+		element = list.get(i);
+		if (checkList.contains(element)){
+			list.remove(i)
 		} else {	
-			checkList.add(field)
+			checkList.add(element)
 		}
 	}
-	return checkList
 }
 
 
