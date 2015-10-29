@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <templates>
 	<template id="11" autoinsert="true" context="de.nordakademie.ticket.Ticket.Status" deleted="false" description="creates new IssueType" enabled="true" name="newIssueType">IssueType ${id} follows ${workflow:CrossReference(IssueType.workflow)}</template>
-	
 	<template id="1" autoinsert="true" context="de.nordakademie.ticket.Ticket.Issue" deleted="false" description="creates a new Transition" enabled="true" name="newTransition">Transition ${id} named "${title}" { &#13;
 	${start:CrossReference(Transition.start)} to  ${ziel:CrossReference(Transition.ziel)} &#13;}</template>
-	
 	<template id="2" autoinsert="true" context="de.nordakademie.ticket.Ticket.Issue" deleted="false" description="creates a new Workflow with 1 Transition" enabled="true" name="newWorkflow">Workflow ${id} { &#13;
 	${transitions:CrossReference(Workflow.transitions)}&#13;
 	${cursor}&#13;}</template>
-	
-	
 	<template id="3" autoinsert="true" context="de.nordakademie.ticket.Ticket.Issue" deleted="false" description="creates a new Workflow with 5 transitions" enabled="true" name="newWorkflow5">Workflow ${id} { &#13;
 	${transition1:CrossReference(Workflow.transitions)}&#13;
 	${transition2:CrossReference(Workflow.transitions)}&#13;

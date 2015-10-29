@@ -7,6 +7,9 @@ import org.eclipse.xtext.ui.editor.quickfix.Fix
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.validation.Issue
 import de.nordakademie.ticket.validation.TicketValidator
+import de.nordakademie.ticket.ticket.Workflow
+import java.util.List
+import java.util.ArrayList
 
 /**
  * Custom quickfixes.
@@ -14,6 +17,39 @@ import de.nordakademie.ticket.validation.TicketValidator
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#quick-fixes
  */
 class TicketQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider {
+
+
+@Fix(TicketValidator.INVALID_WORKFLOW_TRANSITIONS)
+def removeTransition(Issue issue, IssueResolutionAcceptor acceptor){
+	acceptor.accept(issue, 
+		'Remove Transition', 
+		'Do something stupid', 
+		'',
+		[
+			element, 
+			context | 
+//				(element as Workflow).transitions.removeDublicate();
+				(element as Workflow).name = "wooorkflow"
+		
+		]
+	)
+}
+
+def List<?> removeDublicate (List<?> list){
+	var List<Object> checkList = new ArrayList<Object>
+	checkList.clear 
+	for (Object field : list) {
+		if (checkList.contains(field)){
+			list.remove(field)
+		} else {	
+			checkList.add(field)
+		}
+	}
+	return checkList
+}
+
+
+
 
 //@Fix(TicketValidator.EMPTY_WORKFLOW)
 //def addTransition(Issue issue, IssueResolutionAcceptor acceptor){

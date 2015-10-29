@@ -29,6 +29,7 @@ import de.nordakademie.ticket.ticket.ComboField
  */
 class TicketValidator extends AbstractTicketValidator {
 
+	public static val INVALID_WORKFLOW_TRANSITIONS = "de.nordakademie.ticket.InvalidWorkflowTransitions" ;
 	
 	@Check
 	def checkAllRulesAreCreated (ModelIssue modelIssue) {
@@ -75,7 +76,10 @@ class TicketValidator extends AbstractTicketValidator {
 	@Check
 	def checkWorkflowHasDifferentTransitions (Workflow workflow){
 		if (checkListForDublicates(workflow.transitions)){
-			error('Workflow must have different Transitions', WORKFLOW__TRANSITIONS)
+			error('Workflow must have different Transitions', 
+				WORKFLOW__TRANSITIONS, 
+				INVALID_WORKFLOW_TRANSITIONS
+			)
 		}
 	}
 	
