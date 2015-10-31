@@ -15,6 +15,7 @@ import de.nordakademie.ticket.ticket.PersonField
 import de.nordakademie.ticket.ticket.StatusField
 import de.nordakademie.ticket.ticket.MailField
 import de.nordakademie.ticket.ticket.CheckField
+import de.nordakademie.ticket.ticket.ComboField
 
 /**
  * Generates code from your model files on save.
@@ -362,6 +363,16 @@ $(function () {
 			   			 </div>
 			   		 «ENDIF»
 			    «ENDIF»
+			    «IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.ComboField")»
+			    	<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
+			    	<div class="col-sm-10">
+			    		<select id="«fields.name»" class="form-control">
+							«FOR comboField : (fields as ComboField).^default»
+			    				<option>«comboField.intern»</option>
+			    		 	 «ENDFOR»			    		  
+			    		</select>			      		
+			   		 </div>
+			    «ENDIF»	
 			«ENDFOR»    
 		</div>
 		<div class="form-group">
