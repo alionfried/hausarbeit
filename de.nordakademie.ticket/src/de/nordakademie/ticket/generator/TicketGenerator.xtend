@@ -17,6 +17,7 @@ import de.nordakademie.ticket.ticket.MailField
 import de.nordakademie.ticket.ticket.CheckField
 import de.nordakademie.ticket.ticket.ComboField
 import de.nordakademie.ticket.ticket.StringField
+import java.text.SimpleDateFormat
 
 /**
  * Generates code from your model files on save.
@@ -24,8 +25,11 @@ import de.nordakademie.ticket.ticket.StringField
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 class TicketGenerator implements IGenerator {
-	
-	Calendar today
+		
+	Calendar currentDate = Calendar.getInstance(); //Get the current date
+	SimpleDateFormat formatter= new SimpleDateFormat("dd.MM.yyyy"); //format it as per your requirement
+	String dateNow = formatter.format(currentDate.getTime());
+ 
 	
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
 	fsa.generateFile(
@@ -312,10 +316,8 @@ $(function () {
 			  	«IF (fields as DateField).today == true»
 		  			<div class="form-group">
 			  			<label for="«(fields as DateField).description»" class="col-sm-2 control-label">Date</label>
-			  			<div class="col-sm-10">
-			  			«today = Calendar.getInstance()»
-			  			«today.set(Calendar.HOUR_OF_DAY, 0)»			  			
-		  					<input type="text" class="form-control" id="«(fields as DateField).name»" value="«today.toString»">
+			  			<div class="col-sm-10">			  						  			
+		  					<input type="text" class="form-control" id="«(fields as DateField).name»" value="«dateNow»">
 			 			</div>
 		 			</div>	  		  			    
 		 	 	«ENDIF»		
@@ -371,25 +373,29 @@ $(function () {
 							«FOR comboField : (fields as ComboField).^default»
 			    				<option>«comboField.intern»</option>
 			    		 	 «ENDFOR»			    		  
-			    		</select>			      		
+			    		</select>
 			   		 </div>
 			    «ENDIF»	
 			    «IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.PersonField")»
 			    	<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
 			    	<div class="col-sm-10">
-			      		<input type="text" class="form-control" id="«fields.name»" value="«fields.description»">
+			      	«IF (fields as PersonField).^default == null»
+			      		<input type="text" class="form-control" id="«fields.name»" value="">
+			      	«ENDIF»
+			      	«IF (fields as PersonField).^default != null»
+			      		<input type="text" class="form-control" id="«fields.name»" value="«(fields as PersonField).^default.name»">				      		
+			   		«ENDIF»
 			   		 </div>
-			    «ENDIF»
-			    «IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.PersonField")»
-			    	<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
-			    	<div class="col-sm-10">
-			      		<input type="text" class="form-control" id="«fields.name»" value="«fields.description»">
-			   		 </div>
-			    «ENDIF»
+			    «ENDIF»			    
 			    «IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.StringField")»
 			    	<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
 			    	<div class="col-sm-10">
+			    	«IF (fields as StringField).^default == null»	
+			      		<input type="text" class="form-control" id="«fields.name»" value="">
+			      	«ENDIF»
+			    	«IF (fields as StringField).^default != null»	
 			      		<input type="text" class="form-control" id="«fields.name»" value="«(fields as StringField).^default.intern»">
+			      	«ENDIF»	
 			   		 </div>
 			    «ENDIF»
 			    «IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.DateField")»
@@ -397,6 +403,12 @@ $(function () {
 			    	<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
 			    	<div class="col-sm-10">
 			      		<input type="text" class="form-control" id="«fields.name»" value="«(fields as DateField).^default.day.toString».«(fields as DateField).^default.month.toString».«(fields as DateField).^default.year.toString»">
+			   		 </div>
+			   		 «ENDIF»
+			   		 «IF (fields as DateField).today == true»			    	
+			    	<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
+			    	<div class="col-sm-10">
+			      		<input type="text" class="form-control" id="«fields.name»" value="«dateNow»">
 			   		 </div>
 			   		 «ENDIF»
 			    «ENDIF»
