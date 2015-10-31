@@ -10,6 +10,8 @@ import de.nordakademie.ticket.ticket.ModelIssue
 import de.nordakademie.ticket.ticket.IssueType
 import org.eclipse.emf.mwe.core.issues.Issues
 import de.nordakademie.ticket.ticket.DateField
+import java.util.Calendar
+import de.nordakademie.ticket.ticket.PersonField
 
 /**
  * Generates code from your model files on save.
@@ -17,6 +19,8 @@ import de.nordakademie.ticket.ticket.DateField
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 class TicketGenerator implements IGenerator {
+	
+	Calendar today
 	
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
 	fsa.generateFile(
@@ -271,24 +275,44 @@ $(function () {
 '''
 	
 	def CharSequence standardInput(ModelIssue modelIssue)'''
-	<div id="standardInput">		
-		«FOR fields :  modelIssue.issueScreen.fields»			
-			«IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.DateField")»
-				<form>
-					«fields.description»	
-					<input id="«(fields as DateField).name»" name="«fields.name»" type="date" placeholder="«fields.description»">
-				</form>  				
-			«ENDIF»			
+	<form class="form-horizontal">
+		<div id="standardInput">
+		«FOR fields :  modelIssue.issueScreen.fields»
 			
-			«IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.PersonField")»
-				<input id="«fields.name»" name="«fields.name»" type="text" class="form-control" placeholder="«fields.description»" aria-describedby="basic-addon2">  				
-			«ENDIF»
-			
-			«IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.MailField")»
-				<input id="«fields.name»" type="text" class="form-control" placeholder="«fields.description»" aria-describedby="basic-addon2">  				
-			«ENDIF»										
-		«ENDFOR»
-				
+			«IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.MailField")»	
+			  <div class="form-group">
+			    <label for="«fields.name»" class="col-sm-2 control-label">Email</label>
+			    <div class="col-sm-10">
+			      <input type="email" class="form-control" id="«fields.name»" placeholder="«fields.description»">
+			    </div>
+			  </div>
+		  	«ENDIF»  	
+		  	«IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.DateField")»		
+			  	«IF (fields as DateField).today == true»
+		  			<div class="form-group">
+			  			<label for="«(fields as DateField).description»" class="col-sm-2 control-label">Date</label>
+			  			<div class="col-sm-10">
+			  			«today = Calendar.getInstance()»
+		  					<input type="text" class="form-control" id="«(fields as DateField).name»" text="«today.set(Calendar.HOUR_OF_DAY, 0)»">
+			 			</div>
+		 			</div>	  		  			    
+		 	 	«ENDIF»		
+		  	«ENDIF»
+		  	«IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.PersonField")»				  	
+		  		<div class="form-group">
+			  		<label for="«(fields as PersonField).description»" class="col-sm-2 control-label">Person</label>
+			  		<div class="col-sm-10">
+		  				<input type="text" class="form-control" id="«(fields as PersonField).name»" text="«(fields as PersonField).description»">
+			 		</div>
+		 		</div>	  		  			    	 	 	
+		  	«ENDIF»
+		«ENDFOR»  	  
+		  <div class="form-group">
+		    <div class="col-sm-offset-2 col-sm-10">
+		      <button type="submit" class="btn btn-default">Sign in</button>
+		    </div>
+		  </div>
+		</form>						
 	</div>
 	'''
 }
