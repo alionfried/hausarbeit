@@ -16,6 +16,7 @@ import de.nordakademie.ticket.ticket.StatusField
 import de.nordakademie.ticket.ticket.MailField
 import de.nordakademie.ticket.ticket.CheckField
 import de.nordakademie.ticket.ticket.ComboField
+import de.nordakademie.ticket.ticket.StringField
 
 /**
  * Generates code from your model files on save.
@@ -373,6 +374,32 @@ $(function () {
 			    		</select>			      		
 			   		 </div>
 			    «ENDIF»	
+			    «IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.PersonField")»
+			    	<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
+			    	<div class="col-sm-10">
+			      		<input type="text" class="form-control" id="«fields.name»" value="«fields.description»">
+			   		 </div>
+			    «ENDIF»
+			    «IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.PersonField")»
+			    	<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
+			    	<div class="col-sm-10">
+			      		<input type="text" class="form-control" id="«fields.name»" value="«fields.description»">
+			   		 </div>
+			    «ENDIF»
+			    «IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.StringField")»
+			    	<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
+			    	<div class="col-sm-10">
+			      		<input type="text" class="form-control" id="«fields.name»" value="«(fields as StringField).^default.intern»">
+			   		 </div>
+			    «ENDIF»
+			    «IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.DateField")»
+			    	«IF (fields as DateField).today != true»			    	
+			    	<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
+			    	<div class="col-sm-10">
+			      		<input type="text" class="form-control" id="«fields.name»" value="«(fields as DateField).^default.day.toString».«(fields as DateField).^default.month.toString».«(fields as DateField).^default.year.toString»">
+			   		 </div>
+			   		 «ENDIF»
+			    «ENDIF»
 			«ENDFOR»    
 		</div>
 		<div class="form-group">
