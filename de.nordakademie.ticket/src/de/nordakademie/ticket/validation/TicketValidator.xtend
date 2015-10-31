@@ -2,75 +2,83 @@
  */
 package de.nordakademie.ticket.validation
 
+import de.nordakademie.ticket.ticket.ComboField
 import de.nordakademie.ticket.ticket.Date
+import de.nordakademie.ticket.ticket.Field
 import de.nordakademie.ticket.ticket.IssueScreen
 import de.nordakademie.ticket.ticket.IssueType
 import de.nordakademie.ticket.ticket.ModelIssue
 import de.nordakademie.ticket.ticket.Person
 import de.nordakademie.ticket.ticket.Role
 import de.nordakademie.ticket.ticket.Transition
+import de.nordakademie.ticket.ticket.Workflow
 import java.util.ArrayList
 import java.util.List
 import org.eclipse.xtext.validation.Check
 
 import static de.nordakademie.ticket.ticket.TicketPackage.Literals.*
-import de.nordakademie.ticket.ticket.Field
-import de.nordakademie.ticket.ticket.Workflow
-import de.nordakademie.ticket.ticket.ComboField
-import de.nordakademie.ticket.ticket.DateField
+import de.nordakademie.ticket.constantsAndNames.Constants
+import de.nordakademie.ticket.constantsAndNames.Names_EN
 
-//import de.nordakademie.ticket.ticket.Date
-
-//import de.nordakademie.ticket.ticket.ComboField
 
 /**
  * This class contains custom validation rules. 
  *
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
-class TicketValidator extends AbstractTicketValidator {
+class TicketValidator extends AbstractTicketValidator implements Constants 
+	,Names_EN 
+//	,Names_DE
+{
 
-	public static val ELEMENT_CONTAINS_LIST_WITH_DUPLICATES = "de.nordakademie.ticket.ElementContainsListWithDuplicates" ;
-	public static val EMPTY_STRING = "de.nordakademie.ticket.EmptyString" ;
-	public static val EMPTY_ROLE = "de.nordakademie.ticket.EmptyRole" ;
-	public static val INVALID_DAY = "de.nordakademie.ticket.InvalidDay";
-	public static val INVALID_MONTH = "de.nordakademie.ticket.InvalidMonth";
-	public static val INVALID_YEAR = "de.nordakademie.ticket.InvalidYear";
-	public static val DUPLICATED_TRANSITION_STATUS = "de.nordakademie.ticket.DuplicatedTransitionStatus";
+	
 	
 	
 	@Check
 	def checkAllRulesAreCreated (ModelIssue modelIssue) {
+		
 		if (modelIssue.issueType.empty ) {
-			error('At least 1 IssueType is needed', MODEL_ISSUE__ISSUE_TYPE)
+			error(M_RULE_NEEDED_1 + S_ISSUE_TYPE + M_RULE_NEEDED_2
+				, MODEL_ISSUE__ISSUE_TYPE
+			)
 		}
 		
 		if (modelIssue.person.empty ) {
-			error('At least 1 Person is needed', MODEL_ISSUE__PERSON)
+			error(M_RULE_NEEDED_1 + S_PERSON + M_RULE_NEEDED_2
+				, MODEL_ISSUE__PERSON
+			)
 		}		 
 		 
 		if (modelIssue.role.empty ) {
-			error('At least 1 Role is needed', MODEL_ISSUE__ROLE)
+			error(M_RULE_NEEDED_1 + S_ROLE + M_RULE_NEEDED_2
+				, MODEL_ISSUE__ROLE
+			)
 		} 
 		 
 		if (modelIssue.status.empty ) {
-			error('At least 1 Status is needed', MODEL_ISSUE__STATUS)
+			error(M_RULE_NEEDED_1 + S_STATUS + M_RULE_NEEDED_2
+				, MODEL_ISSUE__STATUS
+			)
 		}   
 		
 		if (modelIssue.transition.empty ) {
-			error('At least 1 Transition is needed', MODEL_ISSUE__TRANSITION)
+			error(M_RULE_NEEDED_1 + S_TRANSITION + M_RULE_NEEDED_2
+				, MODEL_ISSUE__TRANSITION
+			)
 		}   
 		
 		if (modelIssue.workflow.empty ) {
-			error('At least 1 Workflow is needed', MODEL_ISSUE__WORKFLOW)
+			error(M_RULE_NEEDED_1 + S_WORKFLOW + M_RULE_NEEDED_2
+				, MODEL_ISSUE__WORKFLOW
+			)
 		} 
 		
 	}
 
 	@Check
-	def checkTransitionHasDifferentStatus (Transition transition) {
+	def checkTransitionHasSameStatus (Transition transition) {
 		if (transition.start == transition.ziel){
-			error('Begin-Status and End-Status must be different', 
+			error(M_SAME_BEGIN_AND_END_STATUS, 
 				TRANSITION__ZIEL,
 				DUPLICATED_TRANSITION_STATUS,
 				transition.name
@@ -81,51 +89,51 @@ class TicketValidator extends AbstractTicketValidator {
 	@Check
 	def checkTransitionTitleIsEmpty (Transition transition) {
 		if (transition.title.empty){
-			error('Title must not be empty', 
+			error(M_EMPTY_TITLE, 
 				TRANSITION__TITLE,
 				EMPTY_STRING,
-				"Title", transition.name, "to" + transition.ziel.name.toUpperCase
+				TITLE, S_TITLE, S_TO + transition.ziel.name.toFirstUpper
 			)
 		}
 	}
 	
 	@Check
-	def checkWorkflowHasDifferentTransitions (Workflow workflow){
+	def checkWorkflowHasDuplicatedTransitions (Workflow workflow){
 		if (this.listHasDuplicates(workflow.transitions)){
-			error('Workflow must have different Transitions', 
+			error(M_SAME_WORKFLOW_TRANSITIONS, 
 				WORKFLOW__TRANSITIONS, 
 				ELEMENT_CONTAINS_LIST_WITH_DUPLICATES,
-				workflow.name, "Transitions"
+				workflow.name, S_TRANSITIONS
 			)
 		}
 	}
 	
 	@Check
-	def checkPersonHasDifferentRoles (Person person){
+	def checkPersonHasDuplicatedRoles (Person person){
 		if (this.listHasDuplicates(person.roles)){
-			error('A Person must have different Roles', 
+			error(M_SAME_PERSON_ROLES, 
 				PERSON__ROLES,
 				ELEMENT_CONTAINS_LIST_WITH_DUPLICATES,
-				person.name, "Roles"
+				person.name, S_ROLES
 			)
 		}
 	}
 	
 	@Check
-	def checkRoleHasDifferentTransitions (Role role){
+	def checkRoleHasDuplicatedTransitions (Role role){
 		if (this.listHasDuplicates(role.transitions)){
-			error('Role must have different Transition', 
+			error(M_SAME_ROLE_TRANSITIONS, 
 				ROLE__TRANSITIONS,
 				ELEMENT_CONTAINS_LIST_WITH_DUPLICATES,
-				role.name, "Transitions"
+				role.name, S_TRANSITIONS
 			)
 		}
 	}
 	
 	@Check
-	def checkRoleContainsTransition (Role role) {
+	def checkRoleContainsNoTransition (Role role) {
 		if (role.transitions.empty && !role.openIssue){
-			error('Role must contain at least one Transition', 
+			error(M_NO_ROLE_TRANSITIONS, 
 				ROLE__NAME,
 				EMPTY_ROLE,
 				role.name
@@ -136,10 +144,10 @@ class TicketValidator extends AbstractTicketValidator {
 	@Check
 	def checkPersonNameIsEmpty (Person person) {
 		if (person.shownName.empty){
-			error('Name must not be empty', 
+			error(M_EMPTY_NAME, 
 				PERSON__SHOWN_NAME,
 				EMPTY_STRING,
-				"Person", person.name, person.name.toFirstUpper
+				PERSON, S_PERSON, person.name.toFirstUpper
 			)
 		}
 	}
@@ -147,7 +155,7 @@ class TicketValidator extends AbstractTicketValidator {
 	@Check
 	def checkDate(Date date) {
 //	Switch-Case funktioniert nicht wie gewünscht mit Mehrfachauswahl
-		var name = ""
+		var name = KEY_EMPTY
 		
 		if (date.eContainer instanceof Field){
 			name = (date.eContainer as Field).name
@@ -156,7 +164,7 @@ class TicketValidator extends AbstractTicketValidator {
 		if (date.month == 1 || date.month == 3 || date.month == 5 || date.month == 7 || date.month == 8
 			|| date.month == 10 || date.month == 12) {
 				if (date.day < 1 || date.day > 31){
-					error('Enter correct Day', 
+					error(M_INVALIDE_DAY, 
 						DATE__DAY,
 						INVALID_DAY,
 						name
@@ -164,7 +172,7 @@ class TicketValidator extends AbstractTicketValidator {
 				}
 		} else if (date.month == 4 || date.month == 6 || date.month == 9 || date.month == 11) {
 				if (date.day < 1 || date.day > 30){
-					error('Enter correct Day', 
+					error(M_INVALIDE_DAY, 
 						DATE__DAY,
 						INVALID_DAY,
 						name
@@ -173,21 +181,21 @@ class TicketValidator extends AbstractTicketValidator {
 		} else if (date.month == 2) {
 				if (date.year % 4 == 0 && ( (date.year % 100 != 0) || (date.year % 400 == 0) ) ){
 					if (date.day < 1 || date.day > 29){
-						error('Enter correct Day', 
+						error(M_INVALIDE_DAY, 
 							DATE__DAY,
 							INVALID_DAY,
 							name
 						)
 					}
 				} else if (date.day < 1 || date.day > 28){
-					error('Enter correct Day', 
+					error(M_INVALIDE_DAY, 
 						DATE__DAY,
 						INVALID_DAY,
 						name
 					)
 				}
 		} else {
-				error('Enter correct Month', 
+				error(M_INVALIDE_MONTH, 
 					DATE__MONTH,
 					INVALID_MONTH,
 					name
@@ -195,7 +203,7 @@ class TicketValidator extends AbstractTicketValidator {
 		} 
 		
 		if (! ((date.year > 1900 && date.year < 2100) || (date.year == 9999) || (date.year > 0 && date.year < 100)) ){
-				error('Enter correct Year', 
+				error(M_INVALIDE_YEAR, 
 					DATE__YEAR,
 					INVALID_YEAR,
 					name
@@ -205,23 +213,23 @@ class TicketValidator extends AbstractTicketValidator {
 	}
 	
 	@Check
-	def checkIssueTypeHasDifferentFields (IssueType issueType){
+	def checkIssueTypeHasDuplicatedFields (IssueType issueType){
 		if (this.listHasDuplicates(issueType.fields)){
-			error('IssueType must have different Fields', 
+			error(M_SAME_ISSUE_TYPE_FIELDS, 
 				ISSUE_TYPE__FIELDS,
 				ELEMENT_CONTAINS_LIST_WITH_DUPLICATES,
-				issueType.name, "Fields"
+				issueType.name, S_FIELDS
 			)
 		}
 	}
 	
 	@Check
-	def checkIssueScreenHasDifferentFields (IssueScreen issueScreen){
+	def checkIssueScreenHasDublicatedFields (IssueScreen issueScreen){
 		if (this.listHasDuplicates(issueScreen.fields)){
-			error('IssueScreen must have different Fields', 
+			error(M_SAME_ISSUE_SCREEN_FIELDS, 
 				ISSUE_SCREEN__FIELDS,
 				ELEMENT_CONTAINS_LIST_WITH_DUPLICATES,
-				issueScreen.name, "Fields"
+				issueScreen.name, S_FIELDS
 			)
 		}
 	}
@@ -229,10 +237,10 @@ class TicketValidator extends AbstractTicketValidator {
 	@Check
 	def checkFieldDescriptionIsEmpty (Field field){
 		if (field.description.empty){
-			error('Description must not be empty', 
+			error(M_EMPTY_DESCRIPTION, 
 				FIELD__DESCRIPTION,
 				EMPTY_STRING,
-				"Description", field.name, field.name.toFirstUpper
+				DESCRIPTION, S_DESCRIPTION, field.name.toFirstUpper
 			)
 		}
 	}
@@ -240,15 +248,27 @@ class TicketValidator extends AbstractTicketValidator {
 	@Check
 	def checkComboFieldList (ComboField combo){
 		if (this.listHasDuplicates(combo.^default)){
-			error('ComboField must have different Entries', COMBO_FIELD__DEFAULT)
+			error(M_SAME_COMBO_ENTRIES, 
+				COMBO_FIELD__DEFAULT,
+				ELEMENT_CONTAINS_LIST_WITH_DUPLICATES,
+				combo.name, S_ENTRIES
+			)
+		}
+		
+		if (combo.^default.empty) {
+			error(M_NO_COMBO_ENTRIES, 
+				FIELD__NAME,
+				EMPTY_STRING,
+				DEFAULT_ENTRIES, S_ENTRIES, S_ENTRY
+			)
 		}
 		
 		for (String string : combo.^default){
 			if (string.empty){
-				error('Entries must not be empty', 
+				error(M_EMPTY_ENTRIES, 
 					COMBO_FIELD__DEFAULT,
 					EMPTY_STRING,
-					"Entry", combo.name + "-Entry", "Entry"
+					ENTRY, S_ALL_ENTRIES, S_ENTRY
 				)
 			}
 		}

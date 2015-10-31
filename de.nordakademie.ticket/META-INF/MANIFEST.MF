@@ -17,14 +17,15 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: de.nordakademie.ticket,
+ de.nordakademie.ticket.constantsAndNames,
+ de.nordakademie.ticket.formatting,
+ de.nordakademie.ticket.generator,
+ de.nordakademie.ticket.parser.antlr,
+ de.nordakademie.ticket.parser.antlr.internal,
+ de.nordakademie.ticket.scoping,
+ de.nordakademie.ticket.serializer,
  de.nordakademie.ticket.services,
  de.nordakademie.ticket.ticket,
  de.nordakademie.ticket.ticket.impl,
  de.nordakademie.ticket.ticket.util,
- de.nordakademie.ticket.serializer,
- de.nordakademie.ticket.parser.antlr,
- de.nordakademie.ticket.parser.antlr.internal,
- de.nordakademie.ticket.validation,
- de.nordakademie.ticket.scoping,
- de.nordakademie.ticket.generator,
- de.nordakademie.ticket.formatting
+ de.nordakademie.ticket.validation

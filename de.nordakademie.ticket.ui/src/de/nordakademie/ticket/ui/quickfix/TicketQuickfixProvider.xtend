@@ -22,26 +22,59 @@ import org.eclipse.xtext.validation.Issue
 import de.nordakademie.ticket.ticket.Transition
 import de.nordakademie.ticket.ticket.Status
 import org.eclipse.emf.common.util.EList
+import de.nordakademie.ticket.ticket.ComboField
+import de.nordakademie.ticket.constantsAndNames.Constants
+import de.nordakademie.ticket.constantsAndNames.Names_EN
 
 /**
  * Custom quickfixes.
  *
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#quick-fixes
  */
-class TicketQuickfixProvider extends DefaultQuickfixProvider {
+class TicketQuickfixProvider extends DefaultQuickfixProvider implements Constants
+	, Names_EN
+//	, Names_DE
+{
 
 
 @Fix(TicketValidator.EMPTY_STRING)
 def fillString(Issue issue, IssueResolutionAcceptor acceptor){
-	var String emptyElement = issue.data.get(0)
+	val String emptyElement 		= issue.data.get(0)
+	val String emptyElementShown 	= issue.data.get(1)
+	val String newString 			= issue.data.get(2)
 	acceptor.accept(issue, 
-		'Fill ' + emptyElement, 
-		"Fill " + emptyElement +" of '" + issue.data.get(1) + "' with '" + issue.data.get(2) + "'" , 
-		'',
+		M_FILL_EMPTY_ELEMENT_1 + emptyElementShown, 
+		M_FILL_EMPTY_ELEMENT_1 + emptyElementShown + M_FILL_EMPTY_ELEMENT_2 + 
+			KEY_APOST + newString + KEY_APOST , 
+		KEY_EMPTY,
 		[
 			element, 
-			context | 
-				(element as Field).description = issue.data.get(2);
+			context |
+				switch (true) {
+				case element instanceof Field:
+					switch (emptyElement){
+					case DESCRIPTION:
+						(element as Field).description = newString
+					case ENTRY:
+						if (element instanceof ComboField){
+							var i = -1
+							for (String string : (element as ComboField).^default){
+								i++
+								if (string.empty){
+									(element as ComboField).^default.set(i, newString)
+								}
+							}
+						}
+					case DEFAULT_ENTRIES:
+						if (element instanceof ComboField){
+							(element as ComboField).^default.add(newString)
+						}
+					}
+				case element instanceof Transition:
+					(element as Transition).title = newString
+				case element instanceof Person:
+					(element as Person).shownName = newString
+				}
 		]
 	)
 }
@@ -49,10 +82,11 @@ def fillString(Issue issue, IssueResolutionAcceptor acceptor){
 
 @Fix(TicketValidator.EMPTY_ROLE)
 def setOpenIssue(Issue issue, IssueResolutionAcceptor acceptor){
+	val String role = issue.data.get(0)
 	acceptor.accept(issue, 
-		'Allow to create new Issue', 
-		"Allow to create new Issue for Role '" + issue.data.get(0) + "'" , 
-		'',
+		M_ALLOW_NEW_ISSUE_SHORT, 
+		M_ALLOW_NEW_ISSUE_LONG + KEY_APOST + role + KEY_APOST , 
+		KEY_EMPTY,
 		[
 			element, 
 			context | 
@@ -64,9 +98,10 @@ def setOpenIssue(Issue issue, IssueResolutionAcceptor acceptor){
 
 @Fix(TicketValidator.EMPTY_ROLE)
 def addTransitionToRole(Issue issue, IssueResolutionAcceptor acceptor){
+	val String role = issue.data.get(0)
 	acceptor.accept(issue, 
-		'Add Transition', 
-		"Add Transition to Role '" + issue.data.get(0) + "'" , 
+		M_ADD_ROLE_TRANSITION_SHORT, 
+		M_ADD_ROLE_TRANSITION_LONG + KEY_APOST + role + KEY_APOST , 
 		'',
 		[
 			element, 
@@ -81,15 +116,16 @@ def addTransitionToRole(Issue issue, IssueResolutionAcceptor acceptor){
 
 @Fix(TicketValidator.DUPLICATED_TRANSITION_STATUS)
 def changeStatus(Issue issue, IssueResolutionAcceptor acceptor){
+	val String status = issue.data.get(0)
 	acceptor.accept(issue, 
-		'Change Transition', 
-		"Change Transition of '" + issue.data.get(0) + "'" ,  
-		'',
+		M_CHANGE_TRANSITION_SHORT, 
+		M_CHANGE_TRANSITION_LONG + KEY_APOST + status + KEY_APOST ,  
+		KEY_EMPTY,
 		[
 			element, 
 			context | 
-				var EList<Status> status = (element.eContainer as ModelIssue).status;
-				(element as Transition).ziel = status.get(status.size)
+				var EList<Status> statuus = (element.eContainer as ModelIssue).status;
+				(element as Transition).ziel = statuus.get(statuus.size)
 				
 		]
 	)
@@ -98,10 +134,11 @@ def changeStatus(Issue issue, IssueResolutionAcceptor acceptor){
 
 @Fix(TicketValidator.INVALID_DAY)
 def changeToFirstDay(Issue issue, IssueResolutionAcceptor acceptor){
+	val String dateElement = issue.data.get(0)
 	acceptor.accept(issue, 
-		'Switch day to the first', 
-		"Switch day of '" + issue.data.get(0) + "' to the first '", 
-		'',
+		M_DAY_TO_FIRST_SHORT, 
+		M_DAY_TO_FIRST_LONG_1 + dateElement + M_DAY_TO_FIRST_LONG_2, 
+		KEY_EMPTY,
 		[
 			element, 
 			context | 
@@ -113,10 +150,11 @@ def changeToFirstDay(Issue issue, IssueResolutionAcceptor acceptor){
 
 @Fix(TicketValidator.INVALID_MONTH)
 def changeToJan(Issue issue, IssueResolutionAcceptor acceptor){
+	val String dateElement = issue.data.get(0)
 	acceptor.accept(issue, 
-		'Switch to January', 
-		"Switch month of '" + issue.data.get(0) + "' to January'", 
-		'',
+		M_MONTH_TO_SHORT + S_JANUARY, 
+		M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_JANUARY, 
+		KEY_EMPTY,
 		[
 			element, 
 			context | 
@@ -127,10 +165,11 @@ def changeToJan(Issue issue, IssueResolutionAcceptor acceptor){
 
 @Fix(TicketValidator.INVALID_MONTH)
 def changeToFeb(Issue issue, IssueResolutionAcceptor acceptor){
+	val String dateElement = issue.data.get(0)
 	acceptor.accept(issue, 
-		'Switch to February', 
-		"Switch month of '" + issue.data.get(0) + "' to February'", 
-		'',
+		M_MONTH_TO_SHORT + S_FEBRUARY, 
+		M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_FEBRUARY, 
+		KEY_EMPTY,
 		[
 			element, 
 			context | 
@@ -141,10 +180,11 @@ def changeToFeb(Issue issue, IssueResolutionAcceptor acceptor){
 
 @Fix(TicketValidator.INVALID_MONTH)
 def changeToMar(Issue issue, IssueResolutionAcceptor acceptor){
+	val String dateElement = issue.data.get(0)
 	acceptor.accept(issue, 
-		'Switch to March', 
-		"Switch month of '" + issue.data.get(0) + "' to March'", 
-		'',
+		M_MONTH_TO_SHORT + S_MARCH, 
+		M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_MARCH, 
+		KEY_EMPTY,
 		[
 			element, 
 			context | 
@@ -155,10 +195,11 @@ def changeToMar(Issue issue, IssueResolutionAcceptor acceptor){
 
 @Fix(TicketValidator.INVALID_MONTH)
 def changeToApr(Issue issue, IssueResolutionAcceptor acceptor){
+	val String dateElement = issue.data.get(0)
 	acceptor.accept(issue, 
-		'Switch to April', 
-		"Switch month of '" + issue.data.get(0) + "' to April'", 
-		'',
+		M_MONTH_TO_SHORT + S_APRIL, 
+		M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_APRIL, 
+		KEY_EMPTY,
 		[
 			element, 
 			context | 
@@ -169,9 +210,10 @@ def changeToApr(Issue issue, IssueResolutionAcceptor acceptor){
 
 @Fix(TicketValidator.INVALID_MONTH)
 def changeToMay(Issue issue, IssueResolutionAcceptor acceptor){
+	val String dateElement = issue.data.get(0)
 	acceptor.accept(issue, 
 		'Switch to May', 
-		"Switch month of '" + issue.data.get(0) + "' to May'", 
+		"Switch month of '" + dateElement + "' to May'", 
 		'',
 		[
 			element, 
@@ -183,10 +225,11 @@ def changeToMay(Issue issue, IssueResolutionAcceptor acceptor){
 
 @Fix(TicketValidator.INVALID_MONTH)
 def changeToJun(Issue issue, IssueResolutionAcceptor acceptor){
+	val String dateElement = issue.data.get(0)
 	acceptor.accept(issue, 
-		'Switch to June', 
-		"Switch month of '" + issue.data.get(0) + "' to June'", 
-		'',
+		M_MONTH_TO_SHORT + S_JUNE, 
+		M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_JUNE, 
+		KEY_EMPTY,
 		[
 			element, 
 			context | 
@@ -197,10 +240,11 @@ def changeToJun(Issue issue, IssueResolutionAcceptor acceptor){
 
 @Fix(TicketValidator.INVALID_MONTH)
 def changeToJul(Issue issue, IssueResolutionAcceptor acceptor){
+	val String dateElement = issue.data.get(0)
 	acceptor.accept(issue, 
-		'Switch to July', 
-		"Switch month of '" + issue.data.get(0) + "' to July'", 
-		'',
+		M_MONTH_TO_SHORT + S_JULY, 
+		M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_JULY, 
+		KEY_EMPTY,
 		[
 			element, 
 			context | 
@@ -211,10 +255,11 @@ def changeToJul(Issue issue, IssueResolutionAcceptor acceptor){
 
 @Fix(TicketValidator.INVALID_MONTH)
 def changeToAug(Issue issue, IssueResolutionAcceptor acceptor){
+	val String dateElement = issue.data.get(0)
 	acceptor.accept(issue, 
-		'Switch to August', 
-		"Switch month of '" + issue.data.get(0) + "' to August'", 
-		'',
+		M_MONTH_TO_SHORT + S_AUGUST, 
+		M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_AUGUST, 
+		KEY_EMPTY,
 		[
 			element, 
 			context | 
@@ -225,10 +270,11 @@ def changeToAug(Issue issue, IssueResolutionAcceptor acceptor){
 
 @Fix(TicketValidator.INVALID_MONTH)
 def changeToSep(Issue issue, IssueResolutionAcceptor acceptor){
+	val String dateElement = issue.data.get(0)
 	acceptor.accept(issue, 
-		'Switch to September', 
-		"Switch month of '" + issue.data.get(0) + "' to September'", 
-		'',
+		M_MONTH_TO_SHORT + S_SEPTEMBER, 
+		M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_SEPTEMBER, 
+		KEY_EMPTY,
 		[
 			element, 
 			context | 
@@ -239,10 +285,11 @@ def changeToSep(Issue issue, IssueResolutionAcceptor acceptor){
 
 @Fix(TicketValidator.INVALID_MONTH)
 def changeToOct(Issue issue, IssueResolutionAcceptor acceptor){
+	val String dateElement = issue.data.get(0)
 	acceptor.accept(issue, 
-		'Switch to October', 
-		"Switch month of '" + issue.data.get(0) + "' to October'", 
-		'',
+		M_MONTH_TO_SHORT + S_OCTOBER, 
+		M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_OCTOBER, 
+		KEY_EMPTY,
 		[
 			element, 
 			context | 
@@ -253,10 +300,11 @@ def changeToOct(Issue issue, IssueResolutionAcceptor acceptor){
 
 @Fix(TicketValidator.INVALID_MONTH)
 def changeToNov(Issue issue, IssueResolutionAcceptor acceptor){
+	val String dateElement = issue.data.get(0)
 	acceptor.accept(issue, 
-		'Switch to November', 
-		"Switch month of '" + issue.data.get(0) + "' to November'", 
-		'',
+		M_MONTH_TO_SHORT + S_NOVEMBER, 
+		M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_NOVEMBER, 
+		KEY_EMPTY,
 		[
 			element, 
 			context | 
@@ -267,10 +315,11 @@ def changeToNov(Issue issue, IssueResolutionAcceptor acceptor){
 
 @Fix(TicketValidator.INVALID_MONTH)
 def changeToDec(Issue issue, IssueResolutionAcceptor acceptor){
+	val String dateElement = issue.data.get(0)
 	acceptor.accept(issue, 
-		'Switch to December', 
-		"Switch month of '" + issue.data.get(0) + "' to December'", 
-		'',
+		M_MONTH_TO_SHORT + S_DECEMBER, 
+		M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_DECEMBER, 
+		KEY_EMPTY,
 		[
 			element, 
 			context | 
@@ -281,14 +330,15 @@ def changeToDec(Issue issue, IssueResolutionAcceptor acceptor){
 
 @Fix(TicketValidator.INVALID_YEAR)
 def changeToLast(Issue issue, IssueResolutionAcceptor acceptor){
+	val String dateElement = issue.data.get(0)
 	acceptor.accept(issue, 
-		"Switch to '9999'", 
-		"Switch year of '" + issue.data.get(0) + "' to '9999'", 
-		'',
+		M_YEAR_TO_SHORT + C_LAST_YEAR, 
+		M_YEAR_TO_LONG_1 + dateElement + M_YEAR_TO_LONG_2 + C_LAST_YEAR, 
+		KEY_EMPTY,
 		[
 			element, 
 			context | 
-				(element as Date).year = 9999
+				(element as Date).year = C_LAST_YEAR
 		]
 	)
 }
@@ -296,11 +346,12 @@ def changeToLast(Issue issue, IssueResolutionAcceptor acceptor){
 
 @Fix(TicketValidator.INVALID_YEAR)
 def changeToThisYear(Issue issue, IssueResolutionAcceptor acceptor){
-	var actualYear = Calendar.getInstance().get(Calendar.YEAR);
+	val String dateElement = issue.data.get(0)
+	val actualYear = Calendar.getInstance().get(Calendar.YEAR);
 	acceptor.accept(issue, 
-		"Switch to '" + actualYear + "'", 
-		"Switch year of '" + issue.data.get(0) + "' to '" + actualYear + "'", 
-		'',
+		M_YEAR_TO_SHORT + actualYear,
+		M_YEAR_TO_LONG_1 + dateElement + M_YEAR_TO_LONG_2 + actualYear, 
+		KEY_EMPTY,
 		[
 			element, 
 			context | 
@@ -313,10 +364,13 @@ def changeToThisYear(Issue issue, IssueResolutionAcceptor acceptor){
 
 @Fix(TicketValidator.ELEMENT_CONTAINS_LIST_WITH_DUPLICATES)
 def removeTransition(Issue issue, IssueResolutionAcceptor acceptor){
+	val String parentElement 		= issue.data.get(0)
+	val String duplicatedElement 	= issue.data.get(1)
 	acceptor.accept(issue, 
-		'Remove all duplicates', 
-		"Remove all duplicated '" + issue.data.get(1) + "' from '" + issue.data.get(0) +"'", 
-		'',
+		M_REMOVE_DUPLICATES_SHORT, 
+		M_REMOVE_DUPLICATES_LONG_1 + duplicatedElement + M_REMOVE_DUPLICATES_LONG_1 + 
+			KEY_APOST + parentElement + KEY_APOST, 
+		KEY_EMPTY,
 		[
 			element, 
 			context |
@@ -331,6 +385,8 @@ def removeTransition(Issue issue, IssueResolutionAcceptor acceptor){
 					(element as IssueType).fields.removeAllDuplicates()
 				case element instanceof IssueScreen:
 					(element as IssueScreen).fields.removeAllDuplicates()
+				case element instanceof ComboField:
+					(element as ComboField).^default.removeAllDuplicates()
 				}
 		]
 	)
