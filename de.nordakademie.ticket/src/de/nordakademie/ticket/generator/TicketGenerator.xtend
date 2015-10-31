@@ -12,6 +12,7 @@ import org.eclipse.emf.mwe.core.issues.Issues
 import de.nordakademie.ticket.ticket.DateField
 import java.util.Calendar
 import de.nordakademie.ticket.ticket.PersonField
+import de.nordakademie.ticket.ticket.StatusField
 
 /**
  * Generates code from your model files on save.
@@ -276,9 +277,21 @@ $(function () {
 	
 	def CharSequence standardInput(ModelIssue modelIssue)'''
 	<form class="form-horizontal">
-		<div id="standardInput">
-		«FOR fields :  modelIssue.issueScreen.fields»
-			
+		<div id="standardInput">						
+			<div class="form-group">
+				<label for="«modelIssue.issueScreen.statusfield.name»" class="col-sm-2 control-label">«modelIssue.issueScreen.statusfield.name»</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="«modelIssue.issueScreen.statusfield.name»" value="«modelIssue.issueScreen.statusfield.^default.name»">
+			    </div>
+			</div>
+			<div class="form-group">
+				<label for="«modelIssue.issueScreen.summaryfield.name»" class="col-sm-2 control-label">«modelIssue.issueScreen.summaryfield.name»</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="«modelIssue.issueScreen.summaryfield.name»" value="«modelIssue.issueScreen.summaryfield.^default»">
+			    </div>
+			</div>
+		
+		«FOR fields :  modelIssue.issueScreen.fields»			
 			«IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.MailField")»	
 			  <div class="form-group">
 			    <label for="«fields.name»" class="col-sm-2 control-label">Email</label>
@@ -293,7 +306,8 @@ $(function () {
 			  			<label for="«(fields as DateField).description»" class="col-sm-2 control-label">Date</label>
 			  			<div class="col-sm-10">
 			  			«today = Calendar.getInstance()»
-		  					<input type="text" class="form-control" id="«(fields as DateField).name»" text="«today.set(Calendar.HOUR_OF_DAY, 0)»">
+			  			«today.set(Calendar.HOUR_OF_DAY, 0)»			  			
+		  					<input type="text" class="form-control" id="«(fields as DateField).name»" text="«today»">
 			 			</div>
 		 			</div>	  		  			    
 		 	 	«ENDIF»		
@@ -309,7 +323,7 @@ $(function () {
 		«ENDFOR»  	  
 		  <div class="form-group">
 		    <div class="col-sm-offset-2 col-sm-10">
-		      <button type="submit" class="btn btn-default">Sign in</button>
+		      <button type="submit" class="btn btn-default">Submit</button>
 		    </div>
 		  </div>
 		</form>						
