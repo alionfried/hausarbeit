@@ -13,6 +13,8 @@ import de.nordakademie.ticket.ticket.DateField
 import java.util.Calendar
 import de.nordakademie.ticket.ticket.PersonField
 import de.nordakademie.ticket.ticket.StatusField
+import de.nordakademie.ticket.ticket.MailField
+import de.nordakademie.ticket.ticket.CheckField
 
 /**
  * Generates code from your model files on save.
@@ -37,7 +39,11 @@ class TicketGenerator implements IGenerator {
 	fsa.generateFile(
 			'standardInput.html',
 			resource.contents.filter(ModelIssue).head.standardInput			
-		)							
+		)		
+	fsa.generateFile(
+			'individualInput.html',
+			resource.contents.filter(ModelIssue).head.individualInput			
+		)						
 	}
 
 
@@ -294,9 +300,9 @@ $(function () {
 		«FOR fields :  modelIssue.issueScreen.fields»			
 			«IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.MailField")»	
 			  <div class="form-group">
-			    <label for="«fields.name»" class="col-sm-2 control-label">Email</label>
+			    <label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
 			    <div class="col-sm-10">
-			      <input type="email" class="form-control" id="«fields.name»" placeholder="«fields.description»">
+			      <input type="email" class="form-control" id="«fields.name»" placeholder="«(fields as MailField).^default»">
 			    </div>
 			  </div>
 		  	«ENDIF»  	
@@ -307,7 +313,7 @@ $(function () {
 			  			<div class="col-sm-10">
 			  			«today = Calendar.getInstance()»
 			  			«today.set(Calendar.HOUR_OF_DAY, 0)»			  			
-		  					<input type="text" class="form-control" id="«(fields as DateField).name»" text="«today»">
+		  					<input type="text" class="form-control" id="«(fields as DateField).name»" value="«today.toString»">
 			 			</div>
 		 			</div>	  		  			    
 		 	 	«ENDIF»		
@@ -316,17 +322,55 @@ $(function () {
 		  		<div class="form-group">
 			  		<label for="«(fields as PersonField).description»" class="col-sm-2 control-label">Person</label>
 			  		<div class="col-sm-10">
-		  				<input type="text" class="form-control" id="«(fields as PersonField).name»" text="«(fields as PersonField).description»">
+		  				<input type="text" class="form-control" id="«(fields as PersonField).name»" value="«(fields as PersonField).description»">
 			 		</div>
-		 		</div>	  		  			    	 	 	
+		 		</div>
 		  	«ENDIF»
 		«ENDFOR»  	  
 		  <div class="form-group">
 		    <div class="col-sm-offset-2 col-sm-10">
-		      <button type="submit" class="btn btn-default">Submit</button>
+		      <button id="submitStandard" type="submit" class="btn btn-default">Submit</button>
 		    </div>
 		  </div>
-		</form>						
+		</div> 
+	</form>	
+	'''
+	
+	def CharSequence individualInput(ModelIssue modelIssue)'''	
+	<div>	
+	«FOR issueType : modelIssue.issueType»
+		<form>		
+		<div id="«issueType.name»" class="form-group">
+			<a>«issueType.name»</a>
+			«FOR fields : modelIssue.fields»
+				«IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.MailField")»
+			    	<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
+			    	<div class="col-sm-10">
+			      		<input type="email" class="form-control" id="«fields.name»" placeholder="«(fields as MailField).^default»">
+			   		 </div>
+			    «ENDIF»			    
+			    «IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.CheckField")»
+			    	«IF (fields as CheckField).^default.booleanValue == true»
+			    		<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
+			    		<div class="col-sm-10">
+			      			<input type="checkbox" id="«fields.name»" value="«(fields as CheckField).description»" checked>
+			   			 </div>
+			   		 «ELSE»
+			   		 	<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
+			    		<div class="col-sm-10">
+			      			<input type="checkbox" id="«fields.name»" value="«(fields as CheckField).description»">
+			   			 </div>
+			   		 «ENDIF»
+			    «ENDIF»
+			«ENDFOR»    
+		</div>
+		<div class="form-group">
+		    <div class="col-sm-offset-2 col-sm-10">
+		      <button type="submit" class="btn btn-default">Submit</button>
+		    </div>
+		</div>
+		</form>
+	«ENDFOR»
 	</div>
 	'''
 }
