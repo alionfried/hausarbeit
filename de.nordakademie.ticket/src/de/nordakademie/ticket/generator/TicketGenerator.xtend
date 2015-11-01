@@ -44,7 +44,6 @@ class TicketGenerator implements IGenerator {
 				
 		<div id="«issueType.name»" class="form-group">
 		<form class="form-horizontal">
-			<a>«issueType.name»</a>
 		
 		<!-- Statusinformationen -->
 		<div class="form-group">
