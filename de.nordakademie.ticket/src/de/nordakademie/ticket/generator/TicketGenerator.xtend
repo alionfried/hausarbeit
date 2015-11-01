@@ -288,8 +288,9 @@ $(function () {
 '''
 	
 	def CharSequence standardInput(ModelIssue modelIssue)'''
-	<form class="form-horizontal">
-		<div id="standardInput">						
+	
+	<div id="standardInput">
+		<form class="form-horizontal">
 			<div class="form-group">
 				<label for="«modelIssue.issueScreen.statusfield.name»" class="col-sm-2 control-label">«modelIssue.issueScreen.statusfield.name»</label>
 			    <div class="col-sm-10">
@@ -336,22 +337,109 @@ $(function () {
 		      <button id="submitStandard" type="submit" class="btn btn-default">Submit</button>
 		    </div>
 		  </div>
-		</div> 
-	</form>	
+	  	</form>
+	</div> 
+	
 	'''
 	
 	def CharSequence individualInput(ModelIssue modelIssue)'''	
 	<div>	
 	«FOR issueType : modelIssue.issueType»
-		<form>		
+				
 		<div id="«issueType.name»" class="form-group">
+		<form class="form-horizontal">
 			<a>«issueType.name»</a>
-			«FOR fields : modelIssue.fields»
+		
+		<!-- Statusinformationen -->
+		<div class="form-group">
+				<label for="«modelIssue.issueScreen.statusfield.name»" class="col-sm-2 control-label">«modelIssue.issueScreen.statusfield.name»</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="«modelIssue.issueScreen.statusfield.name»" value="«modelIssue.issueScreen.statusfield.^default.name»">
+			    </div>
+			</div>
+			<div class="form-group">
+				<label for="«modelIssue.issueScreen.summaryfield.name»" class="col-sm-2 control-label">«modelIssue.issueScreen.summaryfield.name»</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="«modelIssue.issueScreen.summaryfield.name»" value="«modelIssue.issueScreen.summaryfield.^default»">
+			    </div>
+			</div>	
+		
+		<!-- Weitere Statusinformationen -->	
+		«FOR st_fields :  modelIssue.issueScreen.fields»
+		«IF st_fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.MailField")»
+			    	<label for="«st_fields.name»" class="col-sm-2 control-label">«st_fields.description»</label>
+			    	<div class="col-sm-10">
+			      		<input type="email" class="form-control" id="«st_fields.name»" placeholder="«(st_fields as MailField).^default»">
+			   		</div>
+			    «ENDIF»			    
+			    «IF st_fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.CheckField")»
+			    	«IF (st_fields as CheckField).^default.booleanValue == true»
+			    		<label for="«st_fields.name»" class="col-sm-2 control-label">«st_fields.description»</label>
+			    		<div class="col-sm-10">
+			      			<input type="checkbox" id="«st_fields.name»" value="«(st_fields as CheckField).description»" checked>
+			   			 </div>
+			   		 «ELSE»
+			   		 	<label for="«st_fields.name»" class="col-sm-2 control-label">«st_fields.description»</label>
+			    		<div class="col-sm-10">
+			      			<input type="checkbox" id="«st_fields.name»" value="«(st_fields as CheckField).description»">
+			   			 </div>
+			   		 «ENDIF»
+			    «ENDIF»
+			    «IF st_fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.ComboField")»
+			    	<label for="«st_fields.name»" class="col-sm-2 control-label">«st_fields.description»</label>
+			    	<div class="col-sm-10">
+			    		<select id="«st_fields.name»" class="form-control">
+							«FOR comboField : (st_fields as ComboField).^default»
+			    				<option>«comboField.intern»</option>
+			    		 	 «ENDFOR»			    		  
+			    		</select>
+			   		 </div>
+			    «ENDIF»	
+			    «IF st_fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.PersonField")»
+			    	<label for="«st_fields.name»" class="col-sm-2 control-label">«st_fields.description»</label>
+			    	<div class="col-sm-10">
+			      	«IF (st_fields as PersonField).^default == null»
+			      		<input type="text" class="form-control" id="«st_fields.name»" value="">
+			      	«ENDIF»
+			      	«IF (st_fields as PersonField).^default != null»
+			      		<input type="text" class="form-control" id="«st_fields.name»" value="«(st_fields as PersonField).^default.name»">				      		
+			   		«ENDIF»
+			   		</div>
+			    «ENDIF»			    
+			    «IF st_fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.StringField")»
+			    	<label for="«st_fields.name»" class="col-sm-2 control-label">«st_fields.description»</label>
+			    	<div class="col-sm-10">
+			    	«IF (st_fields as StringField).^default == null»	
+			      		<input type="text" class="form-control" id="«st_fields.name»" value="">
+			      	«ENDIF»
+			    	«IF (st_fields as StringField).^default != null»	
+			      		<input type="text" class="form-control" id="«st_fields.name»" value="«(st_fields as StringField).^default.intern»">
+			      	«ENDIF»	
+			   		</div>
+			    «ENDIF»
+			    «IF st_fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.DateField")»
+			    	«IF (st_fields as DateField).today != true»			    	
+			    	<label for="«st_fields.name»" class="col-sm-2 control-label">«st_fields.description»</label>
+			    	<div class="col-sm-10">
+			      		<input type="text" class="form-control" id="«st_fields.name»" value="«(st_fields as DateField).^default.day.toString».«(st_fields as DateField).^default.month.toString».«(st_fields as DateField).^default.year.toString»">
+			   		 </div>
+			   		 «ENDIF»
+			   		 «IF (st_fields as DateField).today == true»			    	
+			    	<label for="«st_fields.name»" class="col-sm-2 control-label">«st_fields.description»</label>
+			    	<div class="col-sm-10">
+			      		<input type="text" class="form-control" id="«st_fields.name»" value="«dateNow»">
+			   		</div>
+			   		 «ENDIF»
+			    «ENDIF»
+		«ENDFOR»	
+			
+		<!-- Hier werden die IssueType speziellen Felder erstellt -->	
+			«FOR fields : issueType.fields»
 				«IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.MailField")»
 			    	<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
 			    	<div class="col-sm-10">
 			      		<input type="email" class="form-control" id="«fields.name»" placeholder="«(fields as MailField).^default»">
-			   		 </div>
+			   		</div>
 			    «ENDIF»			    
 			    «IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.CheckField")»
 			    	«IF (fields as CheckField).^default.booleanValue == true»
@@ -385,7 +473,7 @@ $(function () {
 			      	«IF (fields as PersonField).^default != null»
 			      		<input type="text" class="form-control" id="«fields.name»" value="«(fields as PersonField).^default.name»">				      		
 			   		«ENDIF»
-			   		 </div>
+			   		</div>
 			    «ENDIF»			    
 			    «IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.StringField")»
 			    	<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
@@ -396,7 +484,7 @@ $(function () {
 			    	«IF (fields as StringField).^default != null»	
 			      		<input type="text" class="form-control" id="«fields.name»" value="«(fields as StringField).^default.intern»">
 			      	«ENDIF»	
-			   		 </div>
+			   		</div>
 			    «ENDIF»
 			    «IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.DateField")»
 			    	«IF (fields as DateField).today != true»			    	
@@ -409,17 +497,17 @@ $(function () {
 			    	<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
 			    	<div class="col-sm-10">
 			      		<input type="text" class="form-control" id="«fields.name»" value="«dateNow»">
-			   		 </div>
+			   		</div>
 			   		 «ENDIF»
 			    «ENDIF»
-			«ENDFOR»    
-		</div>
-		<div class="form-group">
-		    <div class="col-sm-offset-2 col-sm-10">
-		      <button type="submit" class="btn btn-default">Submit</button>
-		    </div>
-		</div>
+			«ENDFOR»
+			<div class="form-group">
+			    <div class="col-sm-offset-2 col-sm-10">
+			      <button type="submit" class="btn btn-default">Submit</button>
+			    </div>
+			</div>
 		</form>
+		</div>
 	«ENDFOR»
 	</div>
 	'''
