@@ -36,40 +36,51 @@ class TicketValidator extends AbstractTicketValidator implements Constants
 	
 	@Check
 	def checkAllRulesAreCreated (ModelIssue modelIssue) {
-		
 		if (modelIssue.issueType.empty ) {
-			error(M_RULE_NEEDED_1 + S_ISSUE_TYPE + M_RULE_NEEDED_2
-				, MODEL_ISSUE__ISSUE_TYPE
+			error(M_RULE_NEEDED_1 + S_ISSUE_TYPE + M_RULE_NEEDED_2,
+				MODEL_ISSUE__ISSUE_SCREEN,
+				MISSING_RULE,
+				ISSUE_TYPE
 			)
 		}
 		
 		if (modelIssue.person.empty ) {
-			error(M_RULE_NEEDED_1 + S_PERSON + M_RULE_NEEDED_2
-				, MODEL_ISSUE__PERSON
+			error(M_RULE_NEEDED_1 + S_PERSON + M_RULE_NEEDED_2,
+				MODEL_ISSUE__ISSUE_SCREEN,
+				MISSING_RULE,
+				PERSON
 			)
 		}		 
 		 
 		if (modelIssue.role.empty ) {
-			error(M_RULE_NEEDED_1 + S_ROLE + M_RULE_NEEDED_2
-				, MODEL_ISSUE__ROLE
+			error(M_RULE_NEEDED_1 + S_ROLE + M_RULE_NEEDED_2,
+				MODEL_ISSUE__ISSUE_SCREEN,
+				MISSING_RULE,
+				ROLE
 			)
 		} 
 		 
 		if (modelIssue.status.empty ) {
-			error(M_RULE_NEEDED_1 + S_STATUS + M_RULE_NEEDED_2
-				, MODEL_ISSUE__STATUS
+			error(M_RULE_NEEDED_1 + S_STATUS + M_RULE_NEEDED_2,
+				MODEL_ISSUE__ISSUE_SCREEN,
+				MISSING_RULE,
+				STATUS
 			)
 		}   
 		
 		if (modelIssue.transition.empty ) {
-			error(M_RULE_NEEDED_1 + S_TRANSITION + M_RULE_NEEDED_2
-				, MODEL_ISSUE__TRANSITION
+			error(M_RULE_NEEDED_1 + S_TRANSITION + M_RULE_NEEDED_2,
+				MODEL_ISSUE__ISSUE_SCREEN,
+				MISSING_RULE,
+				TRANSITION
 			)
 		}   
 		
 		if (modelIssue.workflow.empty ) {
-			error(M_RULE_NEEDED_1 + S_WORKFLOW + M_RULE_NEEDED_2
-				, MODEL_ISSUE__WORKFLOW
+			error(M_RULE_NEEDED_1 + S_WORKFLOW + M_RULE_NEEDED_2,
+				MODEL_ISSUE__ISSUE_SCREEN,
+				MISSING_RULE,
+				WORKFLOW
 			)
 		} 
 		
@@ -252,14 +263,6 @@ class TicketValidator extends AbstractTicketValidator implements Constants
 				COMBO_FIELD__DEFAULT,
 				ELEMENT_CONTAINS_LIST_WITH_DUPLICATES,
 				combo.name, S_ENTRIES
-			)
-		}
-		
-		if (combo.^default.empty) {
-			error(M_NO_COMBO_ENTRIES, 
-				FIELD__NAME,
-				EMPTY_STRING,
-				DEFAULT_ENTRIES, S_ENTRIES, S_ENTRY
 			)
 		}
 		

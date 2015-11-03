@@ -1,29 +1,47 @@
 package de.nordakademie.ticket.constantsAndNames;
 
 public interface Constants {
-
+//path
+	public static String PATH = "de.nordakademie.ticket.";
+	
 //errors
-	public static String ELEMENT_CONTAINS_LIST_WITH_DUPLICATES = "de.nordakademie.ticket.elementContainsListWithDuplicates" ;
-	public static String EMPTY_STRING = "de.nordakademie.ticket.emptyString" ;
-	public static String EMPTY_ROLE = "de.nordakademie.ticket.emptyRole" ;
-	public static String INVALID_DAY = "de.nordakademie.ticket.invalidDay";
-	public static String INVALID_MONTH = "de.nordakademie.ticket.invalidMonth";
-	public static String INVALID_YEAR = "de.nordakademie.ticket.invalidYear";
-	public static String DUPLICATED_TRANSITION_STATUS = "de.nordakademie.ticket.duplicatedTransitionStatus";
+	public static String DUPLICATED_TRANSITION_STATUS = PATH + "duplicatedTransitionStatus";
+	public static String ELEMENT_CONTAINS_LIST_WITH_DUPLICATES = PATH + "elementContainsListWithDuplicates" ;
+	public static String EMPTY_ROLE = PATH + "emptyRole" ;
+	public static String EMPTY_STRING = PATH + "emptyString" ;
+	public static String INVALID_DAY = PATH + "invalidDay";
+	public static String INVALID_MONTH = PATH + "invalidMonth";
+	public static String INVALID_YEAR = PATH + "invalidYear";
+	public static String MISSING_RULE = PATH + "missingRule";
+	
+	public static String E_LINKING_DIAGNOSTIC_MESSAGE_1 = "Couldn't resolve reference to ";
+
 	
 //element-constants
-	public static String DESCRIPTION = "de.nordakademie.ticket.description";
-	public static String NAME = "de.nordakademie.ticket.name";
-	public static String ENTRY = "de.nordakademie.ticket.entry";
-	public static String DEFAULT_ENTRIES = "de.nordakademie.ticket.defaultEntries";
-	public static String TITLE = "de.nordakademie.ticket.title";
-	public static String PERSON = "de.nordakademie.ticket.person";
+	public static String DESCRIPTION = PATH + "description";
+	public static String ENTRY = PATH + "entry";
+	public static String FIELD = PATH + "field";
+	public static String ISSUE_SCREEN = PATH + "issueScreen";
+	public static String ISSUE_TYPE = PATH + "issueType";
+	public static String NAME = PATH + "name";
+	public static String PERSON = PATH + "person";
+	public static String ROLE = PATH + "role";
+	public static String STATUS = PATH + "status";
+	public static String STATUS_FIELD = PATH + "statusField";
+	public static String SUMMAY_FIELD = PATH + "summaryField";
+	public static String TITLE = PATH + "title";
+	public static String TRANSITION = PATH + "transition";
+	public static String WORKFLOW = PATH + "workflow";
+	
 	
 //keys
-	public static String KEY_SPACE = " ";
+	public static String KEY_APOST = "'";
 	public static String KEY_EMPTY = "";
 	public static String KEY_MINUS = "-";
-	public static String KEY_APOST = "'";
+	public static String KEY_NEW_LINE = "\r\n";
+	public static String KEY_POINT = ".";
+	public static String KEY_SPACE = " ";
+	public static String KEY_TAB = "\t";
 	
 //value constants	
 	public static int C_LAST_YEAR = 9999;

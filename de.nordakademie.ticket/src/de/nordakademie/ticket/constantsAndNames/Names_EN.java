@@ -8,7 +8,7 @@ public interface Names_EN {
 	public static String M_ALLOW_NEW_ISSUE_LONG = "Allow to create new Issue for Role ";
 	public static String M_ALLOW_NEW_ISSUE_SHORT = "Allow to create new Issue";
 	
-	
+	public static String M_CREATE_RULE = "Create ";
 	public static String M_CHANGE_TRANSITION_LONG = "Change Transition of ";
 	public static String M_CHANGE_TRANSITION_SHORT = "Change Transition";
 	
@@ -32,6 +32,9 @@ public interface Names_EN {
 	public static String M_MONTH_TO_LONG_2 = " to ";
 	public static String M_MONTH_TO_SHORT = "Switch month to ";
 	
+	public static String M_NEW_RULE_LONG_1 = "Create a new ";
+	public static String M_NEW_RULE_LONG_2 = " at the end of the document";
+	public static String M_NEW_RULE_SHORT = "Create new ";
 	public static String M_NO_ROLE_TRANSITIONS = "Role must contain at least one Transition";
 	public static String M_NO_COMBO_ENTRIES = "ComboField must contain at least one Entrie";
 

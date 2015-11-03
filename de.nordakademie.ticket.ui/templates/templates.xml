@@ -1,53 +1,124 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <templates>
-	<template id="11" autoinsert="true" context="de.nordakademie.ticket.Ticket.Status" deleted="false" description="creates new IssueType" enabled="true" name="newIssueType">IssueType ${id} follows ${workflow:CrossReference(IssueType.workflow)}</template>
-	<template id="1" autoinsert="true" context="de.nordakademie.ticket.Ticket.Issue" deleted="false" description="creates a new Transition" enabled="true" name="newTransition">Transition ${id} named "${title}" { &#13;
-	${start:CrossReference(Transition.start)} to  ${ziel:CrossReference(Transition.ziel)} &#13;}</template>
-	<template id="2" autoinsert="true" context="de.nordakademie.ticket.Ticket.Issue" deleted="false" description="creates a new Workflow with 1 Transition" enabled="true" name="newWorkflow">Workflow ${id} { &#13;
-	${transitions:CrossReference(Workflow.transitions)}&#13;
+	<template id="nIsTy1" autoinsert="true" context="de.nordakademie.ticket.Ticket.IssueType" deleted="false" description="creates new IssueType" enabled="true" name="newIssueType">IssueType ${id} follows ${workflow:CrossReference(IssueType.workflow)} { 
 	${cursor}&#13;}</template>
-	<template id="3" autoinsert="true" context="de.nordakademie.ticket.Ticket.Issue" deleted="false" description="creates a new Workflow with 5 transitions" enabled="true" name="newWorkflow5">Workflow ${id} { &#13;
-	${transition1:CrossReference(Workflow.transitions)}&#13;
-	${transition2:CrossReference(Workflow.transitions)}&#13;
-	${transition3:CrossReference(Workflow.transitions)}&#13;
-	${transition4:CrossReference(Workflow.transitions)}&#13;
+	
+	<template id="nTr1" autoinsert="true" context="de.nordakademie.ticket.Ticket.Transition" deleted="false" description="creates a new Transition" enabled="true" name="newTransition">Transition ${id} named "${title}" { 
+	${start:CrossReference(Transition.start)} to  ${ziel:CrossReference(Transition.ziel)} &#13;}</template>
+	
+	<template id="nWf1" autoinsert="true" context="de.nordakademie.ticket.Ticket.Workflow" deleted="false" description="creates a new Workflow with 1 Transition" enabled="true" name="newWorkflow">Workflow ${id} { 
+	${transitions:CrossReference(Workflow.transitions)}
+	${cursor}&#13;}</template>
+	
+	<template id="nWf5" autoinsert="true" context="de.nordakademie.ticket.Ticket.Workflow" deleted="false" description="creates a new Workflow with 5 transitions" enabled="true" name="newWorkflow5">Workflow ${id} { 
+	${transition1:CrossReference(Workflow.transitions)}
+	${transition2:CrossReference(Workflow.transitions)}
+	${transition3:CrossReference(Workflow.transitions)}
+	${transition4:CrossReference(Workflow.transitions)}
 	${transition5:CrossReference(Workflow.transitions)}&#13;}</template>
 	
 	
-	<template id="4" autoinsert="true" context="de.nordakademie.ticket.Ticket.Issue" deleted="false" description="creates a new Workflow with 10 transitions" enabled="true" name="newWorkflow10">Workflow ${id} {&#13;
-	${transition1:CrossReference(Workflow.transitions)}&#13;
-	${transition2:CrossReference(Workflow.transitions)}&#13;
-	${transition3:CrossReference(Workflow.transitions)}&#13;
-	${transition4:CrossReference(Workflow.transitions)}&#13;
-	${transition5:CrossReference(Workflow.transitions)}&#13;
-	${transition6:CrossReference(Workflow.transitions)}&#13;
-	${transition7:CrossReference(Workflow.transitions)}&#13;
-	${transition8:CrossReference(Workflow.transitions)}&#13;
-	${transition9:CrossReference(Workflow.transitions)}&#13;
+	<template id="nWf10" autoinsert="true" context="de.nordakademie.ticket.Ticket.Workflow" deleted="false" description="creates a new Workflow with 10 transitions" enabled="true" name="newWorkflow10">Workflow ${id} {
+	${transition1:CrossReference(Workflow.transitions)}
+	${transition2:CrossReference(Workflow.transitions)}
+	${transition3:CrossReference(Workflow.transitions)}
+	${transition4:CrossReference(Workflow.transitions)}
+	${transition5:CrossReference(Workflow.transitions)}
+	${transition6:CrossReference(Workflow.transitions)}
+	${transition7:CrossReference(Workflow.transitions)}
+	${transition8:CrossReference(Workflow.transitions)}
+	${transition9:CrossReference(Workflow.transitions)}
 	${transition10:CrossReference(Workflow.transitions)}&#13;}</template>
 	
-	<template id="5" autoinsert="true" context="de.nordakademie.ticket.Ticket.Issue" deleted="false" description="create a new Status" enabled="true" name="newStatus">Status ${id}</template>
+	<template id="nSt1" autoinsert="true" context="de.nordakademie.ticket.Ticket.Status" deleted="false" description="create a new Status" enabled="true" name="newStatus">Status ${id}</template>
 	
-	<template id="6" autoinsert="true" context="de.nordakademie.ticket.Ticket.Issue" deleted="false" description="creates a new Role with 1 Transition" enabled="true" name="newRole">Role ${id} {&#13;
+	<template id="nRo1" autoinsert="true" context="de.nordakademie.ticket.Ticket.Role" deleted="false" description="creates a new Role with 1 Transition" enabled="true" name="newRole">Role ${id} {
 	${transitions:CrossReference(Role.transitions)}&#13;}</template>
 	
-	<template id="7" autoinsert="true" context="de.nordakademie.ticket.Ticket.Issue" deleted="false" description="creates a new Role with 3 Transitions" enabled="true" name="newRole3">Role ${id} {&#13;
-	${transition1:CrossReference(Role.transitions)}&#13;
-	${transition2:CrossReference(Role.transitions)}&#13;
+	<template id="nRo2" autoinsert="true" context="de.nordakademie.ticket.Ticket.Role" deleted="false" description="creates a new Role with 'newIssue'-authorization" enabled="true" name="newRole">Role ${id} {
+	create Issue
+	${cursor}&#13;}</template>
+	
+	<template id="nRo3" autoinsert="true" context="de.nordakademie.ticket.Ticket.Role" deleted="false" description="creates a new Role with 3 Transitions" enabled="true" name="newRole3">Role ${id} {
+	${transition1:CrossReference(Role.transitions)}
+	${transition2:CrossReference(Role.transitions)}
 	${transition3:CrossReference(Role.transitions)}&#13;}</template>
 	
-	<template id="8" autoinsert="true" context="de.nordakademie.ticket.Ticket.Issue" deleted="false" description="creates a new Person with 1 Role" enabled="true" name="newPerson">Person ${id} {&#13;
+	<template id="nPe1" autoinsert="true" context="de.nordakademie.ticket.Ticket.Person" deleted="false" description="creates a new Person with 1 Role" enabled="true" name="newPerson">Person ${id} called "${name}" {
 	${roles:CrossReference(Person.roles)}&#13;}</template>
 	
-	<template id="9" autoinsert="true" context="de.nordakademie.ticket.Ticket.Issue" deleted="false" description="creates a new Person with 5 Roles" enabled="true" name="newPerson5">Person ${id} {&#13;
-	${role1:CrossReference(Person.roles)}&#13;
-	${role2:CrossReference(Person.roles)}&#13;
-	${role3:CrossReference(Person.roles)}&#13;
-	${role4:CrossReference(Person.roles)}&#13;
+	<template id="nPe5" autoinsert="true" context="de.nordakademie.ticket.Ticket.Person" deleted="false" description="creates a new Person with 5 Roles" enabled="true" name="newPerson5">Person ${id} called "${name}" {
+	${role1:CrossReference(Person.roles)}
+	${role2:CrossReference(Person.roles)}
+	${role3:CrossReference(Person.roles)}
+	${role4:CrossReference(Person.roles)}
 	${role5:CrossReference(Person.roles)}&#13;}</template>
 	
-	<template id="10" autoinsert="true" context="de.nordakademie.ticket.Ticket.Issue" deleted="false" description="creates a new Issue" enabled="true" name="newIssue">Issue ${id} of ${issueType:CrossReference(Issue.issueType)} {&#13;
-	status ${status:CrossReference(Issue.status)}&#13;
-	from ${assignee:CrossReference(Issue.assignee)}&#13;
-	"${cursor}"&#13;}</template>
+	<template id="nIsSc1" autoinsert="true" context="de.nordakademie.ticket.Ticket.IssueScreen" deleted="false" description="creates a new IssueScreen" enabled="true" name="newIssueScreen">IssueScreen ${id} {
+	StatusField ${stautsId} {
+	}
+	SummaryField ${summaryId} {
+	}&#13;}</template>
+	
+	<template id="nStFi1" autoinsert="true" context="de.nordakademie.ticket.Ticket.StatusField" deleted="false" description="creates a new StatusField" enabled="true" name="newStatusField">StatusField ${id} {
+	${cursor}&#13;}</template>
+	
+	<template id="nStFi2" autoinsert="true" context="de.nordakademie.ticket.Ticket.StatusField" deleted="false" description="creates a new StatusField with default-Status" enabled="true" name="newStatusField">StatusField ${id} {
+	default ${status:CrossReference(StatusField.default)}&#13;}</template>
+	
+	
+	<template id="nSuFi1" autoinsert="true" context="de.nordakademie.ticket.Ticket.SummaryField" deleted="false" description="creates a new SummaryField" enabled="true" name="newSummaryField">SummaryField ${id} {
+	${cursor}&#13;}</template>
+	
+	<template id="nSuFi2" autoinsert="true" context="de.nordakademie.ticket.Ticket.SummaryField" deleted="false" description="creates a new SummaryField with default-Description" enabled="true" name="newSummaryField">SummaryField ${id} {
+	default "${description}"&#13;}</template>
+	
+	
+	<template id="nMaFi1" autoinsert="true" context="de.nordakademie.ticket.Ticket.MailField" deleted="false" description="creates a new MailField" enabled="true" name="newMailField">MailField ${id} as "${description}" {
+	${cursor}&#13;}</template>
+	
+	<template id="nMaFi2" autoinsert="true" context="de.nordakademie.ticket.Ticket.MailField" deleted="false" description="creates a new MailField with default-Mail" enabled="true" name="newMailField">MailField ${id} as "${description}" {
+	default "${mail}"&#13;}</template>
+	
+	
+	<template id="nDaFi1" autoinsert="true" context="de.nordakademie.ticket.Ticket.DateField" deleted="false" description="creates a new DateField" enabled="true" name="newDateField">DateField ${id} as "${description}" {
+	${cursor}&#13;}</template>
+	
+	<template id="nDaFi2" autoinsert="true" context="de.nordakademie.ticket.Ticket.DateField" deleted="false" description="creates a new DateField with default-Date" enabled="true" name="newDateField">DateField ${id} as "${description}" {
+	default ${31}.${12}.${9999}&#13;}</template>
+	
+	<template id="nDaFi3" autoinsert="true" context="de.nordakademie.ticket.Ticket.DateField" deleted="false" description="creates a new DateField with today as default" enabled="true" name="newDateField">DateField ${id} as "${description}" {
+	default today&#13;}</template>
+	
+	<template id="nDat1" autoinsert="true" context="de.nordakademie.ticket.Ticket.Date" deleted="false" description="creates a new Date" enabled="true" name="newDate">${31}.${12}.${2000}</template>
+	
+	
+	
+	<template id="nStFi1" autoinsert="true" context="de.nordakademie.ticket.Ticket.StringField" deleted="false" description="creates a new StringField" enabled="true" name="newStringField">StringField ${id} as "${description}" {
+	${cursor}&#13;}</template>
+	
+	<template id="nStFi2" autoinsert="true" context="de.nordakademie.ticket.Ticket.StringField" deleted="false" description="creates a new StringField" enabled="true" name="newStringField">StringField ${id} as "${description}" {
+	default "${text}"&#13;}</template>
+	
+	
+	<template id="nCoFi1" autoinsert="true" context="de.nordakademie.ticket.Ticket.ComboField" deleted="false" description="creates a new ComboField" enabled="true" name="newComboField">ComboField ${id} as "${description}" {
+	${cursor}&#13;}</template>
+	
+	<template id="nCoFi2" autoinsert="true" context="de.nordakademie.ticket.Ticket.ComboField" deleted="false" description="creates a new ComboField with default-Entries" enabled="true" name="newComboField">ComboField ${id} as "${description}" {
+	default { "${entry}" "${entry2}" } &#13;}</template>
+	
+	
+	<template id="nChFi1" autoinsert="true" context="de.nordakademie.ticket.Ticket.CheckField" deleted="false" description="creates a new CheckField" enabled="true" name="newCheckField">CheckField ${id} as "${description}" {
+	${cursor}&#13;}</template>
+	
+	<template id="nChFi2" autoinsert="true" context="de.nordakademie.ticket.Ticket.CheckField" deleted="false" description="creates a new CheckField with default-Check" enabled="true" name="newCheckField">CheckField ${id} as "${description}" {
+	default TRUE &#13;}</template>
+	
+	
+	<template id="nPeFi1" autoinsert="true" context="de.nordakademie.ticket.Ticket.PersonField" deleted="false" description="creates a new PersonField" enabled="true" name="newPersonField">PersonField ${id} as "${description}" {
+	${cursor}&#13;}</template>
+	
+	<template id="nPeFi2" autoinsert="true" context="de.nordakademie.ticket.Ticket.PersonField" deleted="false" description="creates a new PersonField with default-Person" enabled="true" name="newPersonField">PersonField ${id} as "${description}" {
+	default ${person:CrossReference(PersonField.default)}&#13;}</template>
+	
 </templates>

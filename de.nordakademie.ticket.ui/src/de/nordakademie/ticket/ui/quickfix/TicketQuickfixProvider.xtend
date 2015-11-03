@@ -16,6 +16,7 @@ import java.util.ArrayList
 import java.util.Calendar
 import java.util.List
 import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider
+import org.eclipse.xtext.diagnostics.Diagnostic
 import org.eclipse.xtext.ui.editor.quickfix.Fix
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.validation.Issue
@@ -23,15 +24,17 @@ import de.nordakademie.ticket.ticket.Transition
 import de.nordakademie.ticket.ticket.Status
 import org.eclipse.emf.common.util.EList
 import de.nordakademie.ticket.ticket.ComboField
-import de.nordakademie.ticket.constantsAndNames.Constants
+import de.nordakademie.ticket.constantsAndNames.Constructors
 import de.nordakademie.ticket.constantsAndNames.Names_EN
+import de.nordakademie.ticket.ticket.TicketFactory
+import org.eclipse.emf.ecore.EObject
 
 /**
  * Custom quickfixes.
  *
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#quick-fixes
  */
-class TicketQuickfixProvider extends DefaultQuickfixProvider implements Constants
+class TicketQuickfixProvider extends DefaultQuickfixProvider implements Constructors
 	, Names_EN
 //	, Names_DE
 {
@@ -65,16 +68,76 @@ def fillString(Issue issue, IssueResolutionAcceptor acceptor){
 								}
 							}
 						}
-					case DEFAULT_ENTRIES:
-						if (element instanceof ComboField){
-							(element as ComboField).^default.add(newString)
-						}
 					}
 				case element instanceof Transition:
 					(element as Transition).title = newString
 				case element instanceof Person:
 					(element as Person).shownName = newString
 				}
+		]
+	)
+}
+
+@Fix(TicketValidator.MISSING_RULE)
+def createStatus(Issue issue, IssueResolutionAcceptor acceptor){
+	val factory = TicketFactory.eINSTANCE;
+	
+	val String rule = issue.data.get(0);
+	val String rule_shownName = rule.substring(rule.lastIndexOf(KEY_POINT)+1).toFirstUpper
+	acceptor.accept(issue, 
+		M_NEW_RULE_SHORT + rule_shownName + "(by factory)", 
+		M_NEW_RULE_LONG_1 + rule_shownName + M_NEW_RULE_LONG_2, 
+		KEY_EMPTY,
+		[
+			element, 
+			context |
+				(element as ModelIssue).status.add(
+					factory.createStatus() => [
+						name = "newStatus";
+					]
+				)
+		]
+	)
+}
+
+
+@Fix(TicketValidator.MISSING_RULE)
+def createRule(Issue issue, IssueResolutionAcceptor acceptor){
+	val String rule = issue.data.get(0);
+	val String rule_shownName = rule.substring(rule.lastIndexOf(KEY_POINT)+1).toFirstUpper
+	acceptor.accept(issue, 
+		M_NEW_RULE_SHORT + rule_shownName, 
+		M_NEW_RULE_LONG_1 + rule_shownName + M_NEW_RULE_LONG_2, 
+		KEY_EMPTY,
+		[
+			context |
+				val document = context.xtextDocument;
+				document.set(document.get() + KEY_NEW_LINE + this.getRuleConstructor(rule, rule.removePath));
+		]
+	)
+}
+
+@Fix(Diagnostic.LINKING_DIAGNOSTIC)
+def addNewRule(Issue issue, IssueResolutionAcceptor acceptor){
+	val String ruleMessage = issue.message.replaceFirst(E_LINKING_DIAGNOSTIC_MESSAGE_1, KEY_EMPTY)
+	val String rule = ruleMessage.split(KEY_SPACE, 2).get(0);
+	acceptor.accept(issue, 
+		M_CREATE_RULE + ruleMessage,
+		M_CREATE_RULE + ruleMessage, 
+		KEY_EMPTY,
+		[
+			element, 
+			context | 
+				val document = context.xtextDocument
+				val name = document.get(issue.offset, issue.length)
+				
+				var EObject modelIssue = element.eContainer
+				while (!(modelIssue instanceof ModelIssue) && (modelIssue != null)){
+					modelIssue = modelIssue.eContainer
+				}
+				
+				val constructorText = this.getRuleConstructor(rule.toFirstLower.addPath, name, modelIssue)
+				document.set(document.get() + KEY_NEW_LINE + constructorText);
 		]
 	)
 }
@@ -116,17 +179,21 @@ def addTransitionToRole(Issue issue, IssueResolutionAcceptor acceptor){
 
 @Fix(TicketValidator.DUPLICATED_TRANSITION_STATUS)
 def changeStatus(Issue issue, IssueResolutionAcceptor acceptor){
-	val String status = issue.data.get(0)
+	val String statusName = issue.data.get(0)
 	acceptor.accept(issue, 
 		M_CHANGE_TRANSITION_SHORT, 
-		M_CHANGE_TRANSITION_LONG + KEY_APOST + status + KEY_APOST ,  
+		M_CHANGE_TRANSITION_LONG + KEY_APOST + statusName + KEY_APOST ,  
 		KEY_EMPTY,
 		[
 			element, 
 			context | 
-				var EList<Status> statuus = (element.eContainer as ModelIssue).status;
-				(element as Transition).ziel = statuus.get(statuus.size)
-				
+				val EList<Status> statuus = (element.eContainer as ModelIssue).status;
+				for (var i = 0;  statuus.size > i; i++){
+					if (statuus.get(i) != (element as Transition).ziel){
+						(element as Transition).ziel = statuus.get(i)
+						i = statuus.size;
+					}
+				}
 		]
 	)
 }
@@ -394,7 +461,7 @@ def removeTransition(Issue issue, IssueResolutionAcceptor acceptor){
 
 
 
-def removeAllDuplicates (List<?> list){
+def void removeAllDuplicates (List<?> list){
 	var List<Object> checkList = new ArrayList<Object>
 	var int i;
 	var Object element;
@@ -407,6 +474,90 @@ def removeAllDuplicates (List<?> list){
 			checkList.add(element)
 		}
 	}
+}
+
+def String removePath (String string) {
+	return string.split(KEY_POINT).last
+}
+
+def String addPath (String string) {
+	if (string.contains(PATH)){
+		return string
+	}
+	return PATH + string
+}
+
+def String getRuleConstructor (String rule, String name){
+	return getRuleConstructor (rule, name, null)
+}
+
+/**
+ * Creates the Constructor-String of the rule. 
+ * <p>
+ * Method takes the rule and gives the belonging constructor. 
+ * The id of the rule becomes the name.
+ * All variables of the constructor get filled.
+ * <p>
+ *
+ * @param  rule The xText-Rule that should be created.
+ * @param  name	The name will become the id of the rule.
+ * @param 	modelIssue	For some rules the ModelIssue is needed to get 
+ * 			existing references. If there are no existing rules the method
+ * 			could reference to it will take descriptions.
+ * @return Constructor of the rule as a String.
+ */
+def String getRuleConstructor (String rule, String name, EObject modelIssue) {
+	var text = KEY_EMPTY
+	
+	switch (rule){
+	case ISSUE_SCREEN:
+		{
+			text = NEW_ISSUE_SCRREN.replaceFirst(V_STATUS_FIELD__NAME, STATUS_FIELD.removePath).replaceFirst(V_SUMMARY_FIELD__NAME, SUMMAY_FIELD.removePath)
+			
+		}
+	case ISSUE_TYPE:
+		{
+			text = NEW_ISSUE_TYPE
+			if (modelIssue != null && modelIssue instanceof ModelIssue && !(modelIssue as ModelIssue).workflow.empty){
+				text.replaceFirst(V_ISSUE_TYPE__WORKFLOW, (modelIssue as ModelIssue).workflow.get(0).name)
+			} else {
+				text.replaceFirst(V_ISSUE_TYPE__WORKFLOW, WORKFLOW.removePath)
+			}
+		}
+	case PERSON:
+		text = NEW_PERSON
+	case ROLE:
+		text = NEW_ROLE
+	case STATUS:
+		text = NEW_STATUS
+	case TRANSITION:
+		{
+			text = NEW_TRANSITION.replaceFirst(V_TRANSITION__TITLE, S_TO + name.toFirstUpper)
+			if (modelIssue != null && modelIssue instanceof ModelIssue && !(modelIssue as ModelIssue).status.empty){
+				val ModelIssue model = (modelIssue as ModelIssue)
+				text.replaceFirst(V_TRANSITION__START, model.status.get(0).name)
+				
+				if (model.status.size > 1){
+					text.replaceFirst(V_TRANSITION__END, model.status.get(1).name)
+				} else {
+					text.replaceFirst(V_TRANSITION__END, model.status.get(0).name)
+				}
+			} else {
+				text.replaceFirst(V_TRANSITION__START, STATUS.removePath).replaceFirst(V_TRANSITION__END, STATUS.removePath)
+			}
+		}
+	case WORKFLOW:
+		{
+			text = NEW_WORKFLOW
+			if (modelIssue != null && modelIssue instanceof ModelIssue && !(modelIssue as ModelIssue).transition.empty){
+				text.replaceFirst(V_ISSUE_TYPE__WORKFLOW, (modelIssue as ModelIssue).transition.get(0).name)
+			} else {
+				text.replaceFirst(V_ISSUE_TYPE__WORKFLOW, TRANSITION.removePath)
+			}
+		}
+	}
+	
+	return text.replaceAll(V_RULE__NAME, name)
 }
 
 }

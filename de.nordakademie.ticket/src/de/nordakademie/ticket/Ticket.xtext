@@ -22,6 +22,7 @@ ModelIssue:
 		transition += Transition |
 		issueType += IssueType |
 		workflow += Workflow |
+		fields += Field |
 		status += Status
 	)*
 		
@@ -114,7 +115,7 @@ StringField:
 
 ComboField:
 	'ComboField' name = ID 'as' description = STRING '{'
-		('default' '{' ( default += STRING* ',' )*  default += STRING* '}' )?
+		('default' '{' ( default += STRING ',' )*  default += STRING '}' )?
 	'}'
 ;
 
