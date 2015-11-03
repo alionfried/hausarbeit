@@ -124,7 +124,7 @@ CheckField:
 		( ('default' default ?= 'TRUE' ) | ('default' 'FALSE' ) )?
 	'}'
 ;
-
+ 
 
 PersonField:
 	'PersonField' name = ID  'as' description = STRING '{'
@@ -133,7 +133,7 @@ PersonField:
 ;
 
 terminal MAIL:
-	( 'a'..'z'|'A'..'Z'|'0'..'9'|'.'|'-'|'_'|'%' ) +     	//'beispiel123'
-	'@' ('a'..'z'|'A'..'Z'|'0'..'9'|'.'|'-')+				//'@wak-sh'
-	'.' ('a'..'z' | 'A'..'Z')('a'..'z' | 'A'..'Z')+			//'.de'
+	'<'( 'a'..'z'|'A'..'Z'|'0'..'9'|'.'|'-'|'_'|'%' ) +     					//'beispiel123'
+	'@' ('a'..'z'|'A'..'Z'|'0'..'9')+	('a'..'z'|'A'..'Z'|'0'..'9'|'.'|'-')*	//'@wak-sh'
+	'.' ('a'..'z' | 'A'..'Z')('a'..'z' | 'A'..'Z')+	'>'							//'.de'
 ;
