@@ -43,8 +43,8 @@ Person:
 
 Role:
 	'Role' name = ID '{' 
-		transitions += [Transition]* 
 		( openIssue ?= 'create Issue' ) ?
+		transitions += [Transition]* 
 	'}'
 ;
 
@@ -114,7 +114,7 @@ StringField:
 
 ComboField:
 	'ComboField' name = ID 'as' description = STRING '{'
-		('default' '{' default += STRING* '}' )?
+		('default' '{' ( default += STRING* ',' )*  default += STRING* '}' )?
 	'}'
 ;
 
