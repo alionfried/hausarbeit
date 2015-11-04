@@ -43,7 +43,7 @@ class TicketGenerator implements IGenerator {
 	«FOR issueType : modelIssue.issueType»
 				
 		<div id="«issueType.name»" class="form-group">
-		<form id="formSubmit" class="form-horizontal">
+		<form id="formSubmit" action="" class="form-horizontal">
 		
 		<!-- Statusinformationen -->
 		<div class="form-group">
