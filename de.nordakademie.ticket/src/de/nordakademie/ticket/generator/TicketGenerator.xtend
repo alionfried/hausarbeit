@@ -44,18 +44,23 @@ class TicketGenerator implements IGenerator {
 				
 		<div id="«issueType.name»" class="form-group">
 		<form id="formSubmit" action="" class="form-horizontal">
-		
+				
 		<!-- Statusinformationen -->
-		<div class="form-group">
-				<label for="«modelIssue.issueScreen.statusfield.name»" class="col-sm-2 control-label">«modelIssue.issueScreen.statusfield.name»</label>
-			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="«modelIssue.issueScreen.statusfield.name»" value="«modelIssue.issueScreen.statusfield.^default.name»" disabled>
-			    </div>
+							
+				
+					<input type="text" class="form-control" id="«issueType.name»" name="«issueType.name»" value="«issueType.name»" disabled>
+				
+				
+			<div class="form-group">								
+					<label for="«modelIssue.issueScreen.statusfield.name»" class="col-sm-2 control-label">«modelIssue.issueScreen.statusfield.name»</label>
+				    <div class="col-sm-10">
+				      <input type="text" class="form-control" id="«modelIssue.issueScreen.statusfield.name»" name="«modelIssue.issueScreen.statusfield.name»" value="«modelIssue.issueScreen.statusfield.^default.name»" disabled>
+					</div>
 			</div>
 			<div class="form-group">
 				<label for="«modelIssue.issueScreen.summaryfield.name»" class="col-sm-2 control-label">«modelIssue.issueScreen.summaryfield.name»</label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="«modelIssue.issueScreen.summaryfield.name»" value="«modelIssue.issueScreen.summaryfield.^default»">
+			      <input type="text" class="form-control" id="«modelIssue.issueScreen.summaryfield.name»" name="«modelIssue.issueScreen.summaryfield.name»" value="«modelIssue.issueScreen.summaryfield.^default»">
 			    </div>
 			</div>	
 		
@@ -64,26 +69,26 @@ class TicketGenerator implements IGenerator {
 		«IF st_fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.MailField")»
 			    	<label for="«st_fields.name»" class="col-sm-2 control-label">«st_fields.description»</label>
 			    	<div class="col-sm-10">
-			      		<input type="email" class="form-control" id="«st_fields.name»" placeholder="«(st_fields as MailField).^default»">
+			      		<input type="email" class="form-control" id="«st_fields.name»" name="«st_fields.name»" placeholder="«(st_fields as MailField).^default»">
 			   		</div>
 			    «ENDIF»			    
 			    «IF st_fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.CheckField")»
 			    	«IF (st_fields as CheckField).^default.booleanValue == true»
 			    		<label for="«st_fields.name»" class="col-sm-2 control-label">«st_fields.description»</label>
 			    		<div class="col-sm-10">
-			      			<input type="checkbox" id="«st_fields.name»" value="«(st_fields as CheckField).description»" checked>
+			      			<input type="checkbox" id="«st_fields.name»" name="«st_fields.name»" value="«(st_fields as CheckField).description»" checked>
 			   			 </div>
 			   		 «ELSE»
 			   		 	<label for="«st_fields.name»" class="col-sm-2 control-label">«st_fields.description»</label>
 			    		<div class="col-sm-10">
-			      			<input type="checkbox" id="«st_fields.name»" value="«(st_fields as CheckField).description»">
+			      			<input type="checkbox" id="«st_fields.name»" name="«st_fields.name»" value="«(st_fields as CheckField).description»">
 			   			 </div>
 			   		 «ENDIF»
 			    «ENDIF»
 			    «IF st_fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.ComboField")»
 			    	<label for="«st_fields.name»" class="col-sm-2 control-label">«st_fields.description»</label>
 			    	<div class="col-sm-10">
-			    		<select id="«st_fields.name»" class="form-control">
+			    		<select id="«st_fields.name»" name="«st_fields.name»" class="form-control">
 							«FOR comboField : (st_fields as ComboField).^default»
 			    				<option>«comboField.intern»</option>
 			    		 	 «ENDFOR»			    		  
@@ -94,10 +99,10 @@ class TicketGenerator implements IGenerator {
 			    	<label for="«st_fields.name»" class="col-sm-2 control-label">«st_fields.description»</label>
 			    	<div class="col-sm-10">
 			      	«IF (st_fields as PersonField).^default == null»
-			      		<input type="text" class="form-control" id="«st_fields.name»" value="">
+			      		<input type="text" class="form-control" id="«st_fields.name»" name="«st_fields.name»" value="">
 			      	«ENDIF»
 			      	«IF (st_fields as PersonField).^default != null»
-			      		<input type="text" class="form-control" id="«st_fields.name»" value="«(st_fields as PersonField).^default.name»">				      		
+			      		<input type="text" class="form-control" id="«st_fields.name»" name="«st_fields.name»" value="«(st_fields as PersonField).^default.name»">				      		
 			   		«ENDIF»
 			   		</div>
 			    «ENDIF»			    
@@ -105,10 +110,10 @@ class TicketGenerator implements IGenerator {
 			    	<label for="«st_fields.name»" class="col-sm-2 control-label">«st_fields.description»</label>
 			    	<div class="col-sm-10">
 			    	«IF (st_fields as StringField).^default == null»	
-			      		<input type="text" class="form-control" id="«st_fields.name»" value="">
+			      		<input type="text" class="form-control" id="«st_fields.name»" name="«st_fields.name»" value="">
 			      	«ENDIF»
 			    	«IF (st_fields as StringField).^default != null»	
-			      		<input type="text" class="form-control" id="«st_fields.name»" value="«(st_fields as StringField).^default.intern»">
+			      		<input type="text" class="form-control" id="«st_fields.name»" name="«st_fields.name»" value="«(st_fields as StringField).^default.intern»">
 			      	«ENDIF»	
 			   		</div>
 			    «ENDIF»
@@ -116,13 +121,13 @@ class TicketGenerator implements IGenerator {
 			    	«IF (st_fields as DateField).today != true»			    	
 			    	<label for="«st_fields.name»" class="col-sm-2 control-label">«st_fields.description»</label>
 			    	<div class="col-sm-10">
-			      		<input type="text" class="form-control" id="«st_fields.name»" value="«(st_fields as DateField).^default.day.toString».«(st_fields as DateField).^default.month.toString».«(st_fields as DateField).^default.year.toString»">
+			      		<input type="text" class="form-control" id="«st_fields.name»" name="«st_fields.name»" value="«(st_fields as DateField).^default.day.toString».«(st_fields as DateField).^default.month.toString».«(st_fields as DateField).^default.year.toString»">
 			   		 </div>
 			   		 «ENDIF»
 			   		 «IF (st_fields as DateField).today == true»			    	
 			    	<label for="«st_fields.name»" class="col-sm-2 control-label">«st_fields.description»</label>
 			    	<div class="col-sm-10">
-			      		<input type="text" class="form-control" id="«st_fields.name»" value="«dateNow»">
+			      		<input type="text" class="form-control" id="«st_fields.name»" name="«st_fields.name»" value="«dateNow»">
 			   		</div>
 			   		 «ENDIF»
 			    «ENDIF»
@@ -133,26 +138,26 @@ class TicketGenerator implements IGenerator {
 				«IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.MailField")»
 			    	<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
 			    	<div class="col-sm-10">
-			      		<input type="email" class="form-control" id="«fields.name»" placeholder="«(fields as MailField).^default»">
+			      		<input type="email" class="form-control" id="«fields.name»" name="«fields.name»" placeholder="«(fields as MailField).^default»">
 			   		</div>
 			    «ENDIF»			    
 			    «IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.CheckField")»
 			    	«IF (fields as CheckField).^default.booleanValue == true»
 			    		<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
 			    		<div class="col-sm-10">
-			      			<input type="checkbox" id="«fields.name»" value="«(fields as CheckField).description»" checked>
+			      			<input type="checkbox" id="«fields.name»" name="«fields.name»" value="«(fields as CheckField).description»" checked>
 			   			 </div>
 			   		 «ELSE»
 			   		 	<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
 			    		<div class="col-sm-10">
-			      			<input type="checkbox" id="«fields.name»" value="«(fields as CheckField).description»">
+			      			<input type="checkbox" id="«fields.name»" name="«fields.name»" value="«(fields as CheckField).description»">
 			   			 </div>
 			   		 «ENDIF»
 			    «ENDIF»
 			    «IF fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.ComboField")»
 			    	<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
 			    	<div class="col-sm-10">
-			    		<select id="«fields.name»" class="form-control">
+			    		<select id="«fields.name»" name="«fields.name»" class="form-control">
 							«FOR comboField : (fields as ComboField).^default»
 			    				<option>«comboField.intern»</option>
 			    		 	 «ENDFOR»			    		  
@@ -163,10 +168,10 @@ class TicketGenerator implements IGenerator {
 			    	<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
 			    	<div class="col-sm-10">
 			      	«IF (fields as PersonField).^default == null»
-			      		<input type="text" class="form-control" id="«fields.name»" value="">
+			      		<input type="text" class="form-control" name="«fields.name»" id="«fields.name»" value="">
 			      	«ENDIF»
 			      	«IF (fields as PersonField).^default != null»
-			      		<input type="text" class="form-control" id="«fields.name»" value="«(fields as PersonField).^default.name»">				      		
+			      		<input type="text" class="form-control" id="«fields.name»" name="«fields.name»" value="«(fields as PersonField).^default.name»">				      		
 			   		«ENDIF»
 			   		</div>
 			    «ENDIF»			    
@@ -174,10 +179,10 @@ class TicketGenerator implements IGenerator {
 			    	<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
 			    	<div class="col-sm-10">
 			    	«IF (fields as StringField).^default == null»	
-			      		<input type="text" class="form-control" id="«fields.name»" value="">
+			      		<input type="text" class="form-control" id="«fields.name»" name="«fields.name»" value="">
 			      	«ENDIF»
 			    	«IF (fields as StringField).^default != null»	
-			      		<input type="text" class="form-control" id="«fields.name»" value="«(fields as StringField).^default.intern»">
+			      		<input type="text" class="form-control" id="«fields.name»" name="«fields.name»" value="«(fields as StringField).^default.intern»">
 			      	«ENDIF»	
 			   		</div>
 			    «ENDIF»
@@ -185,13 +190,13 @@ class TicketGenerator implements IGenerator {
 			    	«IF (fields as DateField).today != true»			    	
 			    	<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
 			    	<div class="col-sm-10">
-			      		<input type="text" class="form-control" id="«fields.name»" value="«(fields as DateField).^default.day.toString».«(fields as DateField).^default.month.toString».«(fields as DateField).^default.year.toString»">
+			      		<input type="text" class="form-control" id="«fields.name»" name="«fields.name»" value="«(fields as DateField).^default.day.toString».«(fields as DateField).^default.month.toString».«(fields as DateField).^default.year.toString»">
 			   		 </div>
 			   		 «ENDIF»
 			   		 «IF (fields as DateField).today == true»			    	
 			    	<label for="«fields.name»" class="col-sm-2 control-label">«fields.description»</label>
 			    	<div class="col-sm-10">
-			      		<input type="text" class="form-control" id="«fields.name»" value="«dateNow»">
+			      		<input type="text" class="form-control" id="«fields.name»" name="«fields.name»" value="«dateNow»">
 			   		</div>
 			   		 «ENDIF»
 			    «ENDIF»
