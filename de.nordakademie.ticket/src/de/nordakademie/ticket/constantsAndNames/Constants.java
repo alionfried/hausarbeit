@@ -5,6 +5,7 @@ public interface Constants {
 	public static String PATH = "de.nordakademie.ticket.";
 	
 //errors
+	public static String DUPLICATED_RULE_NAME = PATH + "duplicatedRuleName";
 	public static String DUPLICATED_TRANSITION_STATUS = PATH + "duplicatedTransitionStatus";
 	public static String ELEMENT_CONTAINS_LIST_WITH_DUPLICATES = PATH + "elementContainsListWithDuplicates" ;
 	public static String EMPTY_ROLE = PATH + "emptyRole" ;

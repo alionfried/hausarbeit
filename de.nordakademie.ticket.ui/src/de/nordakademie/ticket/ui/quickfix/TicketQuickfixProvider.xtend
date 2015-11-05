@@ -28,6 +28,7 @@ import de.nordakademie.ticket.constantsAndNames.Constructors
 import de.nordakademie.ticket.constantsAndNames.Names_EN
 import de.nordakademie.ticket.ticket.TicketFactory
 import org.eclipse.emf.ecore.EObject
+import java.util.regex.Pattern
 
 /**
  * Custom quickfixes.
@@ -38,6 +39,8 @@ class TicketQuickfixProvider extends DefaultQuickfixProvider implements Construc
 	, Names_EN
 //	, Names_DE
 {
+
+//TODO: ALREADY EXISTING!
 
 
 @Fix(TicketValidator.EMPTY_STRING)
@@ -78,24 +81,41 @@ def fillString(Issue issue, IssueResolutionAcceptor acceptor){
 	)
 }
 
-@Fix(TicketValidator.MISSING_RULE)
+@Fix(TicketValidator.DUPLICATED_RULE_NAME)
 def createStatus(Issue issue, IssueResolutionAcceptor acceptor){
-	val factory = TicketFactory.eINSTANCE;
-	
 	val String rule = issue.data.get(0);
 	val String rule_shownName = rule.substring(rule.lastIndexOf(KEY_POINT)+1).toFirstUpper
 	acceptor.accept(issue, 
-		M_NEW_RULE_SHORT + rule_shownName + "(by factory)", 
-		M_NEW_RULE_LONG_1 + rule_shownName + M_NEW_RULE_LONG_2, 
+		M_REMOVE_RULE_SHORT + rule_shownName, 
+		M_REMOVE_RULE_SHORT + rule_shownName, 
 		KEY_EMPTY,
 		[
 			element, 
 			context |
-				(element as ModelIssue).status.add(
-					factory.createStatus() => [
-						name = "newStatus";
-					]
-				)
+//				var ModelIssue model;
+//				if (element instanceof ModelIssue){
+//					model = (element as ModelIssue)
+//				} else {
+					var EObject e = element.eContainer
+					while (e != null && !(e instanceof ModelIssue)) {
+						e = e.eContainer
+					} 
+					val model = (e as ModelIssue)
+//				}
+				switch (rule){
+				case STATUS: 
+					model.status.remove(element)
+				case ROLE: 
+					model.role.remove(element)
+				case TRANSITION: 
+					model.transition.remove(element)
+				case WORKFLOW: 
+					model.workflow.remove(element)
+				case PERSON: 
+					model.person.remove(element)
+				case ISSUE_TYPE:
+					model.issueType.remove(element)
+				}
 		]
 	)
 }
@@ -477,11 +497,11 @@ def void removeAllDuplicates (List<?> list){
 }
 
 def String removePath (String string) {
-	return string.split(KEY_POINT).last
+	return string.split(Pattern.quote(KEY_POINT)).last
 }
 
 def String addPath (String string) {
-	if (string.contains(PATH)){
+	if (string.startsWith(PATH)){
 		return string
 	}
 	return PATH + string
@@ -512,16 +532,16 @@ def String getRuleConstructor (String rule, String name, EObject modelIssue) {
 	switch (rule){
 	case ISSUE_SCREEN:
 		{
-			text = NEW_ISSUE_SCRREN.replaceFirst(V_STATUS_FIELD__NAME, STATUS_FIELD.removePath).replaceFirst(V_SUMMARY_FIELD__NAME, SUMMAY_FIELD.removePath)
+			text = NEW_ISSUE_SCRREN.replaceAll(V_STATUS_FIELD__NAME, STATUS_FIELD.removePath).replaceAll(V_SUMMARY_FIELD__NAME, SUMMAY_FIELD.removePath)
 			
 		}
 	case ISSUE_TYPE:
 		{
 			text = NEW_ISSUE_TYPE
 			if (modelIssue != null && modelIssue instanceof ModelIssue && !(modelIssue as ModelIssue).workflow.empty){
-				text.replaceFirst(V_ISSUE_TYPE__WORKFLOW, (modelIssue as ModelIssue).workflow.get(0).name)
+				text = text.replaceAll(V_ISSUE_TYPE__WORKFLOW, (modelIssue as ModelIssue).workflow.get(0).name)
 			} else {
-				text.replaceFirst(V_ISSUE_TYPE__WORKFLOW, WORKFLOW.removePath)
+				text = text.replaceFirst(V_ISSUE_TYPE__WORKFLOW, WORKFLOW.removePath) 
 			}
 		}
 	case PERSON:
@@ -532,27 +552,27 @@ def String getRuleConstructor (String rule, String name, EObject modelIssue) {
 		text = NEW_STATUS
 	case TRANSITION:
 		{
-			text = NEW_TRANSITION.replaceFirst(V_TRANSITION__TITLE, S_TO + name.toFirstUpper)
+			text = NEW_TRANSITION.replaceAll(V_TRANSITION__TITLE, S_TO + name.toFirstUpper)
 			if (modelIssue != null && modelIssue instanceof ModelIssue && !(modelIssue as ModelIssue).status.empty){
 				val ModelIssue model = (modelIssue as ModelIssue)
-				text.replaceFirst(V_TRANSITION__START, model.status.get(0).name)
+				text = text.replaceAll(V_TRANSITION__START, model.status.get(0).name)
 				
 				if (model.status.size > 1){
-					text.replaceFirst(V_TRANSITION__END, model.status.get(1).name)
+					text = text.replaceAll(V_TRANSITION__END, model.status.get(1).name)
 				} else {
-					text.replaceFirst(V_TRANSITION__END, model.status.get(0).name)
+					text = text.replaceAll(V_TRANSITION__END, model.status.get(0).name)
 				}
 			} else {
-				text.replaceFirst(V_TRANSITION__START, STATUS.removePath).replaceFirst(V_TRANSITION__END, STATUS.removePath)
+				text = text.replaceAll(V_TRANSITION__START, STATUS.removePath).replaceAll(V_TRANSITION__END, STATUS.removePath)
 			}
 		}
 	case WORKFLOW:
 		{
 			text = NEW_WORKFLOW
 			if (modelIssue != null && modelIssue instanceof ModelIssue && !(modelIssue as ModelIssue).transition.empty){
-				text.replaceFirst(V_ISSUE_TYPE__WORKFLOW, (modelIssue as ModelIssue).transition.get(0).name)
+				text = text.replaceAll(V_WORKFLOW__TRANSITIONS, (modelIssue as ModelIssue).transition.get(0).name)
 			} else {
-				text.replaceFirst(V_ISSUE_TYPE__WORKFLOW, TRANSITION.removePath)
+				text = text.replaceAll(V_WORKFLOW__TRANSITIONS, TRANSITION.removePath)
 			}
 		}
 	}

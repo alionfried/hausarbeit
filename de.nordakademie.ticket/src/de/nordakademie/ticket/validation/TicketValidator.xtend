@@ -19,7 +19,8 @@ import org.eclipse.xtext.validation.Check
 import static de.nordakademie.ticket.ticket.TicketPackage.Literals.*
 import de.nordakademie.ticket.constantsAndNames.Constants
 import de.nordakademie.ticket.constantsAndNames.Names_EN
-
+import de.nordakademie.ticket.ticket.Status
+import org.eclipse.emf.ecore.EObject
 
 /**
  * This class contains custom validation rules. 
@@ -35,56 +36,136 @@ class TicketValidator extends AbstractTicketValidator implements Constants
 	
 	
 	@Check
-	def checkAllRulesAreCreated (ModelIssue modelIssue) {
-		if (modelIssue.issueType.empty ) {
+	def checkAllRulesCreated (ModelIssue modelIssue) {
+		switch (true){
+		case modelIssue.issueType.empty: 
 			error(M_RULE_NEEDED_1 + S_ISSUE_TYPE + M_RULE_NEEDED_2,
 				MODEL_ISSUE__ISSUE_SCREEN,
 				MISSING_RULE,
-				ISSUE_TYPE
-			)
-		}
-		
-		if (modelIssue.person.empty ) {
+				ISSUE_TYPE)
+		case modelIssue.person.empty:
 			error(M_RULE_NEEDED_1 + S_PERSON + M_RULE_NEEDED_2,
 				MODEL_ISSUE__ISSUE_SCREEN,
 				MISSING_RULE,
-				PERSON
-			)
-		}		 
-		 
-		if (modelIssue.role.empty ) {
+				PERSON)
+		case modelIssue.role.empty:
 			error(M_RULE_NEEDED_1 + S_ROLE + M_RULE_NEEDED_2,
 				MODEL_ISSUE__ISSUE_SCREEN,
 				MISSING_RULE,
-				ROLE
-			)
-		} 
-		 
-		if (modelIssue.status.empty ) {
+				ROLE)
+		case modelIssue.status.empty:
 			error(M_RULE_NEEDED_1 + S_STATUS + M_RULE_NEEDED_2,
 				MODEL_ISSUE__ISSUE_SCREEN,
 				MISSING_RULE,
-				STATUS
-			)
-		}   
-		
-		if (modelIssue.transition.empty ) {
+				STATUS)
+		case modelIssue.transition.empty:
 			error(M_RULE_NEEDED_1 + S_TRANSITION + M_RULE_NEEDED_2,
 				MODEL_ISSUE__ISSUE_SCREEN,
 				MISSING_RULE,
-				TRANSITION
-			)
-		}   
-		
-		if (modelIssue.workflow.empty ) {
+				TRANSITION)
+		case modelIssue.workflow.empty:
 			error(M_RULE_NEEDED_1 + S_WORKFLOW + M_RULE_NEEDED_2,
 				MODEL_ISSUE__ISSUE_SCREEN,
 				MISSING_RULE,
-				WORKFLOW
-			)
-		} 
-		
+				WORKFLOW)
+		}
 	}
+	
+	
+//	@Check
+//	def checkStatusAlreadyExists (Status status){
+//		val container = status.eContainer
+//		if (container instanceof ModelIssue){
+//			var list = (container as ModelIssue).status
+//		}
+//		
+//		
+////		)
+//		var List<String> names = new ArrayList<String>
+//		for (rule : modelIssue.status){
+//			if (names.contains(rule.name)){
+//				error(S_STATUS + M_SAME_NAME,
+//					STATUS__NAME,
+//					DUPLICATED_RULE_NAME,
+//					STATUS
+//				)
+//			} else {
+//				names.add(rule.name)
+//			}
+//		}
+//		names.clear
+//		for (rule : modelIssue.issueType){
+//			if (names.contains(rule.name)){
+//				error(S_ISSUE_TYPE + M_SAME_NAME,
+//					ISSUE_TYPE__NAME,
+//					DUPLICATED_RULE_NAME,
+//					ISSUE_TYPE
+//				)
+//			} else {
+//				names.add(rule.name)
+//			}
+//		}
+//		names.clear
+//		for (rule : modelIssue.person){
+//			if (names.contains(rule.name)){
+//				error(S_PERSON + M_SAME_NAME,
+//					PERSON__NAME,
+//					DUPLICATED_RULE_NAME,
+//					PERSON
+//				)
+//			} else {
+//				names.add(rule.name)
+//			}
+//		}
+//		names.clear
+//		for (rule : modelIssue.fields){
+//			if (names.contains(rule.name)){
+//				error(S_FIELD + M_SAME_NAME,
+//					FIELD__NAME,
+//					DUPLICATED_RULE_NAME,
+//					FIELD
+//				)
+//			} else {
+//				names.add(rule.name)
+//			}
+//		}
+//		names.clear
+//		for (rule : modelIssue.role){
+//			if (names.contains(rule.name)){
+//				error(S_ROLE + M_SAME_NAME,
+//					ROLE__NAME,
+//					DUPLICATED_RULE_NAME,
+//					ROLE
+//				)
+//			} else {
+//				names.add(rule.name)
+//			}
+//		}
+//		names.clear
+//		for (rule : modelIssue.transition){
+//			if (names.contains(rule.name)){
+//				error(S_TRANSITION + M_SAME_NAME,
+//					TRANSITION__NAME,
+//					DUPLICATED_RULE_NAME,
+//					TRANSITION
+//				)
+//			} else {
+//				names.add(rule.name)
+//			}
+//		}
+//		names.clear
+//		for (rule : modelIssue.workflow){
+//			if (names.contains(rule.name)){
+//				error(S_WORKFLOW + M_SAME_NAME,
+//					WORKFLOW__NAME,
+//					DUPLICATED_RULE_NAME,
+//					WORKFLOW
+//				)
+//			} else {
+//				names.add(rule.name)
+//			}
+//		}
+//	}
 
 	@Check
 	def checkTransitionHasSameStatus (Transition transition) {
@@ -119,13 +200,14 @@ class TicketValidator extends AbstractTicketValidator implements Constants
 		}
 	}
 	
+	
 	@Check
-	def checkPersonHasDuplicatedRoles (Person person){
-		if (this.listHasDuplicates(person.roles)){
-			error(M_SAME_PERSON_ROLES, 
-				PERSON__ROLES,
-				ELEMENT_CONTAINS_LIST_WITH_DUPLICATES,
-				person.name, S_ROLES
+	def checkRoleContainsNoTransition (Role role) {
+		if (role.transitions.empty && !role.openIssue){
+			error(M_NO_ROLE_TRANSITIONS, 
+				ROLE__NAME,
+				EMPTY_ROLE,
+				role.name
 			)
 		}
 	}
@@ -142,12 +224,12 @@ class TicketValidator extends AbstractTicketValidator implements Constants
 	}
 	
 	@Check
-	def checkRoleContainsNoTransition (Role role) {
-		if (role.transitions.empty && !role.openIssue){
-			error(M_NO_ROLE_TRANSITIONS, 
-				ROLE__NAME,
-				EMPTY_ROLE,
-				role.name
+	def checkPersonHasDuplicatedRoles (Person person){
+		if (this.listHasDuplicates(person.roles)){
+			error(M_SAME_PERSON_ROLES, 
+				PERSON__ROLES,
+				ELEMENT_CONTAINS_LIST_WITH_DUPLICATES,
+				person.name, S_ROLES
 			)
 		}
 	}
@@ -213,7 +295,7 @@ class TicketValidator extends AbstractTicketValidator implements Constants
 				)
 		} 
 		
-		if (! ((date.year > 1900 && date.year < 2100) || (date.year == 9999) || (date.year > 0 && date.year < 100)) ){
+		if (! ((date.year >= 1900 && date.year < 2100) || (date.year == 9999) || (date.year >= 0 && date.year < 100)) ){
 				error(M_INVALIDE_YEAR, 
 					DATE__YEAR,
 					INVALID_YEAR,

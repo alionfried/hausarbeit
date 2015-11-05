@@ -19,7 +19,7 @@ public interface Constructors extends Constants{
 			KEY_TAB + "StatusField " + V_STATUS_FIELD__NAME + " {" + KEY_NEW_LINE + KEY_TAB + KEY_NEW_LINE + "}" + KEY_NEW_LINE +
 			KEY_TAB + "SummaryField " + V_SUMMARY_FIELD__NAME + " {" + KEY_NEW_LINE + KEY_TAB + KEY_NEW_LINE + "}" + KEY_NEW_LINE + "}";
 	public static String NEW_ISSUE_TYPE = 
-			"IssueType " + V_RULE__NAME + " follows " + V_ISSUE_TYPE__WORKFLOW + "{" + KEY_NEW_LINE + KEY_TAB + KEY_NEW_LINE + "}";
+			"IssueType " + V_RULE__NAME + " follows " + V_ISSUE_TYPE__WORKFLOW + " {" + KEY_NEW_LINE + KEY_TAB + KEY_NEW_LINE + "}";
 	
 	public static String NEW_PERSON = 
 			"Person " + V_RULE__NAME + " called \"" + V_PERSON__SHWON_NAME + "\" {" + KEY_NEW_LINE + KEY_TAB + KEY_NEW_LINE + "}";

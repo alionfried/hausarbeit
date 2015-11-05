@@ -38,6 +38,9 @@ public interface Names_EN {
 	public static String M_NO_ROLE_TRANSITIONS = "Role must contain at least one Transition";
 	public static String M_NO_COMBO_ENTRIES = "ComboField must contain at least one Entrie";
 
+	public static String M_REMOVE_RULE_SHORT = "Remove ";
+	public static String M_RENAME_RULE_SHORT = "Rename to ";
+	
 	public static String M_REMOVE_DUPLICATES_LONG_1 = "Remove all duplicated";
 	public static String M_REMOVE_DUPLICATES_LONG_2 = " from ";
 	public static String M_REMOVE_DUPLICATES_SHORT = "Remove all duplicates";
@@ -46,11 +49,12 @@ public interface Names_EN {
 	
 	public static String M_SAME_BEGIN_AND_END_STATUS = "Begin-Status and End-Status must be different";
 	public static String M_SAME_COMBO_ENTRIES = "ComboField must have different Entries";
-	public static String M_SAME_WORKFLOW_TRANSITIONS = "Workflow must have different Transitions";
 	public static String M_SAME_ISSUE_SCREEN_FIELDS = "IssueScreen must have different Fields";
 	public static String M_SAME_ISSUE_TYPE_FIELDS = "IssueType must have different Fields";
+	public static String M_SAME_NAME = " already exists";
 	public static String M_SAME_PERSON_ROLES = "A Person must have different Roles";
 	public static String M_SAME_ROLE_TRANSITIONS = "Role must have different Transition";
+	public static String M_SAME_WORKFLOW_TRANSITIONS = "Workflow must have different Transitions";
 	
 	public static String M_TRANSITION_HAS_DIFFERENT_STATUS = "Begin-Status and End-Status must be different";
 
@@ -71,6 +75,7 @@ public interface Names_EN {
 	public static String S_ENTRIES = "Entries";
 	
 	public static String S_FEBRUARY = "February";
+	public static String S_FIELD = "Field";
 	public static String S_FIELDS = "Fields";
 	
 	public static String S_ISSUE_TYPE = "IssueType";
