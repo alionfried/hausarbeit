@@ -51,9 +51,9 @@ class TicketGenerator implements IGenerator {
 		<form id="formSubmit" action="" class="form-horizontal">
 			
 			<div class="form-group">								
-					<label for="issueID" class="col-sm-2 control-label">issueID</label>
+					<label for="_id" class="col-sm-2 control-label">_id</label>
 				    <div class="col-sm-10">
-				      <input type="text" class="form-control" id="issueID" name="issueID" value="null" readonly>
+				      <input type="text" class="form-control" id="_id" name="_id" value="null" readonly>
 					</div>
 			</div>		
 			
