@@ -35,14 +35,19 @@ class TicketGenerator implements IGenerator {
 	fsa.generateFile(
 			'individualInput.html',
 			resource.contents.filter(ModelIssue).head.individualInput			
-		)						
-	}	
+		)
+	fsa.generateFile(
+			'datePicker.js',
+			resource.contents.filter(ModelIssue).head.datePicker			
+		)							
+	}			
 	
 	def CharSequence individualInput(ModelIssue modelIssue)'''	
 	<div>	
 	«FOR issueType : modelIssue.issueType»
 				
 		<div id="«issueType.name»" class="form-group">
+		<script src="datePicker.js"></script>
 		<form id="formSubmit" action="" class="form-horizontal">
 			
 			<div class="form-group">								
@@ -219,6 +224,18 @@ class TicketGenerator implements IGenerator {
 		</div>
 	«ENDFOR»
 	</div>
+	'''
+	
+	def CharSequence datePicker(ModelIssue modelIssue)'''
+	«FOR st_fields :  modelIssue.issueScreen.fields»
+		«IF st_fields.eClass.instanceClassName.equals("de.nordakademie.ticket.ticket.DateField")»
+			$(function() {
+     		 	$("#«st_fields.name»").datepicker({	          	
+    	      		dateFormat: "dd.mm.yy"
+      			});
+  			});
+		«ENDIF»
+	«ENDFOR»
 	'''
 }
 
