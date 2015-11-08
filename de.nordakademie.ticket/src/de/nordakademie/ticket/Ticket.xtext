@@ -55,7 +55,7 @@ Role:
 
 Transition:
 	'Transition' name = ID 'named' title = STRING '{'
-		start = [Status] 'to' ziel = [Status] 
+		from = [Status] 'to' to = [Status] 
 	'}'
 ;
 
