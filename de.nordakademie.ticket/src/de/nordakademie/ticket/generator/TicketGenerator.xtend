@@ -58,7 +58,7 @@ class TicketGenerator implements IGenerator {
 				,
 			«ENDIF»
 			{
-				"issueName" : "«issueType.name»",
+				"issueTypeName" : "«issueType.name»",
 				«var workflow = issueType.workflow»
 				"workflow":{
 					"workflowName":"«workflow.name»",
