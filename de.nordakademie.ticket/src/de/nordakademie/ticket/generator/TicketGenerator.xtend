@@ -57,22 +57,24 @@ class TicketGenerator implements IGenerator {
 			«IF (issueType != modelIssue.issueType.get(0))»
 				,
 			«ENDIF»
-			{"issueName" : "«issueType.name»",
-			«var workflow = issueType.workflow»
-			"workflow":{
-				"workflowName":"«workflow.name»",
-				"workflowTransitions":[
-				«FOR transition : workflow.transitions»
-					«IF (transition != workflow.transitions.get(0))»
-						,
-					«ENDIF»
-					{
-						"transitionName":"«transition.name»",
-					 	"from":"«transition.from»",
-					 	"to":"«transition.to»"
-					}
-				«ENDFOR»
-				]}
+			{
+				"issueName" : "«issueType.name»",
+				«var workflow = issueType.workflow»
+				"workflow":{
+					"workflowName":"«workflow.name»",
+					"workflowTransitions":[
+					«FOR transition : workflow.transitions»
+						«IF (transition != workflow.transitions.get(0))»
+							,
+						«ENDIF»
+						{
+							"transitionName":"«transition.name»",
+						 	"from":"«transition.from»",
+						 	"to":"«transition.to»"
+						}
+					«ENDFOR»
+					]
+				}
 			}
 		«ENDFOR»
 		]}
