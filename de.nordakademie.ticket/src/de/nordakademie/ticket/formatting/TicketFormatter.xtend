@@ -34,6 +34,20 @@ class TicketFormatter extends AbstractDeclarativeFormatter {
 		val date = g.dateAccess
 		c.setNoSpace.between(date.dayAssignment_0, date.yearAssignment_4)
 		
+		val issueScreen = g.issueScreenAccess
+		c.setLinewrap.after(issueScreen.leftCurlyBracketKeyword_2)
+		c.setIndentation(issueScreen.leftCurlyBracketKeyword_2, issueScreen.rightCurlyBracketKeyword_6)
+		c.setLinewrap.after(issueScreen.statusfieldAssignment_3)
+		c.setLinewrap.after(issueScreen.summaryfieldAssignment_4)
+		c.setLinewrap.before(issueScreen.rightCurlyBracketKeyword_6)
+		val statusField = g.statusFieldAccess
+		c.setLinewrap.after(statusField.leftCurlyBracketKeyword_2)
+		c.setIndentation(statusField.leftCurlyBracketKeyword_2, statusField.rightCurlyBracketKeyword_5)
+		c.setLinewrap.after(statusField.defaultAssignment_4)
+		val summaryField = g.summaryFieldAccess
+		c.setLinewrap.after(summaryField.leftCurlyBracketKeyword_2)
+		c.setIndentation(summaryField.leftCurlyBracketKeyword_2, summaryField.rightCurlyBracketKeyword_4)
+		c.setLinewrap.after(summaryField.defaultAssignment_3_1)
 		
 // It's usually a good idea to activate the following three statements.
 // They will add and preserve newlines around comments

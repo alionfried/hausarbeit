@@ -162,22 +162,6 @@ class TicketValidator extends AbstractTicketValidator implements Constants
 		 	}
 		}
 	}
-	
-	@Check
-	def checkAlreadyExists (Status status){
-		var container = status.eContainer
-		while (container != null && !(container instanceof ModelIssue)){
-			container = container.eContainer
-		}
-		
-		if (container instanceof ModelIssue && this.listHasSameNamedElement((container as ModelIssue).status, status)){
-			error(S_STATUS + M_SAME_NAME,
-				NAME_OBJECT__NAME,
-				DUPLICATED_RULE_NAME,
-				STATUS, status.name
-			)
-		}
-	}
 		
 
 	@Check
@@ -193,7 +177,7 @@ class TicketValidator extends AbstractTicketValidator implements Constants
 
 	@Check
 	def checkTransitionTitleIsEmpty (Transition transition) {
-		if (transition.title.empty){
+		if (transition.title.empty || transition.title.replaceAll(KEY_SPACE, KEY_EMPTY).empty){
 			error(M_EMPTY_TITLE, 
 				TRANSITION__TITLE,
 				EMPTY_STRING,
@@ -249,7 +233,7 @@ class TicketValidator extends AbstractTicketValidator implements Constants
 	
 	@Check
 	def checkPersonNameIsEmpty (Person person) {
-		if (person.shownName.empty){
+		if (person.shownName.empty || person.shownName.replaceAll(KEY_SPACE, KEY_EMPTY).empty){
 			error(M_EMPTY_NAME, 
 				PERSON__SHOWN_NAME,
 				EMPTY_STRING,
@@ -342,7 +326,7 @@ class TicketValidator extends AbstractTicketValidator implements Constants
 	
 	@Check
 	def checkFieldDescriptionIsEmpty (Field field){
-		if (field.description.empty){
+		if (field.description.empty || field.description.replaceAll(KEY_SPACE, KEY_EMPTY).empty){
 			error(M_EMPTY_DESCRIPTION, 
 				FIELD__DESCRIPTION,
 				EMPTY_STRING,
@@ -362,7 +346,7 @@ class TicketValidator extends AbstractTicketValidator implements Constants
 		}
 		
 		for (String string : combo.^default){
-			if (string.empty){
+			if (string.empty || string.replaceAll(KEY_SPACE, KEY_EMPTY).empty){
 				error(M_EMPTY_ENTRIES, 
 					COMBO_FIELD__DEFAULT,
 					EMPTY_STRING,
