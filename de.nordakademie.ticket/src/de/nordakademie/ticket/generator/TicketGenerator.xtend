@@ -18,6 +18,7 @@ import de.nordakademie.ticket.ticket.CheckField
 import de.nordakademie.ticket.ticket.ComboField
 import de.nordakademie.ticket.ticket.StringField
 import java.text.SimpleDateFormat
+import de.nordakademie.ticket.ticket.Workflow
 
 /**
  * Generates code from your model files on save.
@@ -143,7 +144,14 @@ class TicketGenerator implements IGenerator {
 			<div class="form-group">								
 					<label for="status" class="col-sm-2 control-label">«modelIssue.issueScreen.statusfield.name»</label>
 				    <div class="col-sm-10">
-				      <input type="text" class="form-control" id="status" name="status" value="«modelIssue.issueScreen.statusfield.^default.name»" required>
+				    	<input type="text" class="form-control" id="status" name="status" value="«modelIssue.issueScreen.statusfield.^default.name»" readonly>
+					</div>
+			</div>
+			<div id="optionSelectStatus" class="form-group">								
+					<label for="selectStatus" class="col-sm-2 control-label">Statusänderung</label>
+				    <div class="col-sm-10">
+				    	<select id="selectStatus" name="selectStatus" class="form-control">							
+			    		</select>
 					</div>
 			</div>
 			<div class="form-group">
