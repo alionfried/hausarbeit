@@ -69,8 +69,8 @@ class TicketGenerator implements IGenerator {
 						«ENDIF»
 						{
 							"transitionName":"«transition.name»",
-						 	"from":"«transition.from»",
-						 	"to":"«transition.to»"
+						 	"from":"«transition.from.name»",
+						 	"to":"«transition.to.name»"
 						}
 					«ENDFOR»
 					]
@@ -104,8 +104,8 @@ class TicketGenerator implements IGenerator {
 					«ENDIF»
 					{
 						"transitionName":"«transition.name»",
-					 	"from":"«transition.from»",
-					 	"to":"«transition.to»"
+					 	"from":"«transition.from.name»",
+					 	"to":"«transition.to.name»"
 					}
 				«ENDFOR»
 				]
