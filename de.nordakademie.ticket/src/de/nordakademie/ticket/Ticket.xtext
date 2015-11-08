@@ -96,7 +96,7 @@ Field:
 
 MailField:
 	'MailField' name = ID 'as' description = STRING '{'
-		( 'default' default = MAIL ) ?
+		( 'default' default = STRING ) ?
 	'}'
 ;
 
@@ -136,8 +136,8 @@ PersonField:
 	'}'
 ;
 
-terminal MAIL:
-	'<'( 'a'..'z'|'A'..'Z'|'0'..'9'|'.'|'-'|'_'|'%' ) +     					//'beispiel123'
-	'@' ('a'..'z'|'A'..'Z'|'0'..'9')+	('a'..'z'|'A'..'Z'|'0'..'9'|'.'|'-')*	//'@wak-sh'
-	'.' ('a'..'z' | 'A'..'Z')('a'..'z' | 'A'..'Z')+	'>'							//'.de'
-;
+//terminal MAIL:
+//	'<'( 'a'..'z'|'A'..'Z'|'0'..'9'|'.'|'-'|'_'|'%' ) +     					//'beispiel123'
+//	'@' ('a'..'z'|'A'..'Z'|'0'..'9')+	('a'..'z'|'A'..'Z'|'0'..'9'|'.'|'-')*	//'@wak-sh'
+//	'.' ('a'..'z' | 'A'..'Z')('a'..'z' | 'A'..'Z')+	'>'							//'.de'
+//;

@@ -28,7 +28,7 @@ import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider
 import org.eclipse.xtext.ui.editor.quickfix.Fix
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.validation.Issue
-import de.nordakademie.ticket.ticket.NameObject
+//import de.nordakademie.ticket.ticket.NameObject
 
 /**
  * Custom quickfixes.
@@ -79,6 +79,9 @@ class TicketQuickfixProvider extends DefaultQuickfixProvider implements Construc
 		)
 	}
 	
+	
+//teilweise xText-interner Fehler, wenn obere Rule entfernt werden soll:
+//Element wird aus Liste entfernt, aber Dokument kann nicht generiert werden --> Standard wieder hergestellt
 	@Fix(TicketValidator.DUPLICATED_RULE_NAME)
 	def removeRule(Issue issue, IssueResolutionAcceptor acceptor){
 		val String rule = issue.data.get(0);

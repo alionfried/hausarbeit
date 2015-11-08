@@ -24,9 +24,10 @@ public interface Names_EN {
 	public static String M_FILL_EMPTY_ELEMENT_1 = "Fill empty element ";
 	public static String M_FILL_EMPTY_ELEMENT_2 = " with ";
 	
-	public static String M_INVALIDE_DAY = "Enter a correct Day";
-	public static String M_INVALIDE_MONTH = "Enter a correct Month";
-	public static String M_INVALIDE_YEAR = "Enter a correct Year";
+	public static String M_INVALID_DAY = "Enter a correct Day";
+	public static String M_INVALID_MAIL = "Enter a valid Mail ('example@gmx.com')";
+	public static String M_INVALID_MONTH = "Enter a correct Month";
+	public static String M_INVALID_YEAR = "Enter a correct Year";
 	
 	public static String M_MONTH_TO_LONG_1 = "Switch month of ";
 	public static String M_MONTH_TO_LONG_2 = " to ";

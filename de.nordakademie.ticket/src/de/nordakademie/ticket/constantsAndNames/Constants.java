@@ -11,6 +11,7 @@ public interface Constants {
 	public static String EMPTY_ROLE = PATH + "emptyRole" ;
 	public static String EMPTY_STRING = PATH + "emptyString" ;
 	public static String INVALID_DAY = PATH + "invalidDay";
+	public static String INVALID_MAIL = PATH + "invalidMail";
 	public static String INVALID_MONTH = PATH + "invalidMonth";
 	public static String INVALID_YEAR = PATH + "invalidYear";
 	public static String MISSING_RULE = PATH + "missingRule";
@@ -45,6 +46,8 @@ public interface Constants {
 	public static String KEY_TAB = "\t";
 	
 //value constants	
+	public static String C_MAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 	public static int C_LAST_YEAR = 9999;
 	
 	

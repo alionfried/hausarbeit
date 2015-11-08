@@ -22,6 +22,8 @@ import de.nordakademie.ticket.constantsAndNames.Names_EN
 import de.nordakademie.ticket.ticket.Status
 import de.nordakademie.ticket.ticket.NameObject
 import org.eclipse.emf.common.util.EList
+import java.util.regex.Pattern
+import de.nordakademie.ticket.ticket.MailField
 
 /**
  * This class contains custom validation rules. 
@@ -252,7 +254,7 @@ class TicketValidator extends AbstractTicketValidator implements Constants
 		if (date.month == 1 || date.month == 3 || date.month == 5 || date.month == 7 || date.month == 8
 			|| date.month == 10 || date.month == 12) {
 				if (date.day < 1 || date.day > 31){
-					error(M_INVALIDE_DAY, 
+					error(M_INVALID_DAY, 
 						DATE__DAY,
 						INVALID_DAY,
 						name
@@ -260,7 +262,7 @@ class TicketValidator extends AbstractTicketValidator implements Constants
 				}
 		} else if (date.month == 4 || date.month == 6 || date.month == 9 || date.month == 11) {
 				if (date.day < 1 || date.day > 30){
-					error(M_INVALIDE_DAY, 
+					error(M_INVALID_DAY, 
 						DATE__DAY,
 						INVALID_DAY,
 						name
@@ -269,21 +271,21 @@ class TicketValidator extends AbstractTicketValidator implements Constants
 		} else if (date.month == 2) {
 				if (date.year % 4 == 0 && ( (date.year % 100 != 0) || (date.year % 400 == 0) ) ){
 					if (date.day < 1 || date.day > 29){
-						error(M_INVALIDE_DAY, 
+						error(M_INVALID_DAY, 
 							DATE__DAY,
 							INVALID_DAY,
 							name
 						)
 					}
 				} else if (date.day < 1 || date.day > 28){
-					error(M_INVALIDE_DAY, 
+					error(M_INVALID_DAY, 
 						DATE__DAY,
 						INVALID_DAY,
 						name
 					)
 				}
 		} else {
-				error(M_INVALIDE_MONTH, 
+				error(M_INVALID_MONTH, 
 					DATE__MONTH,
 					INVALID_MONTH,
 					name
@@ -291,7 +293,7 @@ class TicketValidator extends AbstractTicketValidator implements Constants
 		} 
 		
 		if (! ((date.year >= 1900 && date.year < 2100) || (date.year == 9999) || (date.year >= 0 && date.year < 100)) ){
-				error(M_INVALIDE_YEAR, 
+				error(M_INVALID_YEAR, 
 					DATE__YEAR,
 					INVALID_YEAR,
 					name
@@ -352,6 +354,19 @@ class TicketValidator extends AbstractTicketValidator implements Constants
 				)
 			}
 		}
+	}
+	
+	@Check
+	def checkMailFieldMail (MailField mailField){
+		val pattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+				+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+		if (! Pattern.matches(pattern, mailField.^default))	{
+			error(M_INVALID_MAIL, 
+				MAIL_FIELD__DEFAULT,
+				INVALID_MAIL,
+				mailField.^default
+			)
+		}	
 	}
 	
 	def boolean listHasDuplicates (List<?> list){
