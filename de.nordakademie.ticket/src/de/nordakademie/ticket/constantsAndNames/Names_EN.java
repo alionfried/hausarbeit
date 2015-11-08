@@ -39,7 +39,11 @@ public interface Names_EN {
 	public static String M_NO_COMBO_ENTRIES = "ComboField must contain at least one Entrie";
 
 	public static String M_REMOVE_RULE_SHORT = "Remove ";
+	public static String M_RENAME_RULE_SUFFIX = "_2";
+	public static String M_RENAME_RULE_LONG_1 = "Rename ";
+	public static String M_RENAME_RULE_LONG_2 = " to ";
 	public static String M_RENAME_RULE_SHORT = "Rename to ";
+	
 	
 	public static String M_REMOVE_DUPLICATES_LONG_1 = "Remove all duplicated";
 	public static String M_REMOVE_DUPLICATES_LONG_2 = " from ";

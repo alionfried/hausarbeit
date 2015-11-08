@@ -3,6 +3,9 @@
  */
 package de.nordakademie.ticket.ui.quickfix
 
+import de.nordakademie.ticket.constantsAndNames.Constructors
+import de.nordakademie.ticket.constantsAndNames.Names_EN
+import de.nordakademie.ticket.ticket.ComboField
 import de.nordakademie.ticket.ticket.Date
 import de.nordakademie.ticket.ticket.Field
 import de.nordakademie.ticket.ticket.IssueScreen
@@ -10,25 +13,22 @@ import de.nordakademie.ticket.ticket.IssueType
 import de.nordakademie.ticket.ticket.ModelIssue
 import de.nordakademie.ticket.ticket.Person
 import de.nordakademie.ticket.ticket.Role
+import de.nordakademie.ticket.ticket.Status
+import de.nordakademie.ticket.ticket.Transition
 import de.nordakademie.ticket.ticket.Workflow
 import de.nordakademie.ticket.validation.TicketValidator
 import java.util.ArrayList
 import java.util.Calendar
 import java.util.List
-import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider
+import java.util.regex.Pattern
+import org.eclipse.emf.common.util.EList
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.diagnostics.Diagnostic
+import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider
 import org.eclipse.xtext.ui.editor.quickfix.Fix
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.validation.Issue
-import de.nordakademie.ticket.ticket.Transition
-import de.nordakademie.ticket.ticket.Status
-import org.eclipse.emf.common.util.EList
-import de.nordakademie.ticket.ticket.ComboField
-import de.nordakademie.ticket.constantsAndNames.Constructors
-import de.nordakademie.ticket.constantsAndNames.Names_EN
-import de.nordakademie.ticket.ticket.TicketFactory
-import org.eclipse.emf.ecore.EObject
-import java.util.regex.Pattern
+import de.nordakademie.ticket.ticket.NameObject
 
 /**
  * Custom quickfixes.
@@ -40,544 +40,567 @@ class TicketQuickfixProvider extends DefaultQuickfixProvider implements Construc
 //	, Names_DE
 {
 
-//TODO: ALREADY EXISTING!
-
-
-@Fix(TicketValidator.EMPTY_STRING)
-def fillString(Issue issue, IssueResolutionAcceptor acceptor){
-	val String emptyElement 		= issue.data.get(0)
-	val String emptyElementShown 	= issue.data.get(1)
-	val String newString 			= issue.data.get(2)
-	acceptor.accept(issue, 
-		M_FILL_EMPTY_ELEMENT_1 + emptyElementShown, 
-		M_FILL_EMPTY_ELEMENT_1 + emptyElementShown + M_FILL_EMPTY_ELEMENT_2 + 
-			KEY_APOST + newString + KEY_APOST , 
-		KEY_EMPTY,
-		[
-			element, 
-			context |
-				switch (true) {
-				case element instanceof Field:
-					switch (emptyElement){
-					case DESCRIPTION:
-						(element as Field).description = newString
-					case ENTRY:
-						if (element instanceof ComboField){
-							var i = -1
-							for (String string : (element as ComboField).^default){
-								i++
-								if (string.empty){
-									(element as ComboField).^default.set(i, newString)
+	
+	@Fix(TicketValidator.EMPTY_STRING)
+	def fillString(Issue issue, IssueResolutionAcceptor acceptor){
+		val String emptyElement 		= issue.data.get(0)
+		val String emptyElementShown 	= issue.data.get(1)
+		val String newString 			= issue.data.get(2)
+		acceptor.accept(issue, 
+			M_FILL_EMPTY_ELEMENT_1 + emptyElementShown, 
+			M_FILL_EMPTY_ELEMENT_1 + emptyElementShown + M_FILL_EMPTY_ELEMENT_2 + 
+				KEY_APOST + newString + KEY_APOST , 
+			KEY_EMPTY,
+			[
+				element, 
+				context |
+					switch (true) {
+					case element instanceof Field:
+						switch (emptyElement){
+						case DESCRIPTION:
+							(element as Field).description = newString
+						case ENTRY:
+							if (element instanceof ComboField){
+								var i = -1
+								for (String string : (element as ComboField).^default){
+									i++
+									if (string.empty){
+										(element as ComboField).^default.set(i, newString)
+									}
 								}
 							}
 						}
+					case element instanceof Transition:
+						(element as Transition).title = newString
+					case element instanceof Person:
+						(element as Person).shownName = newString
 					}
-				case element instanceof Transition:
-					(element as Transition).title = newString
-				case element instanceof Person:
-					(element as Person).shownName = newString
-				}
-		]
-	)
-}
-
-@Fix(TicketValidator.DUPLICATED_RULE_NAME)
-def createStatus(Issue issue, IssueResolutionAcceptor acceptor){
-	val String rule = issue.data.get(0);
-	val String rule_shownName = rule.substring(rule.lastIndexOf(KEY_POINT)+1).toFirstUpper
-	acceptor.accept(issue, 
-		M_REMOVE_RULE_SHORT + rule_shownName, 
-		M_REMOVE_RULE_SHORT + rule_shownName, 
-		KEY_EMPTY,
-		[
-			element, 
-			context |
-//				var ModelIssue model;
-//				if (element instanceof ModelIssue){
-//					model = (element as ModelIssue)
-//				} else {
+			]
+		)
+	}
+	
+	@Fix(TicketValidator.DUPLICATED_RULE_NAME)
+	def removeRule(Issue issue, IssueResolutionAcceptor acceptor){
+		val String rule = issue.data.get(0);
+		val String rule_shownName = rule.substring(rule.lastIndexOf(KEY_POINT)+1).toFirstUpper
+		acceptor.accept(issue, 
+			M_REMOVE_RULE_SHORT + rule_shownName, 
+			M_REMOVE_RULE_SHORT + rule_shownName, 
+			KEY_EMPTY,
+			[
+				element, 
+				context |
 					var EObject e = element.eContainer
 					while (e != null && !(e instanceof ModelIssue)) {
 						e = e.eContainer
 					} 
-					val model = (e as ModelIssue)
-//				}
-				switch (rule){
-				case STATUS: 
-					model.status.remove(element)
-				case ROLE: 
-					model.role.remove(element)
-				case TRANSITION: 
-					model.transition.remove(element)
-				case WORKFLOW: 
-					model.workflow.remove(element)
-				case PERSON: 
-					model.person.remove(element)
-				case ISSUE_TYPE:
-					model.issueType.remove(element)
-				}
-		]
-	)
-}
-
-
-@Fix(TicketValidator.MISSING_RULE)
-def createRule(Issue issue, IssueResolutionAcceptor acceptor){
-	val String rule = issue.data.get(0);
-	val String rule_shownName = rule.substring(rule.lastIndexOf(KEY_POINT)+1).toFirstUpper
-	acceptor.accept(issue, 
-		M_NEW_RULE_SHORT + rule_shownName, 
-		M_NEW_RULE_LONG_1 + rule_shownName + M_NEW_RULE_LONG_2, 
-		KEY_EMPTY,
-		[
-			context |
-				val document = context.xtextDocument;
-				document.set(document.get() + KEY_NEW_LINE + this.getRuleConstructor(rule, rule.removePath));
-		]
-	)
-}
-
-@Fix(Diagnostic.LINKING_DIAGNOSTIC)
-def addNewRule(Issue issue, IssueResolutionAcceptor acceptor){
-	val String ruleMessage = issue.message.replaceFirst(E_LINKING_DIAGNOSTIC_MESSAGE_1, KEY_EMPTY)
-	val String rule = ruleMessage.split(KEY_SPACE, 2).get(0);
-	acceptor.accept(issue, 
-		M_CREATE_RULE + ruleMessage,
-		M_CREATE_RULE + ruleMessage, 
-		KEY_EMPTY,
-		[
-			element, 
-			context | 
-				val document = context.xtextDocument
-				val name = document.get(issue.offset, issue.length)
-				
-				var EObject modelIssue = element.eContainer
-				while (!(modelIssue instanceof ModelIssue) && (modelIssue != null)){
-					modelIssue = modelIssue.eContainer
-				}
-				
-				val constructorText = this.getRuleConstructor(rule.toFirstLower.addPath, name, modelIssue)
-				document.set(document.get() + KEY_NEW_LINE + constructorText);
-		]
-	)
-}
-
-
-@Fix(TicketValidator.EMPTY_ROLE)
-def setOpenIssue(Issue issue, IssueResolutionAcceptor acceptor){
-	val String role = issue.data.get(0)
-	acceptor.accept(issue, 
-		M_ALLOW_NEW_ISSUE_SHORT, 
-		M_ALLOW_NEW_ISSUE_LONG + KEY_APOST + role + KEY_APOST , 
-		KEY_EMPTY,
-		[
-			element, 
-			context | 
-				(element as Role).openIssue = true
-		]
-	)
-}
-
-
-@Fix(TicketValidator.EMPTY_ROLE)
-def addTransitionToRole(Issue issue, IssueResolutionAcceptor acceptor){
-	val String role = issue.data.get(0)
-	acceptor.accept(issue, 
-		M_ADD_ROLE_TRANSITION_SHORT, 
-		M_ADD_ROLE_TRANSITION_LONG + KEY_APOST + role + KEY_APOST , 
-		'',
-		[
-			element, 
-			context | 
-				(element as Role).transitions.add(
-					(element.eContainer as ModelIssue).transition.get(0)
-				)
-		]
-	)
-}
-
-
-@Fix(TicketValidator.DUPLICATED_TRANSITION_STATUS)
-def changeStatus(Issue issue, IssueResolutionAcceptor acceptor){
-	val String statusName = issue.data.get(0)
-	acceptor.accept(issue, 
-		M_CHANGE_TRANSITION_SHORT, 
-		M_CHANGE_TRANSITION_LONG + KEY_APOST + statusName + KEY_APOST ,  
-		KEY_EMPTY,
-		[
-			element, 
-			context | 
-				val EList<Status> statuus = (element.eContainer as ModelIssue).status;
-				for (var i = 0;  statuus.size > i; i++){
-					if (statuus.get(i) != (element as Transition).ziel){
-						(element as Transition).ziel = statuus.get(i)
-						i = statuus.size;
+					
+					if (e instanceof ModelIssue){
+						val model = (e as ModelIssue)
+							
+						switch (rule){
+						case STATUS: 
+							model.status.remove(element)
+						case ROLE: 
+							model.role.remove(element)
+						case TRANSITION: 
+							model.transition.remove(element)
+						case WORKFLOW: 
+							model.workflow.remove(element)
+						case PERSON: 
+							model.person.remove(element)
+						case ISSUE_TYPE:
+							model.issueType.remove(element)
+						case FIELD:
+							model.fields.remove(element)
+						}
 					}
-				}
-		]
-	)
-}
-
-
-@Fix(TicketValidator.INVALID_DAY)
-def changeToFirstDay(Issue issue, IssueResolutionAcceptor acceptor){
-	val String dateElement = issue.data.get(0)
-	acceptor.accept(issue, 
-		M_DAY_TO_FIRST_SHORT, 
-		M_DAY_TO_FIRST_LONG_1 + dateElement + M_DAY_TO_FIRST_LONG_2, 
-		KEY_EMPTY,
-		[
-			element, 
-			context | 
-				(element as Date).day = 1
-		]
-	)
-}
-
-
-@Fix(TicketValidator.INVALID_MONTH)
-def changeToJan(Issue issue, IssueResolutionAcceptor acceptor){
-	val String dateElement = issue.data.get(0)
-	acceptor.accept(issue, 
-		M_MONTH_TO_SHORT + S_JANUARY, 
-		M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_JANUARY, 
-		KEY_EMPTY,
-		[
-			element, 
-			context | 
-				(element as Date).month = 1
-		]
-	)
-}
-
-@Fix(TicketValidator.INVALID_MONTH)
-def changeToFeb(Issue issue, IssueResolutionAcceptor acceptor){
-	val String dateElement = issue.data.get(0)
-	acceptor.accept(issue, 
-		M_MONTH_TO_SHORT + S_FEBRUARY, 
-		M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_FEBRUARY, 
-		KEY_EMPTY,
-		[
-			element, 
-			context | 
-				(element as Date).month = 2
-		]
-	)
-}
-
-@Fix(TicketValidator.INVALID_MONTH)
-def changeToMar(Issue issue, IssueResolutionAcceptor acceptor){
-	val String dateElement = issue.data.get(0)
-	acceptor.accept(issue, 
-		M_MONTH_TO_SHORT + S_MARCH, 
-		M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_MARCH, 
-		KEY_EMPTY,
-		[
-			element, 
-			context | 
-				(element as Date).month = 3
-		]
-	)
-}
-
-@Fix(TicketValidator.INVALID_MONTH)
-def changeToApr(Issue issue, IssueResolutionAcceptor acceptor){
-	val String dateElement = issue.data.get(0)
-	acceptor.accept(issue, 
-		M_MONTH_TO_SHORT + S_APRIL, 
-		M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_APRIL, 
-		KEY_EMPTY,
-		[
-			element, 
-			context | 
-				(element as Date).month = 4
-		]
-	)
-}
-
-@Fix(TicketValidator.INVALID_MONTH)
-def changeToMay(Issue issue, IssueResolutionAcceptor acceptor){
-	val String dateElement = issue.data.get(0)
-	acceptor.accept(issue, 
-		'Switch to May', 
-		"Switch month of '" + dateElement + "' to May'", 
-		'',
-		[
-			element, 
-			context | 
-				(element as Date).month = 5
-		]
-	)
-}
-
-@Fix(TicketValidator.INVALID_MONTH)
-def changeToJun(Issue issue, IssueResolutionAcceptor acceptor){
-	val String dateElement = issue.data.get(0)
-	acceptor.accept(issue, 
-		M_MONTH_TO_SHORT + S_JUNE, 
-		M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_JUNE, 
-		KEY_EMPTY,
-		[
-			element, 
-			context | 
-				(element as Date).month = 6
-		]
-	)
-}
-
-@Fix(TicketValidator.INVALID_MONTH)
-def changeToJul(Issue issue, IssueResolutionAcceptor acceptor){
-	val String dateElement = issue.data.get(0)
-	acceptor.accept(issue, 
-		M_MONTH_TO_SHORT + S_JULY, 
-		M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_JULY, 
-		KEY_EMPTY,
-		[
-			element, 
-			context | 
-				(element as Date).month = 7
-		]
-	)
-}
-
-@Fix(TicketValidator.INVALID_MONTH)
-def changeToAug(Issue issue, IssueResolutionAcceptor acceptor){
-	val String dateElement = issue.data.get(0)
-	acceptor.accept(issue, 
-		M_MONTH_TO_SHORT + S_AUGUST, 
-		M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_AUGUST, 
-		KEY_EMPTY,
-		[
-			element, 
-			context | 
-				(element as Date).month = 8
-		]
-	)
-}
-
-@Fix(TicketValidator.INVALID_MONTH)
-def changeToSep(Issue issue, IssueResolutionAcceptor acceptor){
-	val String dateElement = issue.data.get(0)
-	acceptor.accept(issue, 
-		M_MONTH_TO_SHORT + S_SEPTEMBER, 
-		M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_SEPTEMBER, 
-		KEY_EMPTY,
-		[
-			element, 
-			context | 
-				(element as Date).month = 9
-		]
-	)
-}
-
-@Fix(TicketValidator.INVALID_MONTH)
-def changeToOct(Issue issue, IssueResolutionAcceptor acceptor){
-	val String dateElement = issue.data.get(0)
-	acceptor.accept(issue, 
-		M_MONTH_TO_SHORT + S_OCTOBER, 
-		M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_OCTOBER, 
-		KEY_EMPTY,
-		[
-			element, 
-			context | 
-				(element as Date).month = 10
-		]
-	)
-}
-
-@Fix(TicketValidator.INVALID_MONTH)
-def changeToNov(Issue issue, IssueResolutionAcceptor acceptor){
-	val String dateElement = issue.data.get(0)
-	acceptor.accept(issue, 
-		M_MONTH_TO_SHORT + S_NOVEMBER, 
-		M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_NOVEMBER, 
-		KEY_EMPTY,
-		[
-			element, 
-			context | 
-				(element as Date).month = 11
-		]
-	)
-}
-
-@Fix(TicketValidator.INVALID_MONTH)
-def changeToDec(Issue issue, IssueResolutionAcceptor acceptor){
-	val String dateElement = issue.data.get(0)
-	acceptor.accept(issue, 
-		M_MONTH_TO_SHORT + S_DECEMBER, 
-		M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_DECEMBER, 
-		KEY_EMPTY,
-		[
-			element, 
-			context | 
-				(element as Date).month = 12
-		]
-	)
-}
-
-@Fix(TicketValidator.INVALID_YEAR)
-def changeToLast(Issue issue, IssueResolutionAcceptor acceptor){
-	val String dateElement = issue.data.get(0)
-	acceptor.accept(issue, 
-		M_YEAR_TO_SHORT + C_LAST_YEAR, 
-		M_YEAR_TO_LONG_1 + dateElement + M_YEAR_TO_LONG_2 + C_LAST_YEAR, 
-		KEY_EMPTY,
-		[
-			element, 
-			context | 
-				(element as Date).year = C_LAST_YEAR
-		]
-	)
-}
-
-
-@Fix(TicketValidator.INVALID_YEAR)
-def changeToThisYear(Issue issue, IssueResolutionAcceptor acceptor){
-	val String dateElement = issue.data.get(0)
-	val actualYear = Calendar.getInstance().get(Calendar.YEAR);
-	acceptor.accept(issue, 
-		M_YEAR_TO_SHORT + actualYear,
-		M_YEAR_TO_LONG_1 + dateElement + M_YEAR_TO_LONG_2 + actualYear, 
-		KEY_EMPTY,
-		[
-			element, 
-			context | 
-				(element as Date).year = Calendar.getInstance().get(Calendar.YEAR)		
-		]
-	)
-}
-
-
-
-@Fix(TicketValidator.ELEMENT_CONTAINS_LIST_WITH_DUPLICATES)
-def removeTransition(Issue issue, IssueResolutionAcceptor acceptor){
-	val String parentElement 		= issue.data.get(0)
-	val String duplicatedElement 	= issue.data.get(1)
-	acceptor.accept(issue, 
-		M_REMOVE_DUPLICATES_SHORT, 
-		M_REMOVE_DUPLICATES_LONG_1 + duplicatedElement + M_REMOVE_DUPLICATES_LONG_1 + 
-			KEY_APOST + parentElement + KEY_APOST, 
-		KEY_EMPTY,
-		[
-			element, 
-			context |
-				switch true {
-				case element instanceof Workflow: 
-					(element as Workflow).transitions.removeAllDuplicates()
-				case element instanceof Role:
-					(element as Role).transitions.removeAllDuplicates()
-				case element instanceof Person:
-					(element as Person).roles.removeAllDuplicates()
-				case element instanceof IssueType:
-					(element as IssueType).fields.removeAllDuplicates()
-				case element instanceof IssueScreen:
-					(element as IssueScreen).fields.removeAllDuplicates()
-				case element instanceof ComboField:
-					(element as ComboField).^default.removeAllDuplicates()
-				}
-		]
-	)
-}
-
-
-
-def void removeAllDuplicates (List<?> list){
-	var List<Object> checkList = new ArrayList<Object>
-	var int i;
-	var Object element;
-
-	for (i = list.size - 1;  i >= 0;  i--) {
-		element = list.get(i);
-		if (checkList.contains(element)){
-			list.remove(i)
-		} else {	
-			checkList.add(element)
-		}
+			]
+		)
 	}
-}
-
-def String removePath (String string) {
-	return string.split(Pattern.quote(KEY_POINT)).last
-}
-
-def String addPath (String string) {
-	if (string.startsWith(PATH)){
-		return string
-	}
-	return PATH + string
-}
-
-def String getRuleConstructor (String rule, String name){
-	return getRuleConstructor (rule, name, null)
-}
-
-/**
- * Creates the Constructor-String of the rule. 
- * <p>
- * Method takes the rule and gives the belonging constructor. 
- * The id of the rule becomes the name.
- * All variables of the constructor get filled.
- * <p>
- *
- * @param  rule The xText-Rule that should be created.
- * @param  name	The name will become the id of the rule.
- * @param 	modelIssue	For some rules the ModelIssue is needed to get 
- * 			existing references. If there are no existing rules the method
- * 			could reference to it will take descriptions.
- * @return Constructor of the rule as a String.
- */
-def String getRuleConstructor (String rule, String name, EObject modelIssue) {
-	var text = KEY_EMPTY
 	
-	switch (rule){
-	case ISSUE_SCREEN:
-		{
-			text = NEW_ISSUE_SCRREN.replaceAll(V_STATUS_FIELD__NAME, STATUS_FIELD.removePath).replaceAll(V_SUMMARY_FIELD__NAME, SUMMAY_FIELD.removePath)
-			
-		}
-	case ISSUE_TYPE:
-		{
-			text = NEW_ISSUE_TYPE
-			if (modelIssue != null && modelIssue instanceof ModelIssue && !(modelIssue as ModelIssue).workflow.empty){
-				text = text.replaceAll(V_ISSUE_TYPE__WORKFLOW, (modelIssue as ModelIssue).workflow.get(0).name)
-			} else {
-				text = text.replaceFirst(V_ISSUE_TYPE__WORKFLOW, WORKFLOW.removePath) 
+	@Fix(TicketValidator.DUPLICATED_RULE_NAME)
+	def renameRule(Issue issue, IssueResolutionAcceptor acceptor){
+		val String rule = issue.data.get(0);
+		val String rule_shownName = rule.substring(rule.lastIndexOf(KEY_POINT)+1).toFirstUpper
+		val String name = issue.data.get(1)
+		acceptor.accept(issue, 
+			M_RENAME_RULE_SHORT + name + M_RENAME_RULE_SUFFIX, 
+			M_RENAME_RULE_LONG_1 + rule_shownName + M_RENAME_RULE_LONG_1 + name + M_RENAME_RULE_SUFFIX, 
+			KEY_EMPTY,
+			[
+				element, 
+				context |
+//Document					
+					val document = context.xtextDocument
+					document.replace(issue.offset, issue.length, name + M_RENAME_RULE_SUFFIX)
+					
+//Context						
+//					if (element instanceof NameObject){
+//						(element as NameObject).name = name + M_RENAME_RULE_SUFFIX
+//					}
+			]
+		)
+	}
+	
+	
+	@Fix(TicketValidator.MISSING_RULE)
+	def createRule(Issue issue, IssueResolutionAcceptor acceptor){
+		val String rule = issue.data.get(0);
+		val String rule_shownName = rule.substring(rule.lastIndexOf(KEY_POINT)+1).toFirstUpper
+		acceptor.accept(issue, 
+			M_NEW_RULE_SHORT + rule_shownName, 
+			M_NEW_RULE_LONG_1 + rule_shownName + M_NEW_RULE_LONG_2, 
+			KEY_EMPTY,
+			[
+				context |
+					val document = context.xtextDocument;
+					document.set(document.get() + KEY_NEW_LINE + this.getRuleConstructor(rule, rule.removePath));
+			]
+		)
+	}
+	
+	@Fix(Diagnostic.LINKING_DIAGNOSTIC)
+	def addNewRule(Issue issue, IssueResolutionAcceptor acceptor){
+		val String ruleMessage = issue.message.replaceFirst(E_LINKING_DIAGNOSTIC_MESSAGE_1, KEY_EMPTY)
+		val String rule = ruleMessage.split(KEY_SPACE, 2).get(0);
+		acceptor.accept(issue, 
+			M_CREATE_RULE + ruleMessage,
+			M_CREATE_RULE + ruleMessage, 
+			KEY_EMPTY,
+			[
+				element, 
+				context | 
+					val document = context.xtextDocument
+					val name = document.get(issue.offset, issue.length)
+					
+					var EObject modelIssue = element.eContainer
+					while (!(modelIssue instanceof ModelIssue) && (modelIssue != null)){
+						modelIssue = modelIssue.eContainer
+					}
+					
+					val constructorText = this.getRuleConstructor(rule.toFirstLower.addPath, name, modelIssue)
+					document.set(document.get() + KEY_NEW_LINE + constructorText);
+			]
+		)
+	}
+	
+	
+	@Fix(TicketValidator.EMPTY_ROLE)
+	def setOpenIssue(Issue issue, IssueResolutionAcceptor acceptor){
+		val String role = issue.data.get(0)
+		acceptor.accept(issue, 
+			M_ALLOW_NEW_ISSUE_SHORT, 
+			M_ALLOW_NEW_ISSUE_LONG + KEY_APOST + role + KEY_APOST , 
+			KEY_EMPTY,
+			[
+				element, 
+				context | 
+					(element as Role).openIssue = true
+			]
+		)
+	}
+	
+	
+	@Fix(TicketValidator.EMPTY_ROLE)
+	def addTransitionToRole(Issue issue, IssueResolutionAcceptor acceptor){
+		val String role = issue.data.get(0)
+		acceptor.accept(issue, 
+			M_ADD_ROLE_TRANSITION_SHORT, 
+			M_ADD_ROLE_TRANSITION_LONG + KEY_APOST + role + KEY_APOST , 
+			'',
+			[
+				element, 
+				context | 
+					(element as Role).transitions.add(
+						(element.eContainer as ModelIssue).transition.get(0)
+					)
+			]
+		)
+	}
+	
+	
+	@Fix(TicketValidator.DUPLICATED_TRANSITION_STATUS)
+	def changeStatus(Issue issue, IssueResolutionAcceptor acceptor){
+		val String statusName = issue.data.get(0)
+		acceptor.accept(issue, 
+			M_CHANGE_TRANSITION_SHORT, 
+			M_CHANGE_TRANSITION_LONG + KEY_APOST + statusName + KEY_APOST ,  
+			KEY_EMPTY,
+			[
+				element, 
+				context | 
+					val EList<Status> statuus = (element.eContainer as ModelIssue).status;
+					for (var i = 0;  statuus.size > i; i++){
+						if (statuus.get(i) != (element as Transition).ziel){
+							(element as Transition).ziel = statuus.get(i)
+							i = statuus.size;
+						}
+					}
+			]
+		)
+	}
+	
+	
+	@Fix(TicketValidator.INVALID_DAY)
+	def changeToFirstDay(Issue issue, IssueResolutionAcceptor acceptor){
+		val String dateElement = issue.data.get(0)
+		acceptor.accept(issue, 
+			M_DAY_TO_FIRST_SHORT, 
+			M_DAY_TO_FIRST_LONG_1 + dateElement + M_DAY_TO_FIRST_LONG_2, 
+			KEY_EMPTY,
+			[
+				element, 
+				context | 
+					(element as Date).day = 1
+			]
+		)
+	}
+	
+	
+	@Fix(TicketValidator.INVALID_MONTH)
+	def changeToJan(Issue issue, IssueResolutionAcceptor acceptor){
+		val String dateElement = issue.data.get(0)
+		acceptor.accept(issue, 
+			M_MONTH_TO_SHORT + S_JANUARY, 
+			M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_JANUARY, 
+			KEY_EMPTY,
+			[
+				element, 
+				context | 
+					(element as Date).month = 1
+			]
+		)
+	}
+	
+	@Fix(TicketValidator.INVALID_MONTH)
+	def changeToFeb(Issue issue, IssueResolutionAcceptor acceptor){
+		val String dateElement = issue.data.get(0)
+		acceptor.accept(issue, 
+			M_MONTH_TO_SHORT + S_FEBRUARY, 
+			M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_FEBRUARY, 
+			KEY_EMPTY,
+			[
+				element, 
+				context | 
+					(element as Date).month = 2
+			]
+		)
+	}
+	
+	@Fix(TicketValidator.INVALID_MONTH)
+	def changeToMar(Issue issue, IssueResolutionAcceptor acceptor){
+		val String dateElement = issue.data.get(0)
+		acceptor.accept(issue, 
+			M_MONTH_TO_SHORT + S_MARCH, 
+			M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_MARCH, 
+			KEY_EMPTY,
+			[
+				element, 
+				context | 
+					(element as Date).month = 3
+			]
+		)
+	}
+	
+	@Fix(TicketValidator.INVALID_MONTH)
+	def changeToApr(Issue issue, IssueResolutionAcceptor acceptor){
+		val String dateElement = issue.data.get(0)
+		acceptor.accept(issue, 
+			M_MONTH_TO_SHORT + S_APRIL, 
+			M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_APRIL, 
+			KEY_EMPTY,
+			[
+				element, 
+				context | 
+					(element as Date).month = 4
+			]
+		)
+	}
+	
+	@Fix(TicketValidator.INVALID_MONTH)
+	def changeToMay(Issue issue, IssueResolutionAcceptor acceptor){
+		val String dateElement = issue.data.get(0)
+		acceptor.accept(issue, 
+			'Switch to May', 
+			"Switch month of '" + dateElement + "' to May'", 
+			'',
+			[
+				element, 
+				context | 
+					(element as Date).month = 5
+			]
+		)
+	}
+	
+	@Fix(TicketValidator.INVALID_MONTH)
+	def changeToJun(Issue issue, IssueResolutionAcceptor acceptor){
+		val String dateElement = issue.data.get(0)
+		acceptor.accept(issue, 
+			M_MONTH_TO_SHORT + S_JUNE, 
+			M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_JUNE, 
+			KEY_EMPTY,
+			[
+				element, 
+				context | 
+					(element as Date).month = 6
+			]
+		)
+	}
+	
+	@Fix(TicketValidator.INVALID_MONTH)
+	def changeToJul(Issue issue, IssueResolutionAcceptor acceptor){
+		val String dateElement = issue.data.get(0)
+		acceptor.accept(issue, 
+			M_MONTH_TO_SHORT + S_JULY, 
+			M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_JULY, 
+			KEY_EMPTY,
+			[
+				element, 
+				context | 
+					(element as Date).month = 7
+			]
+		)
+	}
+	
+	@Fix(TicketValidator.INVALID_MONTH)
+	def changeToAug(Issue issue, IssueResolutionAcceptor acceptor){
+		val String dateElement = issue.data.get(0)
+		acceptor.accept(issue, 
+			M_MONTH_TO_SHORT + S_AUGUST, 
+			M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_AUGUST, 
+			KEY_EMPTY,
+			[
+				element, 
+				context | 
+					(element as Date).month = 8
+			]
+		)
+	}
+	
+	@Fix(TicketValidator.INVALID_MONTH)
+	def changeToSep(Issue issue, IssueResolutionAcceptor acceptor){
+		val String dateElement = issue.data.get(0)
+		acceptor.accept(issue, 
+			M_MONTH_TO_SHORT + S_SEPTEMBER, 
+			M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_SEPTEMBER, 
+			KEY_EMPTY,
+			[
+				element, 
+				context | 
+					(element as Date).month = 9
+			]
+		)
+	}
+	
+	@Fix(TicketValidator.INVALID_MONTH)
+	def changeToOct(Issue issue, IssueResolutionAcceptor acceptor){
+		val String dateElement = issue.data.get(0)
+		acceptor.accept(issue, 
+			M_MONTH_TO_SHORT + S_OCTOBER, 
+			M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_OCTOBER, 
+			KEY_EMPTY,
+			[
+				element, 
+				context | 
+					(element as Date).month = 10
+			]
+		)
+	}
+	
+	@Fix(TicketValidator.INVALID_MONTH)
+	def changeToNov(Issue issue, IssueResolutionAcceptor acceptor){
+		val String dateElement = issue.data.get(0)
+		acceptor.accept(issue, 
+			M_MONTH_TO_SHORT + S_NOVEMBER, 
+			M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_NOVEMBER, 
+			KEY_EMPTY,
+			[
+				element, 
+				context | 
+					(element as Date).month = 11
+			]
+		)
+	}
+	
+	@Fix(TicketValidator.INVALID_MONTH)
+	def changeToDec(Issue issue, IssueResolutionAcceptor acceptor){
+		val String dateElement = issue.data.get(0)
+		acceptor.accept(issue, 
+			M_MONTH_TO_SHORT + S_DECEMBER, 
+			M_MONTH_TO_LONG_1 + dateElement + M_MONTH_TO_LONG_2 + S_DECEMBER, 
+			KEY_EMPTY,
+			[
+				element, 
+				context | 
+					(element as Date).month = 12
+			]
+		)
+	}
+	
+	@Fix(TicketValidator.INVALID_YEAR)
+	def changeToLast(Issue issue, IssueResolutionAcceptor acceptor){
+		val String dateElement = issue.data.get(0)
+		acceptor.accept(issue, 
+			M_YEAR_TO_SHORT + C_LAST_YEAR, 
+			M_YEAR_TO_LONG_1 + dateElement + M_YEAR_TO_LONG_2 + C_LAST_YEAR, 
+			KEY_EMPTY,
+			[
+				element, 
+				context | 
+					(element as Date).year = C_LAST_YEAR
+			]
+		)
+	}
+	
+	
+	@Fix(TicketValidator.INVALID_YEAR)
+	def changeToThisYear(Issue issue, IssueResolutionAcceptor acceptor){
+		val String dateElement = issue.data.get(0)
+		val actualYear = Calendar.getInstance().get(Calendar.YEAR);
+		acceptor.accept(issue, 
+			M_YEAR_TO_SHORT + actualYear,
+			M_YEAR_TO_LONG_1 + dateElement + M_YEAR_TO_LONG_2 + actualYear, 
+			KEY_EMPTY,
+			[
+				element, 
+				context | 
+					(element as Date).year = Calendar.getInstance().get(Calendar.YEAR)		
+			]
+		)
+	}
+	
+	
+	
+	@Fix(TicketValidator.ELEMENT_CONTAINS_LIST_WITH_DUPLICATES)
+	def removeTransition(Issue issue, IssueResolutionAcceptor acceptor){
+		val String parentElement 		= issue.data.get(0)
+		val String duplicatedElement 	= issue.data.get(1)
+		acceptor.accept(issue, 
+			M_REMOVE_DUPLICATES_SHORT, 
+			M_REMOVE_DUPLICATES_LONG_1 + duplicatedElement + M_REMOVE_DUPLICATES_LONG_1 + 
+				KEY_APOST + parentElement + KEY_APOST, 
+			KEY_EMPTY,
+			[
+				element, 
+				context |
+					switch true {
+					case element instanceof Workflow: 
+						(element as Workflow).transitions.removeAllDuplicates()
+					case element instanceof Role:
+						(element as Role).transitions.removeAllDuplicates()
+					case element instanceof Person:
+						(element as Person).roles.removeAllDuplicates()
+					case element instanceof IssueType:
+						(element as IssueType).fields.removeAllDuplicates()
+					case element instanceof IssueScreen:
+						(element as IssueScreen).fields.removeAllDuplicates()
+					case element instanceof ComboField:
+						(element as ComboField).^default.removeAllDuplicates()
+					}
+			]
+		)
+	}
+	
+	
+	
+	def void removeAllDuplicates (List<?> list){
+		var List<Object> checkList = new ArrayList<Object>
+		var int i;
+		var Object element;
+	
+		for (i = list.size - 1;  i >= 0;  i--) {
+			element = list.get(i);
+			if (checkList.contains(element)){
+				list.remove(i)
+			} else {	
+				checkList.add(element)
 			}
 		}
-	case PERSON:
-		text = NEW_PERSON
-	case ROLE:
-		text = NEW_ROLE
-	case STATUS:
-		text = NEW_STATUS
-	case TRANSITION:
-		{
-			text = NEW_TRANSITION.replaceAll(V_TRANSITION__TITLE, S_TO + name.toFirstUpper)
-			if (modelIssue != null && modelIssue instanceof ModelIssue && !(modelIssue as ModelIssue).status.empty){
-				val ModelIssue model = (modelIssue as ModelIssue)
-				text = text.replaceAll(V_TRANSITION__START, model.status.get(0).name)
+	}
+	
+	def String removePath (String string) {
+		return string.split(Pattern.quote(KEY_POINT)).last
+	}
+	
+	def String addPath (String string) {
+		if (string.startsWith(PATH)){
+			return string
+		}
+		return PATH + string
+	}
+	
+	def String getRuleConstructor (String rule, String name){
+		return getRuleConstructor (rule, name, null)
+	}
+	
+	/**
+	 * Creates the Constructor-String of the rule. 
+	 * <p>
+	 * Method takes the rule and gives the belonging constructor. 
+	 * The id of the rule becomes the name.
+	 * All variables of the constructor get filled.
+	 * <p>
+	 *
+	 * @param  rule The xText-Rule that should be created.
+	 * @param  name	The name will become the id of the rule.
+	 * @param 	modelIssue	For some rules the ModelIssue is needed to get 
+	 * 			existing references. If there are no existing rules the method
+	 * 			could reference to it will take descriptions.
+	 * @return Constructor of the rule as a String.
+	 */
+	def String getRuleConstructor (String rule, String name, EObject modelIssue) {
+		var text = KEY_EMPTY
+		
+		switch (rule){
+		case ISSUE_SCREEN:
+			{
+				text = NEW_ISSUE_SCRREN.replaceAll(V_STATUS_FIELD__NAME, STATUS_FIELD.removePath).replaceAll(V_SUMMARY_FIELD__NAME, SUMMAY_FIELD.removePath)
 				
-				if (model.status.size > 1){
-					text = text.replaceAll(V_TRANSITION__END, model.status.get(1).name)
+			}
+		case ISSUE_TYPE:
+			{
+				text = NEW_ISSUE_TYPE
+				if (modelIssue != null && modelIssue instanceof ModelIssue && !(modelIssue as ModelIssue).workflow.empty){
+					text = text.replaceAll(V_ISSUE_TYPE__WORKFLOW, (modelIssue as ModelIssue).workflow.get(0).name)
 				} else {
-					text = text.replaceAll(V_TRANSITION__END, model.status.get(0).name)
+					text = text.replaceFirst(V_ISSUE_TYPE__WORKFLOW, WORKFLOW.removePath) 
 				}
-			} else {
-				text = text.replaceAll(V_TRANSITION__START, STATUS.removePath).replaceAll(V_TRANSITION__END, STATUS.removePath)
+			}
+		case PERSON:
+			text = NEW_PERSON
+		case ROLE:
+			text = NEW_ROLE
+		case STATUS:
+			text = NEW_STATUS
+		case TRANSITION:
+			{
+				text = NEW_TRANSITION.replaceAll(V_TRANSITION__TITLE, S_TO + name.toFirstUpper)
+				if (modelIssue != null && modelIssue instanceof ModelIssue && !(modelIssue as ModelIssue).status.empty){
+					val ModelIssue model = (modelIssue as ModelIssue)
+					text = text.replaceAll(V_TRANSITION__START, model.status.get(0).name)
+					
+					if (model.status.size > 1){
+						text = text.replaceAll(V_TRANSITION__END, model.status.get(1).name)
+					} else {
+						text = text.replaceAll(V_TRANSITION__END, model.status.get(0).name)
+					}
+				} else {
+					text = text.replaceAll(V_TRANSITION__START, STATUS.removePath).replaceAll(V_TRANSITION__END, STATUS.removePath)
+				}
+			}
+		case WORKFLOW:
+			{
+				text = NEW_WORKFLOW
+				if (modelIssue != null && modelIssue instanceof ModelIssue && !(modelIssue as ModelIssue).transition.empty){
+					text = text.replaceAll(V_WORKFLOW__TRANSITIONS, (modelIssue as ModelIssue).transition.get(0).name)
+				} else {
+					text = text.replaceAll(V_WORKFLOW__TRANSITIONS, TRANSITION.removePath)
+				}
 			}
 		}
-	case WORKFLOW:
-		{
-			text = NEW_WORKFLOW
-			if (modelIssue != null && modelIssue instanceof ModelIssue && !(modelIssue as ModelIssue).transition.empty){
-				text = text.replaceAll(V_WORKFLOW__TRANSITIONS, (modelIssue as ModelIssue).transition.get(0).name)
-			} else {
-				text = text.replaceAll(V_WORKFLOW__TRANSITIONS, TRANSITION.removePath)
-			}
-		}
+		
+		return text.replaceAll(V_RULE__NAME, name)
 	}
-	
-	return text.replaceAll(V_RULE__NAME, name)
-}
 
 }

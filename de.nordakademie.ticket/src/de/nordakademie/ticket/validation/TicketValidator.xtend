@@ -20,7 +20,8 @@ import static de.nordakademie.ticket.ticket.TicketPackage.Literals.*
 import de.nordakademie.ticket.constantsAndNames.Constants
 import de.nordakademie.ticket.constantsAndNames.Names_EN
 import de.nordakademie.ticket.ticket.Status
-import org.eclipse.emf.ecore.EObject
+import de.nordakademie.ticket.ticket.NameObject
+import org.eclipse.emf.common.util.EList
 
 /**
  * This class contains custom validation rules. 
@@ -72,100 +73,94 @@ class TicketValidator extends AbstractTicketValidator implements Constants
 	}
 	
 	
-//	@Check
-//	def checkStatusAlreadyExists (Status status){
-//		val container = status.eContainer
-//		if (container instanceof ModelIssue){
-//			var list = (container as ModelIssue).status
-//		}
-//		
-//		
-////		)
-//		var List<String> names = new ArrayList<String>
-//		for (rule : modelIssue.status){
-//			if (names.contains(rule.name)){
-//				error(S_STATUS + M_SAME_NAME,
-//					STATUS__NAME,
-//					DUPLICATED_RULE_NAME,
-//					STATUS
-//				)
-//			} else {
-//				names.add(rule.name)
-//			}
-//		}
-//		names.clear
-//		for (rule : modelIssue.issueType){
-//			if (names.contains(rule.name)){
-//				error(S_ISSUE_TYPE + M_SAME_NAME,
-//					ISSUE_TYPE__NAME,
-//					DUPLICATED_RULE_NAME,
-//					ISSUE_TYPE
-//				)
-//			} else {
-//				names.add(rule.name)
-//			}
-//		}
-//		names.clear
-//		for (rule : modelIssue.person){
-//			if (names.contains(rule.name)){
-//				error(S_PERSON + M_SAME_NAME,
-//					PERSON__NAME,
-//					DUPLICATED_RULE_NAME,
-//					PERSON
-//				)
-//			} else {
-//				names.add(rule.name)
-//			}
-//		}
-//		names.clear
-//		for (rule : modelIssue.fields){
-//			if (names.contains(rule.name)){
-//				error(S_FIELD + M_SAME_NAME,
-//					FIELD__NAME,
-//					DUPLICATED_RULE_NAME,
-//					FIELD
-//				)
-//			} else {
-//				names.add(rule.name)
-//			}
-//		}
-//		names.clear
-//		for (rule : modelIssue.role){
-//			if (names.contains(rule.name)){
-//				error(S_ROLE + M_SAME_NAME,
-//					ROLE__NAME,
-//					DUPLICATED_RULE_NAME,
-//					ROLE
-//				)
-//			} else {
-//				names.add(rule.name)
-//			}
-//		}
-//		names.clear
-//		for (rule : modelIssue.transition){
-//			if (names.contains(rule.name)){
-//				error(S_TRANSITION + M_SAME_NAME,
-//					TRANSITION__NAME,
-//					DUPLICATED_RULE_NAME,
-//					TRANSITION
-//				)
-//			} else {
-//				names.add(rule.name)
-//			}
-//		}
-//		names.clear
-//		for (rule : modelIssue.workflow){
-//			if (names.contains(rule.name)){
-//				error(S_WORKFLOW + M_SAME_NAME,
-//					WORKFLOW__NAME,
-//					DUPLICATED_RULE_NAME,
-//					WORKFLOW
-//				)
-//			} else {
-//				names.add(rule.name)
-//			}
-//		}
-//	}
+
+	@Check
+	def checkNameObjectAlreadyExists (NameObject object){
+		var container = object.eContainer
+		while (container != null && !(container instanceof ModelIssue)){
+			container = container.eContainer
+		}
+		
+		
+		if (container instanceof ModelIssue) {
+			switch (true){
+			case object instanceof Status:
+			 	if (this.listHasSameNamedElement((container as ModelIssue).status, object)){
+					error(S_STATUS + M_SAME_NAME,
+						NAME_OBJECT__NAME,
+						DUPLICATED_RULE_NAME,
+						STATUS, object.name
+					)
+				}
+			case object instanceof Person:
+			 	if (this.listHasSameNamedElement((container as ModelIssue).person, object)){
+					error(S_PERSON + M_SAME_NAME,
+						NAME_OBJECT__NAME,
+						DUPLICATED_RULE_NAME,
+						PERSON, object.name
+					)
+				} 
+			case object instanceof Role:
+			 	if (this.listHasSameNamedElement((container as ModelIssue).role, object)){
+					error(S_ROLE + M_SAME_NAME,
+						NAME_OBJECT__NAME,
+						DUPLICATED_RULE_NAME,
+						ROLE, object.name
+					)
+				} 
+			case object instanceof Transition:
+			 	if (this.listHasSameNamedElement((container as ModelIssue).transition, object)){
+					error(S_TRANSITION + M_SAME_NAME,
+						NAME_OBJECT__NAME,
+						DUPLICATED_RULE_NAME,
+						TRANSITION, object.name
+					)
+				} 
+			case object instanceof IssueType:
+			 	if (this.listHasSameNamedElement((container as ModelIssue).issueType, object)){
+					error(S_ISSUE_TYPE + M_SAME_NAME,
+						NAME_OBJECT__NAME,
+						DUPLICATED_RULE_NAME,
+						ISSUE_TYPE, object.name
+					)
+				} 
+			case object instanceof Workflow:
+			 	if (this.listHasSameNamedElement((container as ModelIssue).workflow, object)){
+					error(S_WORKFLOW + M_SAME_NAME,
+						NAME_OBJECT__NAME,
+						DUPLICATED_RULE_NAME,
+						WORKFLOW, object.name
+					)
+				} 
+			case object instanceof Field:
+			 	if (this.listHasSameNamedElement((container as ModelIssue).fields, object)){
+					error(S_FIELD + M_SAME_NAME,
+						NAME_OBJECT__NAME,
+						DUPLICATED_RULE_NAME,
+						FIELD, object.name
+					)
+				} 
+			 
+		 	}
+		}
+	}
+	
+	@Check
+	def checkAlreadyExists (Status status){
+		var container = status.eContainer
+		while (container != null && !(container instanceof ModelIssue)){
+			container = container.eContainer
+		}
+		
+		if (container instanceof ModelIssue && this.listHasSameNamedElement((container as ModelIssue).status, status)){
+			error(S_STATUS + M_SAME_NAME,
+				NAME_OBJECT__NAME,
+				DUPLICATED_RULE_NAME,
+				STATUS, status.name
+			)
+		}
+	}
+		
 
 	@Check
 	def checkTransitionHasSameStatus (Transition transition) {
@@ -205,7 +200,7 @@ class TicketValidator extends AbstractTicketValidator implements Constants
 	def checkRoleContainsNoTransition (Role role) {
 		if (role.transitions.empty && !role.openIssue){
 			error(M_NO_ROLE_TRANSITIONS, 
-				ROLE__NAME,
+				NAME_OBJECT__NAME,
 				EMPTY_ROLE,
 				role.name
 			)
@@ -371,4 +366,18 @@ class TicketValidator extends AbstractTicketValidator implements Constants
 		}
 		return false
 	}
+	
+	def boolean listHasSameNamedElement (EList<?> list, NameObject obj){
+	var i = 0;
+	for (entry : list){
+		if (entry instanceof NameObject && (entry as NameObject).name == obj.name){
+			i++
+		}
+	}
+	
+	if (i > 1){
+		return true
+	}
+	return false
+}
 }

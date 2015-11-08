@@ -18,39 +18,34 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//ModelIssue/issueScreen"/>
     </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//IssueScreen">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//IssueScreen/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//IssueScreen/statusfield"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Ticket.ecore#//IssueScreen/summaryfield"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//IssueScreen/fields"/>
     </genClasses>
+    <genClasses ecoreClass="Ticket.ecore#//NameObject">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//NameObject/name"/>
+    </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//Person">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Person/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Person/shownName"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Person/roles"/>
     </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//Role">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Role/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Role/openIssue"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Role/transitions"/>
     </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//Transition">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Transition/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Transition/title"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Transition/start"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Transition/ziel"/>
     </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//IssueType">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//IssueType/name"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//IssueType/workflow"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//IssueType/fields"/>
     </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//Workflow">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Workflow/name"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Workflow/transitions"/>
     </genClasses>
-    <genClasses ecoreClass="Ticket.ecore#//Status">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Status/name"/>
-    </genClasses>
+    <genClasses ecoreClass="Ticket.ecore#//Status"/>
     <genClasses ecoreClass="Ticket.ecore#//StatusField">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//StatusField/name"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//StatusField/default"/>
@@ -60,7 +55,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//SummaryField/default"/>
     </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//Field">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Field/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Field/description"/>
     </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//MailField">

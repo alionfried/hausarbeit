@@ -19,8 +19,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="issueScreen" eType="#//IssueScreen"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="IssueScreen">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="IssueScreen" eSuperTypes="#//NameObject">
     <eStructuralFeatures xsi:type="ecore:EReference" name="statusfield" eType="#//StatusField"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="summaryfield" eType="#//SummaryField"
@@ -28,38 +27,34 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="fields" unique="false"
         upperBound="-1" eType="#//Field"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Person">
+  <eClassifiers xsi:type="ecore:EClass" name="NameObject">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Person" eSuperTypes="#//NameObject">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="shownName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="roles" unique="false" upperBound="-1"
         eType="#//Role"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Role">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Role" eSuperTypes="#//NameObject">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="openIssue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="transitions" unique="false"
         upperBound="-1" eType="#//Transition"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Transition">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Transition" eSuperTypes="#//NameObject">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="start" eType="#//Status"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="ziel" eType="#//Status"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="IssueType">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="IssueType" eSuperTypes="#//NameObject">
     <eStructuralFeatures xsi:type="ecore:EReference" name="workflow" eType="#//Workflow"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="fields" unique="false"
         upperBound="-1" eType="#//Field"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Workflow">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Workflow" eSuperTypes="#//NameObject">
     <eStructuralFeatures xsi:type="ecore:EReference" name="transitions" unique="false"
         upperBound="-1" eType="#//Transition"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Status">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Status" eSuperTypes="#//NameObject"/>
   <eClassifiers xsi:type="ecore:EClass" name="StatusField">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="default" eType="#//Status"/>
@@ -68,8 +63,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="default" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Field">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Field" eSuperTypes="#//NameObject">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MailField" eSuperTypes="#//Field">

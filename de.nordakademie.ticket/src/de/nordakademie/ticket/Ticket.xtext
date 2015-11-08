@@ -36,6 +36,10 @@ IssueScreen:
 	'}'
 ;
 
+NameObject:
+	Person | Role | Transition | IssueType | IssueScreen | Workflow | Status | Field
+;
+
 Person:
 	'Person' name = ID 'called' shownName = STRING '{' 
 		roles += [Role]* 
