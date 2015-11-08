@@ -86,28 +86,30 @@ class TicketGenerator implements IGenerator {
 			«IF (person != modelIssue.person.get(0))»
 				,
 			«ENDIF»
-				{"personName" : "«person.name»",
+			{
+				"personName" : "«person.name»",
 				"shownName" : "«person.shownName»",
 				"roles" :[
 			«FOR role : person.roles»
 				«IF (role != person.roles.get(0))»
 					,
 				«ENDIF»
-						{"roleName":"«role.name»",
+					{
+						"roleName":"«role.name»",
 						"openIssue" : «role.openIssue»,
 						"roleTransitions":[
 						«FOR transition : role.transitions»
 							«IF (transition != role.transitions.get(0))»
 								,
 							«ENDIF»
-								{
-									"transitionName":"«transition.name»",
-									"from":"«transition.from.name»",
-									"to":"«transition.to.name»"
-								}
+							{
+								"transitionName":"«transition.name»",
+								"from":"«transition.from.name»",
+								"to":"«transition.to.name»"
+							}
 						«ENDFOR»
 						]
-						}
+					}
 				«ENDFOR»
 				]
 			}
