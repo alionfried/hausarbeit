@@ -78,7 +78,7 @@ Status:
 
 StatusField:
 	'StatusField' name = ID '{'
-		( 'default' default = [Status] ) ?
+		'default' default = [Status]
 	'}'
 ;
 
