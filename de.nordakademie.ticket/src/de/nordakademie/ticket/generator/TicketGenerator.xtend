@@ -66,15 +66,15 @@ class TicketGenerator implements IGenerator {
 				
 		<!-- Statusinformationen -->
 			<div class="form-group">								
-					<label for="«modelIssue.issueScreen.statusfield.name»" class="col-sm-2 control-label">«modelIssue.issueScreen.statusfield.name»</label>
+					<label for="status" class="col-sm-2 control-label">«modelIssue.issueScreen.statusfield.name»</label>
 				    <div class="col-sm-10">
-				      <input type="text" class="form-control" id="«modelIssue.issueScreen.statusfield.name»" name="«modelIssue.issueScreen.statusfield.name»" value="«modelIssue.issueScreen.statusfield.^default.name»">
+				      <input type="text" class="form-control" id="status" name="status" value="«modelIssue.issueScreen.statusfield.^default.name»" required>
 					</div>
 			</div>
 			<div class="form-group">
-				<label for="«modelIssue.issueScreen.summaryfield.name»" class="col-sm-2 control-label">«modelIssue.issueScreen.summaryfield.name»</label>
+				<label for="summary" class="col-sm-2 control-label">«modelIssue.issueScreen.summaryfield.name»</label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="«modelIssue.issueScreen.summaryfield.name»" name="«modelIssue.issueScreen.summaryfield.name»" value="«modelIssue.issueScreen.summaryfield.^default»">
+			      <input type="text" class="form-control" id="summary" name="summary" value="«modelIssue.issueScreen.summaryfield.^default»" required>
 			    </div>
 			</div>	
 		
