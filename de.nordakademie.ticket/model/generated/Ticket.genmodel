@@ -30,6 +30,10 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Person/roles"/>
     </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//Role">
+<<<<<<< Updated upstream
+=======
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Role/name"/>
+>>>>>>> Stashed changes
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Role/openIssue"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Role/transitions"/>
     </genClasses>

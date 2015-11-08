@@ -5,6 +5,9 @@ package de.nordakademie.ticket.formatting
 
 import org.eclipse.xtext.formatting.impl.AbstractDeclarativeFormatter
 import org.eclipse.xtext.formatting.impl.FormattingConfig
+import javax.inject.Inject
+import de.nordakademie.ticket.services.TicketGrammarAccess
+
 // import com.google.inject.Inject;
 // import de.nordakademie.ticket.services.TicketGrammarAccess
 
@@ -18,9 +21,20 @@ import org.eclipse.xtext.formatting.impl.FormattingConfig
  */
 class TicketFormatter extends AbstractDeclarativeFormatter {
 
-//	@Inject extension TicketGrammarAccess
+	@Inject TicketGrammarAccess g
 	
 	override protected void configureFormatting(FormattingConfig c) {
+		val person = g.personAccess
+		c.setLinewrap.after(person.getLeftCurlyBracketKeyword_4)
+		c.setIndentation(person.leftCurlyBracketKeyword_4, person.rightCurlyBracketKeyword_6)
+		c.setLinewrap.before(person.rightCurlyBracketKeyword_6)
+		c.setLinewrap.between(person.leftCurlyBracketKeyword_4, person.rightCurlyBracketKeyword_6)
+		c.setLinewrap(2).after(person.rightCurlyBracketKeyword_6)
+		
+		val date = g.dateAccess
+		c.setNoSpace.between(date.dayAssignment_0, date.yearAssignment_4)
+		
+		
 // It's usually a good idea to activate the following three statements.
 // They will add and preserve newlines around comments
 //		c.setLinewrap(0, 1, 2).before(SL_COMMENTRule)

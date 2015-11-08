@@ -24,6 +24,7 @@ import de.nordakademie.ticket.ticket.NameObject
 import org.eclipse.emf.common.util.EList
 import java.util.regex.Pattern
 import de.nordakademie.ticket.ticket.MailField
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 
 /**
  * This class contains custom validation rules. 
@@ -40,35 +41,50 @@ class TicketValidator extends AbstractTicketValidator implements Constants
 	
 	@Check
 	def checkAllRulesCreated (ModelIssue modelIssue) {
+		val to = NodeModelUtils.getNode(modelIssue).endOffset
+		val from = NodeModelUtils.getNode(modelIssue).text.lastIndexOf(KEY_NEW_LINE) + KEY_NEW_LINE.length
 		switch (true){
 		case modelIssue.issueType.empty: 
-			error(M_RULE_NEEDED_1 + S_ISSUE_TYPE + M_RULE_NEEDED_2,
-				MODEL_ISSUE__ISSUE_SCREEN,
+			acceptError(M_RULE_NEEDED_1 + S_ISSUE_TYPE + M_RULE_NEEDED_2,
+				modelIssue, 
+				from,
+				to - from,
 				MISSING_RULE,
 				ISSUE_TYPE)
 		case modelIssue.person.empty:
-			error(M_RULE_NEEDED_1 + S_PERSON + M_RULE_NEEDED_2,
-				MODEL_ISSUE__ISSUE_SCREEN,
+			acceptError(M_RULE_NEEDED_1 + S_PERSON + M_RULE_NEEDED_2,
+				modelIssue, 
+				from,
+				to - from,
 				MISSING_RULE,
 				PERSON)
 		case modelIssue.role.empty:
-			error(M_RULE_NEEDED_1 + S_ROLE + M_RULE_NEEDED_2,
-				MODEL_ISSUE__ISSUE_SCREEN,
+			acceptError(M_RULE_NEEDED_1 + S_ROLE + M_RULE_NEEDED_2,
+				modelIssue, 
+				from,
+				to - from,
 				MISSING_RULE,
 				ROLE)
 		case modelIssue.status.empty:
-			error(M_RULE_NEEDED_1 + S_STATUS + M_RULE_NEEDED_2,
-				MODEL_ISSUE__ISSUE_SCREEN,
-				MISSING_RULE,
-				STATUS)
+			acceptError(M_RULE_NEEDED_1 + S_STATUS + M_RULE_NEEDED_2,
+				modelIssue, 
+				from,
+				to - from, 
+				MISSING_RULE, 
+				STATUS
+			)
 		case modelIssue.transition.empty:
-			error(M_RULE_NEEDED_1 + S_TRANSITION + M_RULE_NEEDED_2,
-				MODEL_ISSUE__ISSUE_SCREEN,
+			acceptError(M_RULE_NEEDED_1 + S_TRANSITION + M_RULE_NEEDED_2,
+				modelIssue, 
+				from,
+				to - from,
 				MISSING_RULE,
 				TRANSITION)
 		case modelIssue.workflow.empty:
-			error(M_RULE_NEEDED_1 + S_WORKFLOW + M_RULE_NEEDED_2,
-				MODEL_ISSUE__ISSUE_SCREEN,
+			acceptError(M_RULE_NEEDED_1 + S_WORKFLOW + M_RULE_NEEDED_2,
+				modelIssue, 
+				from,
+				to - from,
 				MISSING_RULE,
 				WORKFLOW)
 		}

@@ -5,13 +5,19 @@ public interface Constants {
 	public static String PATH = "de.nordakademie.ticket.";
 	
 //errors
+<<<<<<< Updated upstream
 	public static String DUPLICATED_RULE_NAME = PATH + "duplicatedRuleName";
+=======
+>>>>>>> Stashed changes
 	public static String DUPLICATED_TRANSITION_STATUS = PATH + "duplicatedTransitionStatus";
 	public static String ELEMENT_CONTAINS_LIST_WITH_DUPLICATES = PATH + "elementContainsListWithDuplicates" ;
 	public static String EMPTY_ROLE = PATH + "emptyRole" ;
 	public static String EMPTY_STRING = PATH + "emptyString" ;
 	public static String INVALID_DAY = PATH + "invalidDay";
+<<<<<<< Updated upstream
 	public static String INVALID_MAIL = PATH + "invalidMail";
+=======
+>>>>>>> Stashed changes
 	public static String INVALID_MONTH = PATH + "invalidMonth";
 	public static String INVALID_YEAR = PATH + "invalidYear";
 	public static String MISSING_RULE = PATH + "missingRule";
