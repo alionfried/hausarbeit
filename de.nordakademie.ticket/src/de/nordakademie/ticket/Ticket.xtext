@@ -97,6 +97,8 @@ Field:
 MailField:
 	'MailField' name = ID 'as' description = STRING '{'
 		( 'default' default = STRING ) ?
+// alternativ mit Terminal "MAIL"
+//		( 'default' default = MAIL ) ?
 	'}'
 ;
 
