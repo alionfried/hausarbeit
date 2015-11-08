@@ -35,8 +35,8 @@
     </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//Transition">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Ticket.ecore#//Transition/title"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Transition/start"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Transition/ziel"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Transition/from"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//Transition/to"/>
     </genClasses>
     <genClasses ecoreClass="Ticket.ecore#//IssueType">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Ticket.ecore#//IssueType/workflow"/>

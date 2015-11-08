@@ -235,8 +235,8 @@ class TicketQuickfixProvider extends DefaultQuickfixProvider implements Construc
 				context | 
 					val EList<Status> statuus = (element.eContainer as ModelIssue).status;
 					for (var i = 0;  statuus.size > i; i++){
-						if (statuus.get(i) != (element as Transition).ziel){
-							(element as Transition).ziel = statuus.get(i)
+						if (statuus.get(i) != (element as Transition).to){
+							(element as Transition).to = statuus.get(i)
 							i = statuus.size;
 						}
 					}

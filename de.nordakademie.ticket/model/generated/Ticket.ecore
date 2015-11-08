@@ -42,8 +42,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Transition" eSuperTypes="#//NameObject">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="start" eType="#//Status"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="ziel" eType="#//Status"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="from" eType="#//Status"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="to" eType="#//Status"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IssueType" eSuperTypes="#//NameObject">
     <eStructuralFeatures xsi:type="ecore:EReference" name="workflow" eType="#//Workflow"/>

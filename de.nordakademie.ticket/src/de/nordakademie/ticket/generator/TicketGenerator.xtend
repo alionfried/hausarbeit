@@ -32,15 +32,88 @@ class TicketGenerator implements IGenerator {
  
 	
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {		
-	fsa.generateFile(
+		fsa.generateFile(
 			'individualInput.html',
 			resource.contents.filter(ModelIssue).head.individualInput			
 		)
-	fsa.generateFile(
+		fsa.generateFile(
 			'datePicker.js',
 			resource.contents.filter(ModelIssue).head.datePicker			
-		)							
-	}			
+		)		
+		fsa.generateFile(
+			'issueTypes.json',
+			resource.contents.filter(ModelIssue).head.jsonIssueTypes
+		)
+		fsa.generateFile(
+			'person.json',
+			resource.contents.filter(ModelIssue).head.persons
+		)
+							
+	}	
+	
+	def CharSequence jsonIssueTypes(ModelIssue modelIssue)'''
+		{"issueTypes":[
+		«FOR issueType : modelIssue.issueType»
+			«IF (issueType != modelIssue.issueType.get(0))»
+				,
+			«ENDIF»
+			{"issueName" : "«issueType.name»",
+			«var workflow = issueType.workflow»
+			"workflow":{
+				"workflowName":"«workflow.name»",
+				"workflowTransitions":[
+				«FOR transition : workflow.transitions»
+					«IF (transition != workflow.transitions.get(0))»
+						,
+					«ENDIF»
+					{
+						"transitionName":"«transition.name»",
+					 	"from":"«transition.from»",
+					 	"to":"«transition.to»"
+					}
+				«ENDFOR»
+				]}
+			}
+		«ENDFOR»
+		]}
+	'''	
+	
+	def CharSequence persons(ModelIssue modelIssue)'''
+		{"persons":[
+		«FOR person : modelIssue.person»
+			«IF (person != modelIssue.person.get(0))»
+				,
+			«ENDIF»
+	
+			
+			{"personName" : "«person.name»"
+			"shownName" : "«person.shownName»",
+			"roles" :[
+			«FOR role : person.roles»
+				«IF (role != person.roles.get(0))»
+					,
+				«ENDIF»
+				{"roleName":"«role.name»",
+				"openIssue" : «role.openIssue»,
+				"roleTransitions":[
+				«FOR transition : role.transitions»
+					«IF (transition != role.transitions.get(0))»
+						,
+					«ENDIF»
+					{
+						"transitionName":"«transition.name»",
+					 	"from":"«transition.from»",
+					 	"to":"«transition.to»"
+					}
+				«ENDFOR»
+				]
+			}
+			«ENDFOR»
+			]
+		}
+		«ENDFOR»
+		]}
+	'''	
 	
 	def CharSequence individualInput(ModelIssue modelIssue)'''	
 	<div>	

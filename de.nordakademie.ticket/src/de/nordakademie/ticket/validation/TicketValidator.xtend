@@ -182,9 +182,9 @@ class TicketValidator extends AbstractTicketValidator implements Constants
 
 	@Check
 	def checkTransitionHasSameStatus (Transition transition) {
-		if (transition.start == transition.ziel){
+		if (transition.from == transition.to){
 			error(M_SAME_BEGIN_AND_END_STATUS, 
-				TRANSITION__ZIEL,
+				TRANSITION__FROM,
 				DUPLICATED_TRANSITION_STATUS,
 				transition.name
 			)
@@ -197,7 +197,7 @@ class TicketValidator extends AbstractTicketValidator implements Constants
 			error(M_EMPTY_TITLE, 
 				TRANSITION__TITLE,
 				EMPTY_STRING,
-				TITLE, S_TITLE, S_TO + transition.ziel.name.toFirstUpper
+				TITLE, S_TITLE, S_TO + transition.to.name.toFirstUpper
 			)
 		}
 	}
