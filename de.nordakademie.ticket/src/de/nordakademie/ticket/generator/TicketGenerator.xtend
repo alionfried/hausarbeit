@@ -150,7 +150,8 @@ class TicketGenerator implements IGenerator {
 			<div id="optionSelectStatus" class="form-group">								
 					<label for="selectStatus" class="col-sm-2 control-label">Statusänderung</label>
 				    <div class="col-sm-10">
-				    	<select id="selectStatus" name="selectStatus" class="form-control">							
+				    	<select id="selectStatus" name="selectStatus" class="form-control">
+				    		<option>«modelIssue.issueScreen.statusfield.^default.name»</option>
 			    		</select>
 					</div>
 			</div>
